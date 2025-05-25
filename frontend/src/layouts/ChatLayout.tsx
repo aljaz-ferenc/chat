@@ -1,36 +1,39 @@
 import {FilterIcon, PlusIcon, SearchIcon} from "../assets/icons/icons.tsx";
+import UserCard from "../components/UserCard.tsx";
+import {Link, Outlet} from "react-router";
+import {cn} from "../utils/utils.ts";
 
-const fakeUsers = [
+export const fakeUsers = [
     {
-        id: 1,
+        id: '1',
         name: 'Jasmin The Batman',
         message: 'Hello, how are you? Hello, how are you? Hello, how are you? Hello, how are you?',
         isTyping: true,
         lastMessage: '45 min'
     },
     {
-        id: 2,
+        id: '2',
         name: 'Jane Doe',
         message: 'Hello, how are you?',
         isTyping: false,
         lastMessage: '1 day'
     },
     {
-        id: 3,
+        id: '3',
         name: 'Jane Doe',
         message: 'Hello, how are you?',
         isTyping: false,
         lastMessage: '2 days'
     },
     {
-        id: 4,
+        id: '4',
         name: 'Jane Doe',
         message: 'Hello, how are you?',
         isTyping: true,
         lastMessage: '1 hour'
     },
     {
-        id: 5,
+        id: '5',
         name: 'Jane Doe',
         message: 'Hello, how are you?',
         isTyping: false,
@@ -38,7 +41,7 @@ const fakeUsers = [
     }
 ]
 
-export default function ChatRoute() {
+export default function ChatLayout() {
     return (
         <div className='flex'>
             <div className='min-w-[320px] h-full bg-primary border-r border-border'>
@@ -65,29 +68,20 @@ export default function ChatRoute() {
                 </div>
                 <div className='flex flex-col mt-4'>
                     {fakeUsers.map(user => (
-                        <button className='bg-primary cursor-pointer hover:bg-background transition-all  px-6'>
-                            <div className='flex items-center gap-4 py-3'>
-                                <img src='https://picsum.photos/id/100/50/50' alt='user'
-                                     className='w-12 aspect-square rounded-[5px]'/>
-                                <div className='flex flex-col items-start gap-1'>
-                                    <div className='flex items-center gap-2'>
-                                        <h3 className='font-bold text-white'>{user.name}</h3>
-                                        {user.isTyping && <span className='text-xs text-muted/50'>Typing...</span>}
-                                    </div>
-                                    <div className='flex items-center gap-2'>
-                                        <p className='text-muted text-xs truncate max-w-40 text-left'>{user.message}</p>
-                                        {user.lastMessage &&
-                                            <span className='text-xs text-muted/50 w-max'>&bull; {user.lastMessage}</span>}
-                                    </div>
-                                </div>
-                            </div>
-                        </button>
+                        <Link to={`${user.id}`} className={cn(['cursor-pointer bg-primary hover:bg-background transition-all px-6'])}
+                                key={user.id} type='button'>
+                            <UserCard user={user} showLastMessageTime showTypingStatus className='py-3'/>
+                        </Link>
                     ))}
                 </div>
             </div>
-            <div className='w-full bg-primary'>
-
+            <div className='w-full bg-primary flex flex-col'>
+                <Outlet/>
+                <div className='h-[88px] bg-primary border-t border-border p-6'>
+                    MESSAGE INPUT
+                </div>
             </div>
         </div>
     )
 }
+

@@ -1,18 +1,24 @@
 const express = require('express');
 const app = express();
 const port = process.env.PORT || 3000;
-const {clerkMiddleware, requireAuth, getAuth, clerkClient} = require("@clerk/express");
+const {clerkMiddleware} = require("@clerk/express");
+const usersRouter = require('./routes/userRouter')
 
 require('dotenv').config()
 
 app.use(clerkMiddleware());
 
-app.get('/', requireAuth({signInUrl: process.env.CLERK_SIGN_IN_URL, signUpUrl: process.env.CLERK_SIGN_UP_URL}),  async (req, res) => {
-    const {userId} = getAuth(req);
-    const user = await clerkClient.users.getUser(userId);
-    return res.json(user)
-})
+app.use(`/api/v1/users`, usersRouter)
 
-app.listen(port, () => {
-    console.log(`Example app listening at http://localhost:${port}`)
-})
+const start = async () => {
+    try{
+        app.listen(port, () => {
+            console.log(`Example app listening on port ${port}...`)
+        })
+    }catch(error){
+        console.error(error)
+        process.exit(1)
+    }
+}
+
+start()
