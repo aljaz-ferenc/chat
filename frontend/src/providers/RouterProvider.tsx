@@ -3,6 +3,7 @@ import SignInRoute from "../routes/SignIn.route.tsx";
 import SignUpRoute from "../routes/SignUp.route.tsx";
 import ChatRoute from "../routes/ChatRoute.tsx";
 import RootLayout from "../layouts/RootLayout.tsx";
+import ContactsRoute from "../routes/ContactsRoute.tsx";
 
 const router = createBrowserRouter([
     {
@@ -20,6 +21,10 @@ const router = createBrowserRouter([
             {
                 path: 'chat',
                 element: <ChatRoute/>,
+            },
+            {
+                path: 'contacts',
+                element: <ContactsRoute/>,
             },
         ],
     },
