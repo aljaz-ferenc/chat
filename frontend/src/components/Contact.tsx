@@ -1,9 +1,7 @@
-import {useParams} from "react-router";
+import { useParams } from "react-router";
 
 export default function Contact() {
-    const {id} = useParams();
+	const { id } = useParams();
 
-    return (
-        <div>CONTACT {id}</div>
-    )
+	return <div>CONTACT {id}</div>;
 }

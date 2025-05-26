@@ -1,27 +1,27 @@
 @import "tailwindcss";
 
 :root {
-    --primary: #122136;
-    --background: #0f172a;
-    --muted: #CBD5E1;
-    --border: #334155;
-    --message-secondary: #3a81f6;
-    --message-primary: #2563eb;
-    --icon:#94a3b8;
-    --icon-active: #2563eb;
-    --icon-background:#203047;
-    --icon-background-active: #bfdbfe;
+	--primary: #122136;
+	--background: #0f172a;
+	--muted: #cbd5e1;
+	--border: #334155;
+	--message-secondary: #3a81f6;
+	--message-primary: #2563eb;
+	--icon: #94a3b8;
+	--icon-active: #2563eb;
+	--icon-background: #203047;
+	--icon-background-active: #bfdbfe;
 }
 
 @theme inline {
-    --color-primary: var(--primary);
-    --color-background: var(--background);
-    --color-muted: var(--muted);
-    --color-border: var(--border);
-    --color-message-secondary: var(--message-secondary);
-    --color-message-primary: var(--message-primary);
-    --color-icon: var(--icon);
-    --color-icon-active: var(--icon-active);
-    --color-icon-background: var(--icon-background);
-    --color-icon-background-active: var(--icon-background-active);
+	--color-primary: var(--primary);
+	--color-background: var(--background);
+	--color-muted: var(--muted);
+	--color-border: var(--border);
+	--color-message-secondary: var(--message-secondary);
+	--color-message-primary: var(--message-primary);
+	--color-icon: var(--icon);
+	--color-icon-active: var(--icon-active);
+	--color-icon-background: var(--icon-background);
+	--color-icon-background-active: var(--icon-background-active);
 }

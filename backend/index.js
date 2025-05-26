@@ -1,24 +1,28 @@
-const express = require('express');
+const express = require("express");
 const app = express();
 const port = process.env.PORT || 3000;
-const {clerkMiddleware} = require("@clerk/express");
-const usersRouter = require('./routes/userRouter')
+const { clerkMiddleware } = require("@clerk/express");
+const usersRouter = require("./routes/userRouter");
+const friendRequestRouter = require("./routes/friendRequestRouter");
+const bodyParser = require("body-parser");
 
-require('dotenv').config()
+require("dotenv").config();
 
 app.use(clerkMiddleware());
 
-app.use(`/api/v1/users`, usersRouter)
+app.use(bodyParser.json());
+app.use("/api/v1/users", usersRouter);
+app.use("/api/v1/friendRequest", friendRequestRouter);
 
 const start = async () => {
-    try{
-        app.listen(port, () => {
-            console.log(`Example app listening on port ${port}...`)
-        })
-    }catch(error){
-        console.error(error)
-        process.exit(1)
-    }
-}
+	try {
+		app.listen(port, () => {
+			console.log(`Example app listening on port ${port}...`);
+		});
+	} catch (error) {
+		console.error(error);
+		process.exit(1);
+	}
+};
 
-start()
+start();

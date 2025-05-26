@@ -6,41 +6,37 @@ import RouterProvider from "./RouterProvider.tsx";
 type ProviderProps = {} & PropsWithChildren;
 
 const composeProviders = (
-    providers: React.FC<{
-        children: ReactNode;
-    }>[],
+	providers: React.FC<{
+		children: ReactNode;
+	}>[],
 ) => {
-    if (!providers?.length) {
-        return ({
-                    children,
-                }: {
-            children?: ReactNode;
-        }) => children;
-    }
+	if (!providers?.length) {
+		return ({
+			children,
+		}: {
+			children?: ReactNode;
+		}) => children;
+	}
 
-    return providers.reduce((Prev, Curr) => ({ children }) => {
-        if (Prev) {
-            return (
-                <Prev>
-                    <Curr>{children}</Curr>
-                </Prev>
-            );
-        }
+	return providers.reduce((Prev, Curr) => ({ children }) => {
+		if (Prev) {
+			return (
+				<Prev>
+					<Curr>{children}</Curr>
+				</Prev>
+			);
+		}
 
-        return <Curr>{children}</Curr>;
-    });
+		return <Curr>{children}</Curr>;
+	});
 };
 
 const Providers = composeProviders([
-    ReactQueryProvider,
-    ClerkProviderComponent,
-    RouterProvider,
+	ReactQueryProvider,
+	ClerkProviderComponent,
+	RouterProvider,
 ]);
 
 export default function Provider({ children }: ProviderProps) {
-    return (
-        <Providers>
-            {children}
-        </Providers>
-    );
+	return <Providers>{children}</Providers>;
 }

@@ -1,33 +1,33 @@
 const mongoose = require("mongoose");
-require('dotenv').config()
+require("dotenv").config();
 
 const MONGODB_URL = process.env.MONGODB_URL;
 
 let cached = global.mongoose;
 
 if (!cached) {
-    cached = global.mongoose = {
-        conn: null,
-        promise: null,
-    };
+	cached = global.mongoose = {
+		conn: null,
+		promise: null,
+	};
 }
 
 const connectToDatabase = async () => {
-    if (cached.conn) return cached.conn;
-    if (!MONGODB_URL) throw new Error("Missing MONGODB_URL");
+	if (cached.conn) return cached.conn;
+	if (!MONGODB_URL) throw new Error("Missing MONGODB_URL");
 
-    cached.promise =
-        cached.promise ||
-        mongoose.connect(MONGODB_URL, {
-            dbName: "chat",
-            bufferCommands: false,
-        });
+	cached.promise =
+		cached.promise ||
+		mongoose.connect(MONGODB_URL, {
+			dbName: "chat",
+			bufferCommands: false,
+		});
 
-    cached.conn = await cached.promise;
+	cached.conn = await cached.promise;
 
-    return cached.conn;
+	return cached.conn;
 };
 
 module.exports = {
-    connectToDatabase
+	connectToDatabase,
 };

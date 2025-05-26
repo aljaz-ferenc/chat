@@ -10,3 +10,5 @@ export type User = {
         blocked: User[],
     }
 }
+
+export type FriendRequestAction = 'send' | 'accept' | 'cancel'

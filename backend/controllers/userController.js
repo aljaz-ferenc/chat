@@ -1,26 +1,27 @@
-const User = require('../models/user');
-const {connectToDatabase} = require("../models/mongoose");
+const User = require("../models/user");
+const { connectToDatabase } = require("../models/mongoose");
 
 exports.getAllUsers = async (req, res) => {
-    try {
-        await connectToDatabase()
-        const users = await User.find()
+	try {
+		await connectToDatabase();
+		const users = await User.find();
 
-        res.status(200).json(users)
-    } catch (error) {
-        console.error(error)
-    }
-}
+		res.status(200).json(users);
+	} catch (error) {
+		return res.status(500).json({ message: "Server error" });
+	}
+};
 
 exports.getUser = async (req, res) => {
-    try {
-        const {clerkId} = req.params
-        await connectToDatabase()
-        const user = await User.findOne({clerkId})
-        console.log(user._id)
+	try {
+		const { clerkId } = req.params;
+		await connectToDatabase();
+		const user = await User.findOne({ clerkId }).populate(
+			"friends.pendingRequests friends.incomingRequests",
+		);
 
-        res.status(200).json(user)
-    } catch (error) {
-        console.error(error)
-    }
-}
+		res.status(200).json(user);
+	} catch (error) {
+		return res.status(500).json({ message: "Server error" });
+	}
+};

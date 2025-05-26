@@ -1,5 +1,3 @@
-export default function ContactsRoute(){
-    return (
-        <div>CONTACTS</div>
-    )
+export default function ContactsRoute() {
+	return <div>CONTACTS</div>;
 }
