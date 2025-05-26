@@ -9,6 +9,22 @@ export default function SearchUsers() {
 	const [thisUser] = useUserStore(useShallow((state) => [state.user]));
 	const { mutateAsync: sendRequest, isPending } = useFriendRequest();
 
+	const isFriend = (userId: string) => {
+		return thisUser?.friends.friends.some((u) => u._id === userId);
+	};
+
+	const isPendingRequest = (userId: string) => {
+		return thisUser?.friends.pendingRequests.some((u) => u._id === userId);
+	};
+
+	const isBlocked = (userId: string) => {
+		return thisUser?.friends.blocked.some((u) => u._id === userId);
+	};
+
+	const isIncomingRequest = (userId: string) => {
+		return thisUser?.friends.incomingRequests.some((u) => u._id === userId);
+	};
+
 	return (
 		<div className="p-6">
 			<div>
@@ -25,47 +41,41 @@ export default function SearchUsers() {
 					users.map((user) => {
 						if (
 							user._id === thisUser?._id ||
-							thisUser?.friends.pendingRequests.some(
-								(u) => u._id === user._id,
-							) ||
-							thisUser?.friends.blocked.some((u) => u._id === user._id)
+							isPendingRequest(user._id) ||
+							isBlocked(user._id) ||
+							isIncomingRequest(user._id)
 						)
 							return null;
+
+						if (isFriend(user._id)) {
+							return (
+								<div
+									key={user._id}
+									className="flex justify-between items-center text-muted font-bold"
+								>
+									<UserCard user={user} />
+									<span>Friends</span>
+								</div>
+							);
+						}
+
 						return (
 							<div key={user._id} className="flex justify-between items-center">
 								<UserCard user={user} />
-
-								{thisUser?.friends.incomingRequests.some(
-									(u) => u._id === user._id,
-								) ? (
-									<button
-										type="button"
-										disabled={isPending}
-										onClick={async () =>
-											await sendRequest({
-												receiverId: user._id,
-												action: "accept",
-											})
-										}
-										className="cursor-pointer text-white bg-message-primary px-3 py-1 h-min rounded-[5px] ml-2"
-									>
-										Accept
-									</button>
-								) : (
-									<button
-										type="button"
-										disabled={isPending}
-										onClick={async () =>
-											await sendRequest({
-												receiverId: user._id,
-												action: "send",
-											})
-										}
-										className="cursor-pointer text-white bg-message-primary px-3 py-1 h-min rounded-[5px] ml-auto"
-									>
-										Add
-									</button>
-								)}
+								<button
+									type="button"
+									disabled={isPending}
+									onClick={async () =>
+										await sendRequest({
+											receiverId: user._id,
+											action: "send",
+										})
+									}
+									className="cursor-pointer text-white bg-message-primary px-3 py-1 h-min rounded-[5px] ml-auto"
+								>
+									Add
+								</button>
+								)
 							</div>
 						);
 					})
@@ -80,6 +90,7 @@ export default function SearchUsers() {
 				)}
 			</div>
 
+			{/*PENDING REQUESTS*/}
 			{!!thisUser?.friends.pendingRequests.length && (
 				<div className="flex flex-col gap-4 mt-10">
 					<h3 className="text-muted text-sm font-bold">Pending Requests</h3>
@@ -100,6 +111,7 @@ export default function SearchUsers() {
 				</div>
 			)}
 
+			{/*INCOMING REQUESTS*/}
 			{!!thisUser?.friends.incomingRequests.length && (
 				<div className="flex flex-col gap-4 mt-10">
 					<h3 className="text-muted text-sm font-bold">Incoming Requests</h3>
@@ -111,9 +123,18 @@ export default function SearchUsers() {
 								onClick={async () => {
 									sendRequest({ receiverId: user._id, action: "accept" });
 								}}
-								className="cursor-pointer text-white bg-message-primary px-3 py-1 h-min rounded-[5px]"
+								className="ml-auto mr-2 cursor-pointer text-white bg-message-primary px-3 py-1 h-min rounded-[5px]"
 							>
 								Accept
+							</button>
+							<button
+								type="button"
+								onClick={async () => {
+									sendRequest({ receiverId: user._id, action: "decline" });
+								}}
+								className="cursor-pointer text-white bg-red-500 px-3 py-1 h-min rounded-[5px]"
+							>
+								Decline
 							</button>
 						</div>
 					))}{" "}

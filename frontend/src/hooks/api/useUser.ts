@@ -16,7 +16,9 @@ export default function useUser() {
 	});
 
 	useEffect(() => {
-		if (query.data) setUser(query.data);
+		if (query.data) {
+			setUser(query.data);
+		}
 	}, [query.data, setUser]);
 
 	return query;

@@ -8,7 +8,18 @@ export type User = {
         incomingRequests: User[],
         pendingRequests: User[],
         blocked: User[],
-    }
+        friends: User[]
+    },
+    notifications: {
+        notifications: Notification[],
+        opened: boolean }
 }
 
-export type FriendRequestAction = 'send' | 'accept' | 'cancel'
+export type FriendRequestAction = 'send' | 'accept' | 'cancel' | 'decline'
+export type NotificationAction = 'read'
+
+export type Notification = {
+    read: boolean,
+    type: 'friendRequest',
+    from: User,
+}

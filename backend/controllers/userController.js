@@ -17,7 +17,7 @@ exports.getUser = async (req, res) => {
 		const { clerkId } = req.params;
 		await connectToDatabase();
 		const user = await User.findOne({ clerkId }).populate(
-			"friends.pendingRequests friends.incomingRequests",
+			"friends.pendingRequests friends.incomingRequests friends.friends friends.blocked",
 		);
 
 		res.status(200).json(user);
