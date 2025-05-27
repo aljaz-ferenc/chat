@@ -38,6 +38,51 @@ const userSchema = new mongoose.Schema(
 			trim: true,
 			unique: [true, "email already exists"],
 		},
+		username: {
+			type: String,
+			trim: true,
+			required: [true, "username is required"],
+		},
+		about: {
+			type: String,
+			trim: true,
+			default: "",
+		},
+		birthday: {
+			type: Date,
+			default: null,
+		},
+		gender: {
+			type: String,
+			enum: ["female", "male"],
+			default: null,
+		},
+		languages: {
+			type: [String],
+			default: [],
+		},
+		city: {
+			type: String,
+			default: "",
+		},
+		country: {
+			type: String,
+			default: "",
+		},
+		phoneNumber: {
+			type: String,
+			trim: true,
+			default: "",
+		},
+		socials: {
+			type: {
+				facebook: String,
+				x: String,
+				instagram: String,
+				tiktok: String,
+			},
+			default: {},
+		},
 		friends: {
 			incomingRequests: [
 				{ type: mongoose.SchemaTypes.ObjectId, ref: "User", default: [] },

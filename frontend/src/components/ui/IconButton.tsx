@@ -1,3 +1,4 @@
+import { href } from "react-router";
 import {
 	BellIcon,
 	CheckmarkIcon,
@@ -7,8 +8,10 @@ import {
 	ContactIcon,
 	EllipsisIcon,
 	EmojiIcon,
+	FacebookIcon,
 	FilterIcon,
 	ImageIcon,
+	InstagramIcon,
 	LogoIcon,
 	MessageIcon,
 	NotificationIcon,
@@ -16,7 +19,9 @@ import {
 	ProfileIcon,
 	SearchIcon,
 	SidebarIcon,
+	TiktokIcon,
 	TrashIcon,
+	XIcon,
 } from "../../assets/icons/icons.tsx";
 import { cn } from "../../utils/utils.ts";
 
@@ -38,7 +43,11 @@ type Icons =
 	| "profile"
 	| "trash"
 	| "image"
-	| "emoji";
+	| "emoji"
+	| "facebook"
+	| "x"
+	| "instagram"
+	| "tiktok";
 
 const icons = {
 	logo: <LogoIcon />,
@@ -59,18 +68,27 @@ const icons = {
 	trash: <TrashIcon />,
 	image: <ImageIcon />,
 	emoji: <EmojiIcon />,
+	facebook: <FacebookIcon />,
+	x: <XIcon />,
+	instagram: <InstagramIcon />,
+	tiktok: <TiktokIcon />,
 };
 
 type IconButtonProps = {
 	icon: Icons;
 	className?: string;
 	onClick?: () => void;
+	href?: string;
+	shape?: "round" | "rect";
+	isActive?: boolean
 };
 
 export default function IconButton({
 	icon,
 	className = "",
 	onClick,
+	shape = "round",
+	isActive = false
 }: IconButtonProps) {
 	return (
 		<button
@@ -78,7 +96,9 @@ export default function IconButton({
 			onClick={onClick}
 			className={cn([
 				"cursor-pointer transition-all grid place-items-center bg-icon-background hover:bg-icon-background-active h-12 rounded-full aspect-square p-3.5 [&_svg]:fill-icon hover:[&_svg]:fill-icon-active [&_svg]:h-full [&_svg]:w-full",
+				shape === "rect" && "rounded-md",
 				className,
+				isActive && ['bg-icon-background-active [&_svg]:fill-icon-active']
 			])}
 		>
 			{icons[icon]}

@@ -26,7 +26,7 @@ export default function SearchUsers() {
 	};
 
 	return (
-		<div className="p-6">
+		<div className="p-6 max-w-6xl w-full mx-auto">
 			<div>
 				<input
 					type="text"

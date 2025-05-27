@@ -1,6 +1,6 @@
 import { UserButton } from "@clerk/clerk-react";
 import { useMemo } from "react";
-import { Link } from "react-router";
+import {Link, NavLink, useResolvedPath} from "react-router";
 import { useShallow } from "zustand/react/shallow";
 import { LogoIcon } from "../assets/icons/icons";
 import useReadNotification from "../hooks/api/useReadNotification.ts";
@@ -18,6 +18,7 @@ export default function Header() {
 			state.user?.notifications.opened,
 		]),
 	);
+	const {pathname} = useResolvedPath()
 
 	const existsUnread = useMemo(() => {
 		return notifications?.notifications.some((n) => !n.read);
@@ -29,12 +30,12 @@ export default function Header() {
 				<LogoIcon />
 			</div>
 			<div className="flex px-4 gap-4 w-full">
-				<Link to="/chat">
-					<IconButton icon="message" />
-				</Link>
-				<Link to={"/contacts"}>
-					<IconButton icon="contact" />
-				</Link>
+				<NavLink to="/chat">
+					<IconButton isActive={pathname.startsWith('/chat')} icon="message" />
+				</NavLink>
+				<NavLink to={"/contacts"}>
+					<IconButton isActive={pathname.startsWith('/contacts')} icon="contact" />
+				</NavLink>
 
 				<IconButton
 					onClick={async () => await readNotification().then(() => refetch())}

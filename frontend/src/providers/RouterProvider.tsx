@@ -46,7 +46,7 @@ const router = createBrowserRouter([
 						element: <SearchUsers />,
 					},
 					{
-						path: ":id",
+						path: ":contactId",
 						element: <Contact />,
 					},
 				],

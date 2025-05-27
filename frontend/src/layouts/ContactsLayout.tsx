@@ -1,6 +1,7 @@
-import { Link, Outlet } from "react-router";
+import {Link, Outlet, useNavigate} from "react-router";
 import { FilterIcon, PlusIcon, SearchIcon } from "../assets/icons/icons.tsx";
 import UserCard from "../components/UserCard.tsx";
+import useContacts from "../hooks/api/useContacts.ts";
 import { cn } from "../utils/utils.ts";
 
 export const fakeUsers = [
@@ -43,25 +44,33 @@ export const fakeUsers = [
 ];
 
 export default function ContactsLayout() {
+	const { data: contacts, isPending } = useContacts();
+	const navigate = useNavigate()
+
+	if (isPending) {
+		return <div>Loading contacts...</div>;
+	}
+
 	return (
 		<div className="flex">
 			<div className="min-w-[320px] h-full bg-primary border-r border-border">
 				<div className="py-5 px-6 flex gap-4">
-					<h3 className="font-bold text-2xl mr-auto text-white">Chats</h3>
+					<h3 className="font-bold text-2xl mr-auto text-white">Contacts</h3>
 					<button
+						onClick={()=>navigate('/contacts')}
 						type="button"
 						className="flex gap-2 items-center text-muted [&_svg]:fill-muted font-bold text-xs hover:text-message-primary hover:[&_svg]:fill-message-primary cursor-pointer"
 					>
-						<PlusIcon />
-						<span>New</span>
+						<SearchIcon />
+						<span>Search</span>
 					</button>
-					<button
-						type="button"
-						className="flex gap-2 items-center text-muted [&_svg]:fill-muted font-bold text-xs hover:text-message-primary hover:[&_svg]:fill-message-primary cursor-pointer"
-					>
-						<FilterIcon />
-						<span>Filter</span>
-					</button>
+					{/*<button*/}
+					{/*	type="button"*/}
+					{/*	className="flex gap-2 items-center text-muted [&_svg]:fill-muted font-bold text-xs hover:text-message-primary hover:[&_svg]:fill-message-primary cursor-pointer"*/}
+					{/*>*/}
+					{/*	<FilterIcon />*/}
+					{/*	<span>Filter</span>*/}
+					{/*</button>*/}
 				</div>
 				<div className="flex items-center gap-2 [&_svg]:fill-muted relative px-6">
 					<span className="absolute top-1/2 -translate-y-1/2 left-9 [&_svg]:p-[1px]">
@@ -74,13 +83,13 @@ export default function ContactsLayout() {
 					/>
 				</div>
 				<div className="flex flex-col mt-4">
-					{fakeUsers.map((user) => (
+					{contacts.map((user) => (
 						<Link
-							to={`${user.id}`}
+							to={`${user._id}`}
 							className={cn([
 								"cursor-pointer bg-primary hover:bg-background transition-all px-6",
 							])}
-							key={user.id}
+							key={user._id}
 							type="button"
 						>
 							<UserCard

@@ -4,6 +4,20 @@ export type User = {
     firstName: string,
     lastName: string,
     email: string,
+    username: string,
+    about: string,
+    birthday: Date,
+    gender: 'male' | 'female',
+    languages: string[],
+    city: string,
+    country: string,
+    phoneNumber: string,
+    socials: {
+        facebook: string,
+        x: string,
+        instagram: string,
+        tiktok: string,
+    }
     friends: {
         incomingRequests: User[],
         pendingRequests: User[],
@@ -14,6 +28,8 @@ export type User = {
         notifications: Notification[],
         opened: boolean }
 }
+
+export type Contact = User & {mutualFriends: string[]}
 
 export type FriendRequestAction = 'send' | 'accept' | 'cancel' | 'decline'
 export type NotificationAction = 'read'

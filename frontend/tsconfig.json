@@ -1,4 +1,7 @@
 {
+  "compilerOptions": {
+    "lib": ["ES2020", "DOM"]
+  },
   "files": [],
   "references": [
     { "path": "./tsconfig.app.json" },

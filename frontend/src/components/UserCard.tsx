@@ -1,6 +1,7 @@
 import type { User } from "../../../shared/types.ts";
 import { cn } from "../utils/utils.ts";
 import { Skeleton } from "./ui/Skeleton.tsx";
+import {Link} from "react-router";
 
 export default function UserCard({
 	user,
@@ -16,7 +17,7 @@ export default function UserCard({
 	showLastMessageTime?: boolean;
 }) {
 	return (
-		<div className={cn(["flex items-center gap-4", className])}>
+		<Link to={`/contacts/${user._id}`} className={cn(["flex items-center gap-4", className])}>
 			<img
 				src="https://picsum.photos/id/100/50/50"
 				alt="user"
@@ -42,7 +43,7 @@ export default function UserCard({
 					)}
 				</div>
 			</div>
-		</div>
+		</Link>
 	);
 }
 
