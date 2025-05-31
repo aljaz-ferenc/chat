@@ -1,60 +1,64 @@
+import { useDebounce } from "@uidotdev/usehooks";
+import { useState } from "react";
 import { useShallow } from "zustand/react/shallow";
-import useAllUsers from "../hooks/api/useAllUsers.ts";
+import {
+	isBlocked,
+	isFriend,
+	isIncomingRequest,
+	isPendingRequest,
+} from "../../../shared/functions/utils.tsx";
 import useFriendRequest from "../hooks/api/useFriendRequest.ts";
+import useSearchUsers from "../hooks/api/useSearchUsers.ts";
 import useUserStore from "../state/useUserStore.ts";
-import UserCard, { UserCardSkeleton } from "./UserCard.tsx";
+import { FriendStatusButtons } from "./ContactInfo.tsx";
+import UserCard from "./UserCard.tsx";
+import IconButton from "./ui/IconButton.tsx";
 
 export default function SearchUsers() {
-	const { data: users } = useAllUsers();
 	const [thisUser] = useUserStore(useShallow((state) => [state.user]));
-	const { mutateAsync: sendRequest, isPending } = useFriendRequest();
+		useFriendRequest();
+	const [query, setQuery] = useState("");
+	const debouncedQuery = useDebounce(query, 300);
 
-	const isFriend = (userId: string) => {
-		return thisUser?.friends.friends.some((u) => u._id === userId);
-	};
+	const { data: users, isPending: isSearchPending } =
+		useSearchUsers(debouncedQuery);
 
-	const isPendingRequest = (userId: string) => {
-		return thisUser?.friends.pendingRequests.some((u) => u._id === userId);
-	};
-
-	const isBlocked = (userId: string) => {
-		return thisUser?.friends.blocked.some((u) => u._id === userId);
-	};
-
-	const isIncomingRequest = (userId: string) => {
-		return thisUser?.friends.incomingRequests.some((u) => u._id === userId);
-	};
+	if (!thisUser) return;
 
 	return (
 		<div className="p-6 max-w-6xl w-full mx-auto">
 			<div>
 				<input
+					value={query}
+					onChange={(e) => setQuery(e.target.value)}
 					type="text"
-					placeholder="Search users..."
+					placeholder="Search by name or username..."
 					className={
 						"w-full p-2 outline-border outline rounded-[5px] focus-visible:outline-none focus-visible:bg-background text-muted"
 					}
 				/>
 			</div>
 			<div className="flex flex-col gap-4 mt-6">
-				{users ? (
+				{!isSearchPending &&
+					users &&
 					users.map((user) => {
 						if (
 							user._id === thisUser?._id ||
-							isPendingRequest(user._id) ||
-							isBlocked(user._id) ||
-							isIncomingRequest(user._id)
+							isPendingRequest(user._id, thisUser) ||
+							isBlocked(user._id, thisUser) ||
+							isIncomingRequest(user._id, thisUser)
 						)
 							return null;
 
-						if (isFriend(user._id)) {
+						if (isFriend(user._id, thisUser)) {
 							return (
 								<div
 									key={user._id}
 									className="flex justify-between items-center text-muted font-bold"
 								>
-									<UserCard user={user} />
-									<span>Friends</span>
+									<UserCard highlight={debouncedQuery} user={user} />
+									<IconButton icon='message'/>
+									{/*<span>Friends</span>*/}
 								</div>
 							);
 						}
@@ -62,32 +66,10 @@ export default function SearchUsers() {
 						return (
 							<div key={user._id} className="flex justify-between items-center">
 								<UserCard user={user} />
-								<button
-									type="button"
-									disabled={isPending}
-									onClick={async () =>
-										await sendRequest({
-											receiverId: user._id,
-											action: "send",
-										})
-									}
-									className="cursor-pointer text-white bg-message-primary px-3 py-1 h-min rounded-[5px] ml-auto"
-								>
-									Add
-								</button>
-								)
+								<FriendStatusButtons thisUser={thisUser} contactId={user._id} />
 							</div>
 						);
-					})
-				) : (
-					<div className="flex flex-col gap-4">
-						{Array(10)
-							.fill(0)
-							.map((_, i) => (
-								<UserCardSkeleton key={`skeleton-${i + 1}`} />
-							))}
-					</div>
-				)}
+					})}
 			</div>
 
 			{/*PENDING REQUESTS*/}
@@ -97,17 +79,9 @@ export default function SearchUsers() {
 					{thisUser?.friends.pendingRequests.map((user) => (
 						<div key={user._id} className="flex justify-between items-center">
 							<UserCard user={user} />
-							<button
-								type="button"
-								onClick={async () => {
-									sendRequest({ receiverId: user._id, action: "cancel" });
-								}}
-								className="cursor-pointer text-white bg-red-500 px-3 py-1 h-min rounded-[5px]"
-							>
-								Cancel
-							</button>
+							<FriendStatusButtons contactId={user._id} thisUser={thisUser} />
 						</div>
-					))}{" "}
+					))}
 				</div>
 			)}
 
@@ -118,26 +92,9 @@ export default function SearchUsers() {
 					{thisUser?.friends.incomingRequests.map((user) => (
 						<div key={user._id} className="flex justify-between items-center">
 							<UserCard user={user} />
-							<button
-								type="button"
-								onClick={async () => {
-									sendRequest({ receiverId: user._id, action: "accept" });
-								}}
-								className="ml-auto mr-2 cursor-pointer text-white bg-message-primary px-3 py-1 h-min rounded-[5px]"
-							>
-								Accept
-							</button>
-							<button
-								type="button"
-								onClick={async () => {
-									sendRequest({ receiverId: user._id, action: "decline" });
-								}}
-								className="cursor-pointer text-white bg-red-500 px-3 py-1 h-min rounded-[5px]"
-							>
-								Decline
-							</button>
+							<FriendStatusButtons contactId={user._id} thisUser={thisUser} />
 						</div>
-					))}{" "}
+					))}
 				</div>
 			)}
 		</div>

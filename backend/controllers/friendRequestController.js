@@ -42,7 +42,7 @@ exports.sendFriendRequest = async (req, res) => {
 			io().to(receiver).emit("notification-new");
 		}
 
-		res.status(200).json({ message: "success" });
+		return res.sendStatus(204);
 	} catch (error) {
 		console.log(error);
 		return res.status(500).json({ message: "Server error" });
@@ -79,7 +79,7 @@ exports.declineFriendRequest = async (req, res) => {
 			});
 		}
 
-		res.status(200).json({ message: "success" });
+		return res.status(204).json({ message: "success" });
 	} catch (error) {
 		return res.status(500).json({ message: "Server error" });
 	}
@@ -121,7 +121,7 @@ exports.acceptFriendRequest = async (req, res) => {
 			});
 		}
 
-		res.status(200).json({ message: "success" });
+		return res.status(204).json({ message: "success" });
 	} catch (error) {
 		return res.status(500).json({ message: "Server error" });
 	}
@@ -157,7 +157,43 @@ exports.cancelFriendRequest = async (req, res) => {
 			});
 		}
 
-		res.status(200).json({ message: "success" });
+		return res.status(204).json({ message: "success" });
+	} catch (error) {
+		return res.status(500).json({ message: "Server error" });
+	}
+};
+
+exports.unfriend = async (req, res) => {
+	try {
+		const { senderId, receiverId } = req.body;
+		await connectToDatabase();
+		const sender = await User.findById(senderId);
+		const receiver = await User.findById(receiverId);
+
+		if (!sender || !receiver) {
+			return res.status(404).json({ message: "user not found" });
+		}
+
+		await User.findByIdAndUpdate(senderId, {
+			$pull: {
+				"friends.friends": receiver._id,
+			},
+		});
+
+		await User.findByIdAndUpdate(receiverId, {
+			$pull: {
+				"friends.friends": sender._id,
+			},
+		});
+
+		if (onlineUsers.has(receiverId)) {
+			const receiver = onlineUsers.get(receiverId);
+			io().to(receiver).emit("friendRequest-unfriended", {
+				from: senderId,
+			});
+		}
+
+		return res.status(204).json({ message: "success" });
 	} catch (error) {
 		return res.status(500).json({ message: "Server error" });
 	}

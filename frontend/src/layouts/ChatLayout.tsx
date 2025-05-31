@@ -70,7 +70,7 @@ export default function ChatLayout() {
 					<input
 						type="text"
 						className="w-full placeholder:text-muted pl-10 py-2 transition-all rounded-full focus-visible:bg-background focus-visible:outline-none text-muted outline-border outline-1"
-						placeholder="Search contacts"
+						placeholder="Search messages..."
 					/>
 				</div>
 				<div className="flex flex-col mt-4">

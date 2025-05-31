@@ -25,3 +25,34 @@ exports.getUser = async (req, res) => {
 		return res.status(500).json({ message: "Server error" });
 	}
 };
+
+exports.searchUsers = async (req, res) => {
+	try {
+		const { query } = req.params;
+		await connectToDatabase();
+		const users = await User.aggregate([
+			{
+				$match: {
+					$or: [
+						{ firstName: { $regex: query, $options: "i" } },
+						{ lastName: { $regex: query, $options: "i" } },
+						{ username: { $regex: query, $options: "i" } },
+					],
+				},
+			},
+			{
+				$project: {
+					firstName: 1,
+					lastName: 1,
+					username: 1,
+					_id: 1,
+				},
+			},
+		]);
+
+		res.status(200).json(users);
+	} catch (error) {
+		console.log(error);
+		return res.status(500).json({ message: "Server error" });
+	}
+};

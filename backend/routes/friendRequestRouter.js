@@ -9,4 +9,6 @@ router.route("/cancel").post(friendRequestController.cancelFriendRequest);
 
 router.route("/decline").post(friendRequestController.declineFriendRequest);
 
+router.route("/unfriend").post(friendRequestController.unfriend);
+
 module.exports = router;

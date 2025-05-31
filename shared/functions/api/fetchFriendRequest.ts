@@ -9,5 +9,10 @@ export async function fetchFriendRequest(senderId: string, receiverId: string, a
             'Content-Type': 'application/json'
         }
     })
+
+    if(res.status === 204) {
+        return
+    }
+
     return res.json()
 }

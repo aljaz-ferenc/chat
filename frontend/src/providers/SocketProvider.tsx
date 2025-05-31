@@ -39,6 +39,10 @@ export default function SocketProvider({ children }: PropsWithChildren) {
 			await refetch();
 		});
 
+		socket.on("friendRequest-unfriended", async () => {
+			await refetch();
+		})
+
 		return () => {
 			socket.off("connect");
 			socket.disconnect();

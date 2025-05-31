@@ -52,15 +52,11 @@ exports.getContact = async (req, res) => {
 			},
 		]);
 
-		console.log("CONTACT: ", result[0]);
-
 		if (!result.length) {
 			return res.status(404).json({ message: "Contact not found" });
 		}
 
-		res.status(200).json(result[0]);
-
-		res.status(200).json(user);
+		return res.status(200).json(result[0]);
 	} catch (error) {
 		return res.status(500).json({ message: "Server error" });
 	}

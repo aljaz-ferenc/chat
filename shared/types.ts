@@ -31,7 +31,7 @@ export type User = {
 
 export type Contact = User & {mutualFriends: string[]}
 
-export type FriendRequestAction = 'send' | 'accept' | 'cancel' | 'decline'
+export type FriendRequestAction = 'send' | 'accept' | 'cancel' | 'decline' | 'unfriend'
 export type NotificationAction = 'read'
 
 export type Notification = {

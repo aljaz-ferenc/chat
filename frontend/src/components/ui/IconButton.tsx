@@ -25,7 +25,7 @@ import {
 } from "../../assets/icons/icons.tsx";
 import { cn } from "../../utils/utils.ts";
 
-type Icons =
+export type Icons =
 	| "logo"
 	| "message"
 	| "contact"
@@ -80,7 +80,7 @@ type IconButtonProps = {
 	onClick?: () => void;
 	href?: string;
 	shape?: "round" | "rect";
-	isActive?: boolean
+	isActive?: boolean;
 };
 
 export default function IconButton({
@@ -88,7 +88,7 @@ export default function IconButton({
 	className = "",
 	onClick,
 	shape = "round",
-	isActive = false
+	isActive = false,
 }: IconButtonProps) {
 	return (
 		<button
@@ -98,7 +98,7 @@ export default function IconButton({
 				"cursor-pointer transition-all grid place-items-center bg-icon-background hover:bg-icon-background-active h-12 rounded-full aspect-square p-3.5 [&_svg]:fill-icon hover:[&_svg]:fill-icon-active [&_svg]:h-full [&_svg]:w-full",
 				shape === "rect" && "rounded-md",
 				className,
-				isActive && ['bg-icon-background-active [&_svg]:fill-icon-active']
+				isActive && ["bg-icon-background-active [&_svg]:fill-icon-active"],
 			])}
 		>
 			{icons[icon]}

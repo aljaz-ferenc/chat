@@ -8,4 +8,5 @@ export class Endpoints {
     public static notifications = (action: NotificationAction) => `${BASE_URL}/notifications/${action}`
     public static contact = (userId: User['_id'], contactId: User['_id']) => `${BASE_URL}/contacts/${userId}/${contactId}`
     public static contacts = (userId: User['_id']) => `${BASE_URL}/contacts/${userId}`
+    public static searchUsers = (query: string) => `${BASE_URL}/users/search/${query}`
 }
