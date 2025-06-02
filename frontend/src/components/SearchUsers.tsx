@@ -1,5 +1,6 @@
 import { useDebounce } from "@uidotdev/usehooks";
 import { useState } from "react";
+import { useNavigate } from "react-router";
 import { useShallow } from "zustand/react/shallow";
 import {
 	isBlocked,
@@ -10,15 +11,16 @@ import {
 import useFriendRequest from "../hooks/api/useFriendRequest.ts";
 import useSearchUsers from "../hooks/api/useSearchUsers.ts";
 import useUserStore from "../state/useUserStore.ts";
-import { FriendStatusButtons } from "./ContactInfo.tsx";
 import UserCard from "./UserCard.tsx";
+import { FriendStatusButtons } from "./contacts/ContactInfo.tsx";
 import IconButton from "./ui/IconButton.tsx";
 
 export default function SearchUsers() {
 	const [thisUser] = useUserStore(useShallow((state) => [state.user]));
-		useFriendRequest();
+	useFriendRequest();
 	const [query, setQuery] = useState("");
 	const debouncedQuery = useDebounce(query, 300);
+	const navigate = useNavigate();
 
 	const { data: users, isPending: isSearchPending } =
 		useSearchUsers(debouncedQuery);
@@ -57,7 +59,10 @@ export default function SearchUsers() {
 									className="flex justify-between items-center text-muted font-bold"
 								>
 									<UserCard highlight={debouncedQuery} user={user} />
-									<IconButton icon='message'/>
+									<IconButton
+										onClick={() => navigate(`/chats/${user._id}`)}
+										icon="message"
+									/>
 									{/*<span>Friends</span>*/}
 								</div>
 							);

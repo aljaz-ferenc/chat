@@ -6,11 +6,13 @@ import { Skeleton } from "./ui/Skeleton.tsx";
 
 export default function UserCard({
 	user,
-	// bottomText,
+	bottomText,
 	// showTypingStatus,
 	// showLastMessageTime,
 	className,
 	highlight,
+	showUsername = true,
+	navigateTo,
 }: {
 	className?: string;
 	user: Partial<User>;
@@ -18,10 +20,12 @@ export default function UserCard({
 	showTypingStatus?: boolean;
 	showLastMessageTime?: boolean;
 	highlight?: string;
+	showUsername?: boolean;
+	navigateTo?: string;
 }) {
 	return (
 		<Link
-			to={`/contacts/${user._id}`}
+			to={navigateTo || `/contacts/${user._id}`}
 			className={cn(["flex items-center gap-4", className])}
 		>
 			<img
@@ -35,23 +39,25 @@ export default function UserCard({
 						{highlightText(user.firstName as string, highlight as string)}
 						{highlightText(user.lastName as string, highlight as string)}
 					</h3>
-					<span className="text-xs font-normal text-muted">
-						@{highlightText(user.username as string, highlight as string)}
-					</span>
+					{showUsername && (
+						<span className="text-xs font-normal text-muted">
+							@{highlightText(user.username as string, highlight as string)}
+						</span>
+					)}
 					{/*{showTypingStatus && user.isTyping && (*/}
 					{/*	<span className="text-xs text-muted/50">Typing...</span>*/}
 					{/*)}*/}
 				</div>
-				{/*<div className="flex items-center gap-2">*/}
-				{/*	<p className="text-muted text-xs truncate max-w-40 text-left">*/}
-				{/*		{bottomText || user.message}*/}
-				{/*	</p>*/}
-				{/*	{showLastMessageTime && (*/}
-				{/*		<span className="text-xs text-muted/50 w-max">*/}
-				{/*			&bull; {user.lastMessage}*/}
-				{/*		</span>*/}
-				{/*	)}*/}
-				{/*</div>*/}
+				<div className="flex items-center gap-2">
+					<p className="text-muted text-xs truncate max-w-40 text-left">
+						{bottomText || user.message}
+					</p>
+					{/*{showLastMessageTime && (*/}
+					{/*	<span className="text-xs text-muted/50 w-max">*/}
+					{/*		&bull; {user.lastMessage}*/}
+					{/*	</span>*/}
+					{/*)}*/}
+				</div>
 			</div>
 		</Link>
 	);

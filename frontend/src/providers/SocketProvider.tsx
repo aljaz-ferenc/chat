@@ -1,6 +1,8 @@
+import { useQueryClient } from "@tanstack/react-query";
 import { type PropsWithChildren, useEffect } from "react";
 import { io } from "socket.io-client";
 import { useShallow } from "zustand/react/shallow";
+import type { Message } from "../../../shared/types.ts";
 import useUser from "../hooks/api/useUser.ts";
 import useUserStore from "../state/useUserStore.ts";
 // @ts-ignore
@@ -9,6 +11,7 @@ const socket = io(import.meta.env.VITE_BACKEND_URL, { autoConnect: false });
 export default function SocketProvider({ children }: PropsWithChildren) {
 	const userId = useUserStore(useShallow((state) => state.user?._id));
 	const { refetch } = useUser();
+	const queryClient = useQueryClient();
 
 	useEffect(() => {
 		if (!userId) return;
@@ -16,6 +19,13 @@ export default function SocketProvider({ children }: PropsWithChildren) {
 
 		socket.on("connect", () => {
 			socket.emit("online", userId);
+		});
+
+		socket.on("new-message", (message: Message) => {
+			queryClient.setQueryData(
+				["messages", { chatId: message.chat }],
+				(oldMessages: Message[]) => [...oldMessages, message],
+			);
 		});
 
 		//TODO: use same event for each if they do the same thing, but wait for confirmation
@@ -41,13 +51,13 @@ export default function SocketProvider({ children }: PropsWithChildren) {
 
 		socket.on("friendRequest-unfriended", async () => {
 			await refetch();
-		})
+		});
 
 		return () => {
 			socket.off("connect");
 			socket.disconnect();
 		};
-	}, [userId, refetch]);
+	}, [userId, refetch, queryClient]);
 
 	return <>{children}</>;
 }

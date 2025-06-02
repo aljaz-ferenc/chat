@@ -1,4 +1,4 @@
-import {Endpoints} from "../../Ednpoints";
+import {Endpoints} from "../../Endpoints";
 import type {Contact, User} from "../../types";
 
 export async function fetchContact(userId: User['_id'], contactId: User['_id']): Promise<Contact>{

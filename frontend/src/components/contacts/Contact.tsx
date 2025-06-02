@@ -1,6 +1,6 @@
 import { useParams } from "react-router";
-import type { User } from "../../../shared/types.ts";
-import useContact from "../hooks/api/useContact.ts";
+import type { User } from "../../../../shared/types.ts";
+import useContact from "../../hooks/api/useContact.ts";
 import ContactInfo from "./ContactInfo.tsx";
 
 export default function Contact() {

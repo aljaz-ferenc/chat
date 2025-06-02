@@ -1,5 +1,6 @@
 const { connectToDatabase } = require("../models/mongoose");
 const User = require("../models/User");
+const Chat = require("../models/Chat");
 const { onlineUsers, io } = require("../socket");
 const { isOnline } = require("../utils/socket");
 
@@ -119,6 +120,28 @@ exports.acceptFriendRequest = async (req, res) => {
 			io().to(receiver).emit("friendRequest-accepted", {
 				from: senderId,
 			});
+		}
+
+		const chatExists = await Chat.findOne({
+			type: "single",
+			users: { $all: [sender._id, receiver._id] },
+			$expr: { $eq: [{ $size: "$users" }, 2] },
+		});
+
+		if (!chatExists) {
+			const newChat = await Chat.create({
+				type: "single",
+				users: [sender._id, receiver._id],
+			});
+
+			await Promise.all([
+				User.findByIdAndUpdate(sender._id, {
+					$addToSet: { chats: newChat._id },
+				}),
+				User.findByIdAndUpdate(receiver._id, {
+					$addToSet: { chats: newChat._id },
+				}),
+			]);
 		}
 
 		return res.status(204).json({ message: "success" });

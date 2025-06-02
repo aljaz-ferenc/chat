@@ -1,4 +1,4 @@
-import {Endpoints} from "../../Ednpoints";
+import {Endpoints} from "../../Endpoints";
 import type {FriendRequestAction} from "../../types";
 
 export async function fetchFriendRequest(senderId: string, receiverId: string, action: FriendRequestAction) {

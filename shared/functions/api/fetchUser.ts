@@ -1,4 +1,4 @@
-import {Endpoints} from "../../Ednpoints";
+import {Endpoints} from "../../Endpoints";
 import type {User} from "../../types";
 
 export async function fetchUser(clerkId: string): Promise<User> {

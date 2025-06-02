@@ -1,48 +1,12 @@
-import { Link, Outlet } from "react-router";
+import { Outlet } from "react-router";
 import { FilterIcon, PlusIcon, SearchIcon } from "../assets/icons/icons.tsx";
-import UserCard from "../components/UserCard.tsx";
-import { cn } from "../utils/utils.ts";
-
-export const fakeUsers = [
-	{
-		id: "1",
-		name: "Jasmin The Batman",
-		message:
-			"Hello, how are you? Hello, how are you? Hello, how are you? Hello, how are you?",
-		isTyping: true,
-		lastMessage: "45 min",
-	},
-	{
-		id: "2",
-		name: "Jane Doe",
-		message: "Hello, how are you?",
-		isTyping: false,
-		lastMessage: "1 day",
-	},
-	{
-		id: "3",
-		name: "Jane Doe",
-		message: "Hello, how are you?",
-		isTyping: false,
-		lastMessage: "2 days",
-	},
-	{
-		id: "4",
-		name: "Jane Doe",
-		message: "Hello, how are you?",
-		isTyping: true,
-		lastMessage: "1 hour",
-	},
-	{
-		id: "5",
-		name: "Jane Doe",
-		message: "Hello, how are you?",
-		isTyping: false,
-		lastMessage: "2 hours",
-	},
-];
+import ChatPreview from "../components/chat/ChatPreview.tsx";
+import MessageInput from "../components/chat/MessageInput.tsx";
+import useChats from "../hooks/api/useChats.ts";
 
 export default function ChatLayout() {
+	const { data: chats } = useChats();
+
 	return (
 		<div className="flex">
 			<div className="min-w-[320px] h-full bg-primary border-r border-border">
@@ -73,31 +37,15 @@ export default function ChatLayout() {
 						placeholder="Search messages..."
 					/>
 				</div>
-				<div className="flex flex-col mt-4">
-					{fakeUsers.map((user) => (
-						<Link
-							to={`${user.id}`}
-							className={cn([
-								"cursor-pointer bg-primary hover:bg-background transition-all px-6",
-							])}
-							key={user.id}
-							type="button"
-						>
-							<UserCard
-								user={user}
-								showLastMessageTime
-								showTypingStatus
-								className="py-3"
-							/>
-						</Link>
+				<div className="flex flex-col mt-4 p-6">
+					{chats?.map((chat) => (
+						<ChatPreview key={chat._id} chat={chat} />
 					))}
 				</div>
 			</div>
 			<div className="w-full bg-primary flex flex-col">
 				<Outlet />
-				<div className="h-[88px] bg-primary border-t border-border p-6">
-					MESSAGE INPUT
-				</div>
+				<MessageInput />
 			</div>
 		</div>
 	);

@@ -1,5 +1,7 @@
 const { Server } = require("socket.io");
 const http = require("node:http");
+const { connectToDatabase } = require("./models/mongoose");
+const User = require("./models/User");
 
 const onlineUsers = new Map();
 let io;
@@ -15,8 +17,13 @@ function initSocket(app) {
 	});
 
 	io.on("connection", (socket) => {
-		socket.on("online", (userId) => {
+		socket.on("online", async (userId) => {
 			onlineUsers.set(userId, socket.id);
+			await connectToDatabase();
+			const user = await User.findById(userId).select("chats");
+			for (const chatId of user.chats) {
+				socket.join(chatId.toString());
+			}
 		});
 
 		socket.on("disconnect", () => {

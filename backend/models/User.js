@@ -103,6 +103,13 @@ const userSchema = new mongoose.Schema(
 				default: true,
 			},
 		},
+		chats: [
+			{
+				type: mongoose.SchemaTypes.ObjectId,
+				ref: "Chat",
+				default: [],
+			},
+		],
 	},
 	{ timestamps: true },
 );

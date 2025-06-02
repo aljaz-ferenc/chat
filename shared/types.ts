@@ -26,7 +26,9 @@ export type User = {
     },
     notifications: {
         notifications: Notification[],
-        opened: boolean }
+        opened: boolean
+    },
+    chats: string[]
 }
 
 export type Contact = User & {mutualFriends: string[]}
@@ -38,4 +40,22 @@ export type Notification = {
     read: boolean,
     type: 'friendRequest',
     from: User,
+}
+
+export type Chat = {
+    _id: string,
+    type: 'single' | 'group',
+    users: User[],
+    lastMessage: Message
+}
+
+export type Message = {
+    _id: string,
+    user: User['_id'],
+    chat: Chat['_id'],
+    content:{
+        markdown: string
+    },
+    createdAt: Date,
+    updatedAt: Date
 }

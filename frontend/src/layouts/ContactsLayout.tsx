@@ -1,51 +1,12 @@
-import {Link, Outlet, useNavigate} from "react-router";
-import { FilterIcon, PlusIcon, SearchIcon } from "../assets/icons/icons.tsx";
+import { Link, Outlet, useNavigate } from "react-router";
+import { SearchIcon } from "../assets/icons/icons.tsx";
 import UserCard from "../components/UserCard.tsx";
 import useContacts from "../hooks/api/useContacts.ts";
 import { cn } from "../utils/utils.ts";
 
-export const fakeUsers = [
-	{
-		id: "1",
-		name: "Jasmin The Batman",
-		message:
-			"Hello, how are you? Hello, how are you? Hello, how are you? Hello, how are you?",
-		isTyping: true,
-		lastMessage: "45 min",
-	},
-	{
-		id: "2",
-		name: "Jane Doe",
-		message: "Hello, how are you?",
-		isTyping: false,
-		lastMessage: "1 day",
-	},
-	{
-		id: "3",
-		name: "Jane Doe",
-		message: "Hello, how are you?",
-		isTyping: false,
-		lastMessage: "2 days",
-	},
-	{
-		id: "4",
-		name: "Jane Doe",
-		message: "Hello, how are you?",
-		isTyping: true,
-		lastMessage: "1 hour",
-	},
-	{
-		id: "5",
-		name: "Jane Doe",
-		message: "Hello, how are you?",
-		isTyping: false,
-		lastMessage: "2 hours",
-	},
-];
-
 export default function ContactsLayout() {
 	const { data: contacts, isPending } = useContacts();
-	const navigate = useNavigate()
+	const navigate = useNavigate();
 
 	if (isPending) {
 		return <div>Loading contacts...</div>;
@@ -57,7 +18,7 @@ export default function ContactsLayout() {
 				<div className="py-5 px-6 flex gap-4">
 					<h3 className="font-bold text-2xl mr-auto text-white">Contacts</h3>
 					<button
-						onClick={()=>navigate('/contacts')}
+						onClick={() => navigate("/contacts")}
 						type="button"
 						className="flex gap-2 items-center text-muted [&_svg]:fill-muted font-bold text-xs hover:text-message-primary hover:[&_svg]:fill-message-primary cursor-pointer"
 					>

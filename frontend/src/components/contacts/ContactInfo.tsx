@@ -5,23 +5,23 @@ import {
 	isFriend,
 	isIncomingRequest,
 	isPendingRequest,
-} from "../../../shared/functions/utils.tsx";
+} from "../../../../shared/functions/utils.tsx";
 import type {
 	Contact,
 	FriendRequestAction,
 	User,
-} from "../../../shared/types.ts";
+} from "../../../../shared/types.ts";
 import {
 	BuildingsIcon,
 	CakeIcon,
 	EarthIcon,
 	EnvelopeIcon,
 	PhoneIcon,
-} from "../assets/icons/icons.tsx";
-import useFriendRequest from "../hooks/api/useFriendRequest.ts";
-import useUserStore from "../state/useUserStore.ts";
-import { cn } from "../utils/utils.ts";
-import IconButton, { type Icons } from "./ui/IconButton.tsx";
+} from "../../assets/icons/icons.tsx";
+import useFriendRequest from "../../hooks/api/useFriendRequest.ts";
+import useUserStore from "../../state/useUserStore.ts";
+import { cn } from "../../utils/utils.ts";
+import IconButton, { type Icons } from "../ui/IconButton.tsx";
 
 type ContactInfoProps = {
 	contact: Contact;

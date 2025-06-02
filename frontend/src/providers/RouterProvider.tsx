@@ -1,7 +1,8 @@
 import { RouterProvider as Provider, createBrowserRouter } from "react-router";
-import Contact from "../components/Contact.tsx";
-import Messages from "../components/Messages.tsx";
+import { Routes } from "../../../shared/Routes.enum.ts";
 import SearchUsers from "../components/SearchUsers.tsx";
+import Messages from "../components/chat/Messages.tsx";
+import Contact from "../components/contacts/Contact.tsx";
 import ChatLayout from "../layouts/ChatLayout.tsx";
 import ContactsLayout from "../layouts/ContactsLayout.tsx";
 import RootLayout from "../layouts/RootLayout.tsx";
@@ -11,15 +12,15 @@ import SignUpRoute from "../routes/SignUp.route.tsx";
 
 const router = createBrowserRouter([
 	{
-		path: "/sign-in",
+		path: Routes.SIGN_IN,
 		element: <SignInRoute />,
 	},
 	{
-		path: "sign-up",
+		path: Routes.SIGN_UP,
 		element: <SignUpRoute />,
 	},
 	{
-		path: "/",
+		path: Routes.HOME,
 		element: (
 			<ProtectedRoute>
 				{" "}
@@ -28,17 +29,17 @@ const router = createBrowserRouter([
 		),
 		children: [
 			{
-				path: "chat",
+				path: Routes.CHATS,
 				element: <ChatLayout />,
 				children: [
 					{
-						path: ":id",
+						path: ":chatId",
 						element: <Messages />,
 					},
 				],
 			},
 			{
-				path: "contacts",
+				path: Routes.CONTACTS,
 				element: <ContactsLayout />,
 				children: [
 					{
