@@ -44,7 +44,7 @@ export default function ContactsLayout() {
 					/>
 				</div>
 				<div className="flex flex-col mt-4">
-					{contacts.map((user) => (
+					{contacts?.map((user) => (
 						<Link
 							to={`${user._id}`}
 							className={cn([

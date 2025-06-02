@@ -11,10 +11,9 @@ exports.getAllChats = async (req, res) => {
 			return res.status(404).json({ message: "User not found" });
 		}
 
-		const chats = await Chat.find({ users: userId }).populate(
-			"users",
-			"firstName lastName username",
-		);
+		const chats = await Chat.find({ users: userId })
+			.populate("users", "firstName lastName username")
+			.populate("lastMessage");
 
 		res.status(200).json(chats);
 	} catch (error) {

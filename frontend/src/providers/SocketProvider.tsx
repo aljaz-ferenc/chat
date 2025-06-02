@@ -2,7 +2,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { type PropsWithChildren, useEffect } from "react";
 import { io } from "socket.io-client";
 import { useShallow } from "zustand/react/shallow";
-import type { Message } from "../../../shared/types.ts";
+import type { Chat, Message } from "../../../shared/types.ts";
 import useUser from "../hooks/api/useUser.ts";
 import useUserStore from "../state/useUserStore.ts";
 // @ts-ignore
@@ -25,6 +25,14 @@ export default function SocketProvider({ children }: PropsWithChildren) {
 			queryClient.setQueryData(
 				["messages", { chatId: message.chat }],
 				(oldMessages: Message[]) => [...oldMessages, message],
+			);
+			queryClient.setQueryData(["chats"], (chats: Chat[]) =>
+				chats.map((chat) => {
+					if (chat._id === message.chat) {
+						return { ...chat, lastMessage: message };
+					}
+					return chat;
+				}),
 			);
 		});
 

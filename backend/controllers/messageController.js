@@ -1,5 +1,6 @@
 const { connectToDatabase } = require("../models/mongoose");
 const Message = require("../models/Message");
+const Chat = require("../models/Chat");
 const { io } = require("../socket");
 
 exports.createMessage = async (req, res) => {
@@ -7,6 +8,9 @@ exports.createMessage = async (req, res) => {
 		const { message } = req.body;
 		await connectToDatabase();
 		const newMessage = await Message.create(message);
+		await Chat.findByIdAndUpdate(message.chat, {
+			lastMessage: newMessage,
+		});
 
 		io().to(message.chat).emit("new-message", newMessage);
 

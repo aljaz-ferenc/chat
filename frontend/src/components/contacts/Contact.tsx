@@ -11,6 +11,10 @@ export default function Contact() {
 		return <div>Loading contact</div>;
 	}
 
+	if (!isPending && !contact) {
+		return <div>Contact not found</div>;
+	}
+
 	return (
 		<div className="bg-background h-full w-full p-6 ">
 			<div className="bg-primary rounded-2xl overflow-hidden max-w-6xl mx-auto">

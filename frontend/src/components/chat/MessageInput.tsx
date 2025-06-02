@@ -26,7 +26,7 @@ export default function MessageInput() {
 					content: {
 						markdown,
 					},
-				});
+				}).then(() => setMarkdown(""));
 			}
 		},
 		[chatId, markdown, createMessage, userId],

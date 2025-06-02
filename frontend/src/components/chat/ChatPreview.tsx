@@ -14,11 +14,12 @@ export default function ChatPreview({ chat }: ChatPreviewProps) {
 		const otherUser = chat.users.find((u) => u._id !== thisUserId);
 
 		if (!otherUser) return;
+		console.log(chat);
 
 		return (
 			<UserCard
 				user={otherUser}
-				bottomText={"Last message goes here..."}
+				bottomText={chat.lastMessage.content.markdown}
 				showUsername={false}
 				navigateTo={chat._id}
 			/>
