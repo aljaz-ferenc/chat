@@ -36,6 +36,36 @@ export default function SocketProvider({ children }: PropsWithChildren) {
 			);
 		});
 
+		socket.on(
+			"delete-message",
+			({
+				messageId,
+				chatId,
+			}: {
+				messageId: Message["_id"];
+				chatId: Message["chat"];
+			}) => {
+				const updatedMessages = queryClient.setQueryData(
+					["messages", { chatId }],
+					(oldMessages: Message[] = []) =>
+						oldMessages.filter((m) => m._id !== messageId),
+				) as Message[];
+
+				const lastMessage = updatedMessages.at(-1) ?? null;
+				console.log("LAST_MESSAGE: ", lastMessage);
+
+				console.log("LAST_MESSAGE: ", lastMessage);
+				queryClient.setQueryData(["chats"], (chats: Chat[] = []) =>
+					chats.map((chat) => {
+						if (chat._id === chatId) {
+							return { ...chat, lastMessage };
+						}
+						return chat;
+					}),
+				);
+			},
+		);
+
 		//TODO: use same event for each if they do the same thing, but wait for confirmation
 		socket.on("friendRequest-incoming", async () => {
 			await refetch();

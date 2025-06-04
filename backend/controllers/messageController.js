@@ -9,7 +9,7 @@ exports.createMessage = async (req, res) => {
 		await connectToDatabase();
 		const newMessage = await Message.create(message);
 		await Chat.findByIdAndUpdate(message.chat, {
-			lastMessage: newMessage,
+			lastMessage: newMessage._id,
 		});
 
 		io().to(message.chat).emit("new-message", newMessage);
@@ -26,6 +26,34 @@ exports.getMessagesByChat = async (req, res) => {
 		const messages = await Message.find({ chat: chatId });
 
 		res.status(200).json(messages);
+	} catch (error) {
+		res.status(500).json({ message: "Server error", error });
+	}
+};
+
+exports.deleteMessage = async (req, res) => {
+	try {
+		const { messageId, chatId, lastMessageId } = req.body;
+		await connectToDatabase();
+		const deletedMessage = await Message.findByIdAndDelete(messageId);
+
+		if (!deletedMessage) {
+			return res.sendStatus(404);
+		}
+
+		console.log("LAST_MESSAGE_ID: ", lastMessageId);
+
+		if (lastMessageId && messageId === lastMessageId) {
+			await Chat.findByIdAndUpdate(chatId, {
+				lastMessage: new mongoose.Types.ObjectId(lastMessageId),
+			});
+		}
+
+		io()
+			.to(chatId)
+			.emit("delete-message", { messageId, chatId, lastMessageId });
+
+		res.sendStatus(204);
 	} catch (error) {
 		res.status(500).json({ message: "Server error", error });
 	}

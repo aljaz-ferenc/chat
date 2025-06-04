@@ -50,7 +50,7 @@ export default function UserCard({
 				</div>
 				<div className="flex items-center gap-2">
 					<p className="text-muted text-xs truncate max-w-40 text-left">
-						{bottomText || user.message}
+						{bottomText}
 					</p>
 					{/*{showLastMessageTime && (*/}
 					{/*	<span className="text-xs text-muted/50 w-max">*/}
