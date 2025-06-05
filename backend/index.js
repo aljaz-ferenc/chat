@@ -22,7 +22,7 @@ app.use("/api/v1/friendRequest", friendRequestRouter);
 app.use("/api/v1/notifications", notificationsRouter);
 app.use("/api/v1/contacts", contactsRouter);
 app.use("/api/v1/chats", chatsRouter);
-app.use("/api/v1/messages", messagesRouter)
+app.use("/api/v1/messages", messagesRouter);
 
 server.listen(port, () => {
 	console.log(`Server listening on port ${port}`);

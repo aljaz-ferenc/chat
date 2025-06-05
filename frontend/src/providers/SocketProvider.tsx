@@ -1,12 +1,14 @@
 import { useQueryClient } from "@tanstack/react-query";
-import { type PropsWithChildren, useEffect } from "react";
-import { io } from "socket.io-client";
+import { type PropsWithChildren, createContext, useEffect } from "react";
+import { type Socket, io } from "socket.io-client";
 import { useShallow } from "zustand/react/shallow";
 import type { Chat, Message } from "../../../shared/types.ts";
 import useUser from "../hooks/api/useUser.ts";
 import useUserStore from "../state/useUserStore.ts";
 // @ts-ignore
 const socket = io(import.meta.env.VITE_BACKEND_URL, { autoConnect: false });
+
+export const SocketContext = createContext<Socket | null>(null);
 
 export default function SocketProvider({ children }: PropsWithChildren) {
 	const userId = useUserStore(useShallow((state) => state.user?._id));
@@ -51,6 +53,7 @@ export default function SocketProvider({ children }: PropsWithChildren) {
 						oldMessages.filter((m) => m._id !== messageId),
 				) as Message[];
 
+				//@ts-ignore
 				const lastMessage = updatedMessages.at(-1) ?? null;
 				console.log("LAST_MESSAGE: ", lastMessage);
 
@@ -97,5 +100,7 @@ export default function SocketProvider({ children }: PropsWithChildren) {
 		};
 	}, [userId, refetch, queryClient]);
 
-	return <>{children}</>;
+	return (
+		<SocketContext.Provider value={socket}>{children}</SocketContext.Provider>
+	);
 }

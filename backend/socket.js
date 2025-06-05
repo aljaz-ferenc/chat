@@ -26,6 +26,10 @@ function initSocket(app) {
 			}
 		});
 
+		socket.on("typing", ({ isTyping, userId, chatId }) => {
+			io.to(chatId).emit("typing", { userId, isTyping });
+		});
+
 		socket.on("disconnect", () => {
 			for (const [userId, socketId] of onlineUsers.entries()) {
 				if (socketId === socket.id) {

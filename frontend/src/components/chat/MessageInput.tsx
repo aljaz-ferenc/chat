@@ -1,7 +1,16 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import {
+	type RefObject,
+	use,
+	useCallback,
+	useEffect,
+	useRef,
+	useState,
+} from "react";
 import { useParams } from "react-router";
 import { useShallow } from "zustand/react/shallow";
 import useCreateMessage from "../../hooks/api/useCreateMessage";
+import useIsTyping from "../../hooks/useIsTyping.tsx";
+import { SocketContext } from "../../providers/SocketProvider.tsx";
 import useUserStore from "../../state/useUserStore";
 import IconButton from "../ui/IconButton";
 
@@ -11,6 +20,12 @@ export default function MessageInput() {
 	const { mutateAsync: createMessage } = useCreateMessage();
 	const userId = useUserStore(useShallow((state) => state.user?._id));
 	const { chatId } = useParams();
+	const isTyping = useIsTyping(inputRef as RefObject<HTMLElement>, 500);
+	const socket = use(SocketContext);
+
+	useEffect(() => {
+		socket?.emit("typing", { isTyping, userId, chatId });
+	}, [isTyping, socket, userId, chatId]);
 
 	const handleKeyPress = useCallback(
 		async (e: KeyboardEvent) => {

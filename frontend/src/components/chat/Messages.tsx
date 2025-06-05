@@ -1,10 +1,13 @@
 import { EditIcon } from "lucide-react";
+import { use, useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { useShallow } from "zustand/react/shallow";
-import type { Message } from "../../../../shared/types.ts";
+import type { Message, User } from "../../../../shared/types.ts";
 import { TrashIcon } from "../../assets/icons/icons.tsx";
+import useChat from "../../hooks/api/useChat.ts";
 import useDeleteMessage from "../../hooks/api/useDeleteMessage.ts";
 import useMessages from "../../hooks/api/useMessages.ts";
+import { SocketContext } from "../../providers/SocketProvider.tsx";
 import useUserStore from "../../state/useUserStore.ts";
 import { cn } from "../../utils/utils.ts";
 import {
@@ -16,10 +19,39 @@ import {
 import IconButton from "../ui/IconButton.tsx";
 
 export default function Messages() {
+	const socket = use(SocketContext);
 	const { chatId } = useParams();
 	const { data: messages } = useMessages(chatId);
 	const thisUserId = useUserStore(useShallow((state) => state.user?._id));
 	const { mutateAsync: deleteMessage } = useDeleteMessage();
+	const [typingUsers, setTypingUsers] = useState<Set<string>>(new Set());
+	const { data: chat } = useChat();
+
+	useEffect(() => {
+		if (!socket) return;
+
+		const handleTyping = ({
+			userId,
+			isTyping,
+		}: { userId: string; isTyping: boolean }) => {
+			setTypingUsers((prev) => {
+				const newSet = new Set(prev);
+
+				if (isTyping) {
+					newSet.add(userId);
+				} else {
+					newSet.delete(userId);
+				}
+				return newSet;
+			});
+		};
+
+		socket.on("typing", handleTyping);
+
+		return () => {
+			socket.off("typing", handleTyping);
+		};
+	}, [socket]);
 
 	if (!messages) return <div>Loading messages...</div>;
 	if (!thisUserId) return <div>User not found...</div>;
@@ -102,6 +134,22 @@ export default function Messages() {
 					</div>
 				);
 			})}
+			<div className="mt-auto">
+				{Array.from(typingUsers).map((userId) => {
+					if (userId === thisUserId) return null;
+
+					return (
+						<p className="text-muted text-sm" key={userId}>
+							{
+								chat.users.find(
+									(u: Pick<User, "firstName" | "_id">) => u._id === userId,
+								).firstName
+							}{" "}
+							is typing...
+						</p>
+					);
+				})}
+			</div>
 		</div>
 	);
 }

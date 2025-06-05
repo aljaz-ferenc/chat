@@ -1,5 +1,6 @@
 const User = require("../models/User");
 const Chat = require("../models/Chat");
+const { connectToDatabase } = require("../models/mongoose");
 
 exports.getAllChats = async (req, res) => {
 	try {
@@ -16,6 +17,21 @@ exports.getAllChats = async (req, res) => {
 			.populate("lastMessage");
 
 		res.status(200).json(chats);
+	} catch (error) {
+		res.status(500).json({ message: "Server error" });
+	}
+};
+exports.getChat = async (req, res) => {
+	try {
+		const { chatId } = req.params;
+		await connectToDatabase();
+		const chat = await Chat.findById(chatId).populate("users", "firstName");
+
+		if (!chat) {
+			res.status(404).json({ message: "Chat not found" });
+		}
+
+		res.status(200).json(chat);
 	} catch (error) {
 		res.status(500).json({ message: "Server error" });
 	}
