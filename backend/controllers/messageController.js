@@ -79,3 +79,21 @@ exports.editMessage = async (req, res) => {
 		res.status(500).json({ message: "Server error", error });
 	}
 };
+
+exports.addReaction = async (req, res) => {
+	try {
+		const { messageId } = req.params;
+		const { reaction } = req.body;
+
+		await connectToDatabase();
+		const message = await Message.findByIdAndUpdate(messageId, {
+			$addToSet: { reactions: reaction },
+		});
+
+		io().to(message.chat.toString()).emit("reaction", {reaction, chatId: message.chat.toString(), messageId});
+
+		res.sendStatus(204);
+	} catch (error) {
+		res.status(500).json({ message: "Server error", error });
+	}
+};

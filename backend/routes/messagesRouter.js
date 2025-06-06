@@ -10,4 +10,5 @@ router.route("/:chatId").get(messageController.getMessagesByChat);
 
 router.route("/:messageId").patch(messageController.editMessage);
 
+router.route("/:messageId/reactions").post(messageController.addReaction);
 module.exports = router;

@@ -59,4 +59,8 @@ export type Message = {
     edited: boolean;
     createdAt: Date;
     updatedAt: Date;
+    reactions: {
+        emoji: string,
+        by: string
+    }
 }

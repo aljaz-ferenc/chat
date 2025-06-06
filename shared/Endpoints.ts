@@ -14,4 +14,5 @@ export class Endpoints {
     public static messages = (chatId?: Chat['_id']) =>
         `${BASE_URL}/messages` + (chatId ? `/${chatId}` : '');
     public static message = (messageId: Message['_id']) => `${BASE_URL}/messages/${messageId}`
+    public static reactions = (messageId: Message['_id']) => `${BASE_URL}/messages/${messageId}/reactions`
 }

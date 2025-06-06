@@ -38,6 +38,25 @@ export default function SocketProvider({ children }: PropsWithChildren) {
 			);
 		});
 
+		socket.on("reaction", ({ reaction, chatId, messageId }) => {
+			queryClient.setQueryData(
+				["messages", { chatId }],
+				(oldMessages: Message[]) => {
+					return oldMessages.map((m) => {
+						if (m._id === messageId) {
+							const updatedReactions = [...m.reactions, reaction];
+
+							return {
+								...m,
+								reactions: updatedReactions,
+							};
+						}
+						return m;
+					});
+				},
+			);
+		});
+
 		socket.on(
 			"delete-message",
 			({
