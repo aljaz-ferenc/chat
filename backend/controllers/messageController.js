@@ -58,3 +58,24 @@ exports.deleteMessage = async (req, res) => {
 		res.status(500).json({ message: "Server error", error });
 	}
 };
+
+exports.editMessage = async (req, res) => {
+	try {
+		const { messageId } = req.params;
+		const { markdown, chatId } = req.body;
+
+		await connectToDatabase();
+		const message = await Message.findByIdAndUpdate(messageId, {
+			$set: { "content.markdown": markdown, edited: true },
+		});
+
+		if (!message) {
+			res.status(404).json({ message: "Message not found" });
+		}
+
+		io().to(chatId).emit("edit-message", { messageId, markdown });
+		res.sendStatus(204);
+	} catch (error) {
+		res.status(500).json({ message: "Server error", error });
+	}
+};

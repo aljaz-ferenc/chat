@@ -13,6 +13,10 @@ const messageSchema = new mongoose.Schema(
 		content: {
 			markdown: String,
 		},
+		edited: {
+			type: Boolean,
+			default: false,
+		},
 	},
 	{ timestamps: true },
 );

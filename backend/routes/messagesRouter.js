@@ -8,4 +8,6 @@ router
 
 router.route("/:chatId").get(messageController.getMessagesByChat);
 
+router.route("/:messageId").patch(messageController.editMessage);
+
 module.exports = router;

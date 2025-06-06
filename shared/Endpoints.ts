@@ -1,4 +1,4 @@
-import type {Chat, FriendRequestAction, NotificationAction, User} from "./types";
+import type {Chat, FriendRequestAction, Message, NotificationAction, User} from "./types";
 
 const BASE_URL = '/api/v1'
 
@@ -13,4 +13,5 @@ export class Endpoints {
     public static chats = (userId: User['_id']) => `${BASE_URL}/chats/user/${userId}`
     public static messages = (chatId?: Chat['_id']) =>
         `${BASE_URL}/messages` + (chatId ? `/${chatId}` : '');
+    public static message = (messageId: Message['_id']) => `${BASE_URL}/messages/${messageId}`
 }

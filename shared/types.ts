@@ -50,12 +50,13 @@ export type Chat = {
 }
 
 export type Message = {
-    _id: string,
-    user: User['_id'],
-    chat: Chat['_id'],
+    _id: string;
+    user: User['_id'];
+    chat: Chat['_id'];
     content:{
         markdown: string
-    },
-    createdAt: Date,
-    updatedAt: Date
+    };
+    edited: boolean;
+    createdAt: Date;
+    updatedAt: Date;
 }
