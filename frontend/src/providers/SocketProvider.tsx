@@ -74,9 +74,7 @@ export default function SocketProvider({ children }: PropsWithChildren) {
 
 				//@ts-ignore
 				const lastMessage = updatedMessages.at(-1) ?? null;
-				console.log("LAST_MESSAGE: ", lastMessage);
 
-				console.log("LAST_MESSAGE: ", lastMessage);
 				queryClient.setQueryData(["chats"], (chats: Chat[] = []) =>
 					chats.map((chat) => {
 						if (chat._id === chatId) {

@@ -5,11 +5,18 @@ import {
 	PopoverTrigger,
 } from "@radix-ui/react-popover";
 import { EditIcon } from "lucide-react";
-import { useCallback, useEffect, useRef, useState } from "react";
+import {
+	type Dispatch,
+	type SetStateAction,
+	useCallback,
+	useEffect,
+	useRef,
+	useState,
+} from "react";
 import { useParams } from "react-router";
 import { useShallow } from "zustand/react/shallow";
 import type { Message as TMessage } from "../../../../shared/types.ts";
-import { TrashIcon } from "../../assets/icons/icons.tsx";
+import { ReplyIcon, TrashIcon } from "../../assets/icons/icons.tsx";
 import useDeleteMessage from "../../hooks/api/useDeleteMessage.ts";
 import useEditMessage from "../../hooks/api/useEditMessage.ts";
 import useReactToMessage from "../../hooks/api/useReactToMessage.ts";
@@ -22,15 +29,22 @@ import {
 	DropdownMenuTrigger,
 } from "../ui/DropdownMenu.tsx";
 import IconButton from "../ui/IconButton.tsx";
+import UserTag from "./UserTag.tsx";
 
 type MessageProps = {
 	message: TMessage;
+	setReplyingTo: Dispatch<SetStateAction<TMessage["_id"]>>;
+	replyingTo: TMessage;
 };
 
-export default function Message({ message }: MessageProps) {
+export default function Message({
+	message,
+	setReplyingTo,
+	replyingTo,
+}: MessageProps) {
 	const { mutateAsync: editMessage } = useEditMessage();
 	const thisUserId = useUserStore(useShallow((state) => state.user?._id));
-	const isMine = message.user === thisUserId;
+	const isMine = message.user._id === thisUserId;
 	const { mutateAsync: deleteMessage } = useDeleteMessage();
 	const [isEditing, setIsEditing] = useState(false);
 	const [editedMarkdown, setEditedMarkdown] = useState(
@@ -69,14 +83,15 @@ export default function Message({ message }: MessageProps) {
 	}, [handleKeyPress]);
 
 	return (
-		<div key={message._id}>
-			<div
-				className={cn([
-					"group w-full",
-					isMine ? "" : "grid grid-cols-[32px_auto_auto] gap-2",
-				])}
-			>
-				{!isMine && (
+		<div
+			key={message._id}
+			className={cn([
+				message.replyTo &&
+					"ml-2 relative after:content-[''] after:absolute after:w-px after:h-full after:-left-2 after:top-0 after:bg-white",
+			])}
+		>
+			<div className={cn(["group w-full"])}>
+				<div className="flex gap-2 items-center">
 					<div className="rounded-full overflow-hidden h-[32px] aspect-square">
 						<img
 							src="https://picsum.photos/32"
@@ -84,8 +99,23 @@ export default function Message({ message }: MessageProps) {
 							alt=""
 						/>
 					</div>
+					<span className="text-white">
+						{message.user.firstName} {message.user.lastName}
+					</span>
+				</div>
+				{message.replyTo?.user?.firstName && (
+					<div className="text-muted mt-2 flex items-center gap-2">
+						<div className="h-4 [&_svg]:h-full">
+							<ReplyIcon />
+						</div>
+						<UserTag user={message.replyTo.user} className="text-sm" />
+						<span className="text-muted/50 text-sm">
+							{message.replyTo?.content?.markdown}
+						</span>
+					</div>
 				)}
-				<div className="flex gap-2 justify-end">
+
+				<div className="flex gap-2  items-center">
 					<div>
 						{!isEditing ? (
 							<MessageMarkdown message={message} isMine={isMine} />
@@ -99,48 +129,6 @@ export default function Message({ message }: MessageProps) {
 						)}
 						<MessageFiles messageId={message._id} />
 					</div>
-					{isMine && (
-						<DropdownMenu>
-							<DropdownMenuTrigger className="cursor-pointer [&_svg]:fill-muted">
-								<IconButton
-									icon="ellipsis"
-									className="h-[24px] w-[24px] p-1.5"
-								/>
-							</DropdownMenuTrigger>
-							<DropdownMenuContent className="bg-primary border-border text-muted">
-								<DropdownMenuItem
-									onClick={() => {
-										setIsEditing(true);
-										setEditedMarkdown(message.content.markdown);
-									}}
-									className="flex items-center gap-2 hover:text-white cursor-pointer transition"
-								>
-									<EditIcon />
-									Edit
-								</DropdownMenuItem>
-								<DropdownMenuItem
-									asChild
-									className="flex w-full items-center gap-2 hover:text-white cursor-pointer transition"
-								>
-									<button
-										type="button"
-										onClick={async () =>
-											await deleteMessage({
-												messageId: message._id,
-												chatId: message.chat,
-											})
-										}
-									>
-										<TrashIcon />
-										Delete
-									</button>
-								</DropdownMenuItem>
-							</DropdownMenuContent>
-						</DropdownMenu>
-					)}
-				</div>
-
-				{!isMine && (
 					<div className="h-full flex items-center z-20">
 						<div className="flex gap-2">
 							<Popover
@@ -162,10 +150,59 @@ export default function Message({ message }: MessageProps) {
 									/>
 								</PopoverContent>
 							</Popover>
-							<div>Reply</div>
 						</div>
 					</div>
-				)}
+					<DropdownMenu>
+						<DropdownMenuTrigger className="cursor-pointer [&_svg]:fill-muted">
+							<IconButton icon="ellipsis" className="h-[24px] w-[24px] p-1.5" />
+						</DropdownMenuTrigger>
+						<DropdownMenuContent className="bg-primary border-border text-muted">
+							{isMine && (
+								<DropdownMenuItem
+									onClick={() => {
+										setIsEditing(true);
+										setEditedMarkdown(message.content.markdown);
+									}}
+									className="flex items-center gap-2 hover:text-white cursor-pointer transition"
+								>
+									<EditIcon />
+									Edit
+								</DropdownMenuItem>
+							)}
+							{isMine && (
+								<DropdownMenuItem
+									asChild
+									className="flex w-full items-center gap-2 hover:text-white cursor-pointer transition"
+								>
+									<button
+										type="button"
+										onClick={async () => {
+											await deleteMessage({
+												messageId: message._id,
+												chatId: message.chat,
+											});
+											if (replyingTo._id === message._id) {
+												setReplyingTo(null);
+											}
+										}}
+									>
+										<TrashIcon />
+										Delete
+									</button>
+								</DropdownMenuItem>
+							)}
+							<DropdownMenuItem
+								asChild
+								className="flex w-full items-center gap-2 hover:text-white cursor-pointer transition"
+							>
+								<button type="button" onClick={() => setReplyingTo(message)}>
+									<ReplyIcon />
+									Reply
+								</button>
+							</DropdownMenuItem>
+						</DropdownMenuContent>
+					</DropdownMenu>
+				</div>
 			</div>
 			<FacebookCounter
 				bg={"var(--color-primary)"}
@@ -186,13 +223,13 @@ function MessageMarkdown({ message, isMine }: MessageMarkdownProps) {
 		<div
 			className={cn([
 				"text-white rounded-xl p-2",
-				isMine ? "bg-message-primary" : "bg-message-secondary",
+				// isMine ? "bg-message-primary" : "bg-message-secondary",
 			])}
 		>
 			<p>
 				{message.content.markdown}{" "}
 				{message.edited && (
-					<span className="text-muted text-xs italic">Edited</span>
+					<span className="text-muted/50 text-xs italic">Edited</span>
 				)}
 			</p>
 		</div>

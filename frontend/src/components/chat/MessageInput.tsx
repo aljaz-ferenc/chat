@@ -1,5 +1,7 @@
 import {
+	type Dispatch,
 	type RefObject,
+	type SetStateAction,
 	use,
 	useCallback,
 	useEffect,
@@ -8,13 +10,23 @@ import {
 } from "react";
 import { useParams } from "react-router";
 import { useShallow } from "zustand/react/shallow";
+import type { Message } from "../../../../shared/types.ts";
+import { PlusIcon } from "../../assets/icons/icons.tsx";
 import useCreateMessage from "../../hooks/api/useCreateMessage";
 import useIsTyping from "../../hooks/useIsTyping.tsx";
 import { SocketContext } from "../../providers/SocketProvider.tsx";
 import useUserStore from "../../state/useUserStore";
 import IconButton from "../ui/IconButton";
 
-export default function MessageInput() {
+type MessageInputProps = {
+	replyingTo: Message;
+	setReplyingTo: Dispatch<SetStateAction<Message>>;
+};
+
+export default function MessageInput({
+	replyingTo,
+	setReplyingTo,
+}: MessageInputProps) {
 	const [markdown, setMarkdown] = useState("");
 	const inputRef = useRef<HTMLTextAreaElement>(null);
 	const { mutateAsync: createMessage } = useCreateMessage();
@@ -27,6 +39,13 @@ export default function MessageInput() {
 		socket?.emit("typing", { isTyping, userId, chatId });
 	}, [isTyping, socket, userId, chatId]);
 
+	useEffect(() => {
+		if (replyingTo) {
+			console.log("haha");
+			setTimeout(() => inputRef.current.focus(), 10);
+		}
+	}, [replyingTo]);
+
 	const handleKeyPress = useCallback(
 		async (e: KeyboardEvent) => {
 			if (
@@ -34,17 +53,20 @@ export default function MessageInput() {
 				(e.code === "Enter" || e.code === "NumpadEnter")
 			) {
 				if (!userId || !chatId) return;
-
 				await createMessage({
 					user: userId,
 					chat: chatId,
 					content: {
 						markdown,
 					},
-				}).then(() => setMarkdown(""));
+					replyTo: replyingTo ? replyingTo._id : null,
+				}).then(() => {
+					setMarkdown("");
+					setReplyingTo(null);
+				});
 			}
 		},
-		[chatId, markdown, createMessage, userId],
+		[chatId, markdown, createMessage, userId, replyingTo, setReplyingTo],
 	);
 
 	useEffect(() => {
@@ -53,7 +75,22 @@ export default function MessageInput() {
 	}, [handleKeyPress]);
 
 	return (
-		<div className="h-[88px] bg-primary border-t border-border p-2">
+		<div className=" bg-primary border-t border-border p-2">
+			{replyingTo && (
+				<div className="text-muted/50 mb-3 flex items-center gap-2">
+					<button
+						type="button"
+						onClick={() => setReplyingTo(null)}
+						className="rotate-45 cursor-pointer h-6 w-6 [&_svg]:h-full"
+					>
+						<PlusIcon />
+					</button>
+					<span className="text-sm">
+						@{replyingTo.user.firstName} {replyingTo.user.lastName}:{" "}
+						{replyingTo.content.markdown}
+					</span>
+				</div>
+			)}
 			<div className="flex items-center gap-5">
 				<textarea
 					className="w-full h-full text-white p-2 bg-background rounded"

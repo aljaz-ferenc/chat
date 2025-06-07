@@ -5,7 +5,8 @@ import type { Message } from "../../../../shared/types.ts";
 export default function useCreateMessage() {
 	return useMutation({
 		mutationKey: ["message", { action: "create" }],
-		mutationFn: async (message: Pick<Message, "content" | "user" | "chat">) =>
-			await fetchCreateMessage(message),
+		mutationFn: async (
+			message: Pick<Message, "content" | "user" | "chat" | "replyTo">,
+		) => await fetchCreateMessage(message),
 	});
 }

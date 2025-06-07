@@ -12,7 +12,13 @@ exports.createMessage = async (req, res) => {
 			lastMessage: newMessage._id,
 		});
 
-		io().to(message.chat).emit("new-message", newMessage);
+		const messageWithUser = await Message.findById(newMessage._id)
+			.populate({
+				path: "user",
+			})
+			.populate({ path: "replyTo", populate: { path: "user" } });
+
+		io().to(message.chat).emit("new-message", messageWithUser);
 
 		res.sendStatus(204);
 	} catch (error) {
@@ -23,7 +29,14 @@ exports.createMessage = async (req, res) => {
 exports.getMessagesByChat = async (req, res) => {
 	try {
 		const { chatId } = req.params;
-		const messages = await Message.find({ chat: chatId });
+		const messages = await Message.find({ chat: chatId })
+			.populate("user")
+			.populate({
+				path: "replyTo",
+				populate: {
+					path: "user",
+				},
+			});
 
 		res.status(200).json(messages);
 	} catch (error) {
@@ -40,8 +53,6 @@ exports.deleteMessage = async (req, res) => {
 		if (!deletedMessage) {
 			return res.sendStatus(404);
 		}
-
-		console.log("LAST_MESSAGE_ID: ", lastMessageId);
 
 		if (lastMessageId && messageId === lastMessageId) {
 			await Chat.findByIdAndUpdate(chatId, {
@@ -90,7 +101,11 @@ exports.addReaction = async (req, res) => {
 			$addToSet: { reactions: reaction },
 		});
 
-		io().to(message.chat.toString()).emit("reaction", {reaction, chatId: message.chat.toString(), messageId});
+		io().to(message.chat.toString()).emit("reaction", {
+			reaction,
+			chatId: message.chat.toString(),
+			messageId,
+		});
 
 		res.sendStatus(204);
 	} catch (error) {

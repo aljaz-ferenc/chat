@@ -1,4 +1,6 @@
+import { useState } from "react";
 import { Outlet } from "react-router";
+import type { Message as TMessage } from "../../../shared/types.ts";
 import { FilterIcon, PlusIcon, SearchIcon } from "../assets/icons/icons.tsx";
 import ChatPreview from "../components/chat/ChatPreview.tsx";
 import MessageInput from "../components/chat/MessageInput.tsx";
@@ -6,6 +8,7 @@ import useChats from "../hooks/api/useChats.ts";
 
 export default function ChatLayout() {
 	const { data: chats } = useChats();
+	const [replyingTo, setReplyingTo] = useState<TMessage>(null);
 
 	return (
 		<div className="flex">
@@ -44,8 +47,8 @@ export default function ChatLayout() {
 				</div>
 			</div>
 			<div className="w-full bg-primary flex flex-col">
-				<Outlet />
-				<MessageInput />
+				<Outlet context={{ replyingTo, setReplyingTo }} />
+				<MessageInput replyingTo={replyingTo} setReplyingTo={setReplyingTo} />
 			</div>
 		</div>
 	);

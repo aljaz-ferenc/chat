@@ -51,7 +51,7 @@ export type Chat = {
 
 export type Message = {
     _id: string;
-    user: User['_id'];
+    user: User;
     chat: Chat['_id'];
     content:{
         markdown: string
@@ -62,5 +62,6 @@ export type Message = {
     reactions: {
         emoji: string,
         by: string
-    }
+    };
+    replyTo?: Message | null
 }

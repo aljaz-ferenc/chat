@@ -1,7 +1,7 @@
 import type {Message} from "../../types";
 import {Endpoints} from "../../Endpoints";
 
-export async function fetchCreateMessage(message: Pick<Message, 'content' | 'user' | 'chat'>){
+export async function fetchCreateMessage(message: Pick<Message, 'content' | 'user' | 'chat' | 'replyTo'>){
 
     return await fetch(Endpoints.messages(), {
         method: 'POST',
