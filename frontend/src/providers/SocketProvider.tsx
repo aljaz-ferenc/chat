@@ -24,6 +24,7 @@ export default function SocketProvider({ children }: PropsWithChildren) {
 		});
 
 		socket.on("new-message", (message: Message) => {
+			console.log("new message");
 			queryClient.setQueryData(
 				["messages", { chatId: message.chat }],
 				(oldMessages: Message[]) => [...oldMessages, message],
@@ -36,6 +37,19 @@ export default function SocketProvider({ children }: PropsWithChildren) {
 					return chat;
 				}),
 			);
+		});
+
+		socket.on("chat-rename", (data) => {
+			const { chatId, chatName } = data;
+
+			queryClient.setQueryData(["chats"], (chats: Chat[]) => {
+				return chats.map((chat) => {
+					if (chat._id === chatId) {
+						return { ...chat, name: chatName };
+					}
+					return chat;
+				});
+			});
 		});
 
 		socket.on("reaction", ({ reaction, chatId, messageId }) => {

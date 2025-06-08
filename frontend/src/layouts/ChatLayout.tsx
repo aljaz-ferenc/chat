@@ -1,14 +1,42 @@
-import { useState } from "react";
-import { Outlet } from "react-router";
+import { useEffect, useMemo, useState } from "react";
+import { Outlet, useParams } from "react-router";
 import type { Message as TMessage } from "../../../shared/types.ts";
 import { FilterIcon, PlusIcon, SearchIcon } from "../assets/icons/icons.tsx";
 import ChatPreview from "../components/chat/ChatPreview.tsx";
 import MessageInput from "../components/chat/MessageInput.tsx";
 import useChats from "../hooks/api/useChats.ts";
+import useCreateChat from "../hooks/api/useCreateChat.ts";
+import { cn } from "../utils/utils.ts";
 
 export default function ChatLayout() {
 	const { data: chats } = useChats();
-	const [replyingTo, setReplyingTo] = useState<TMessage>(null);
+	const [replyingTo, setReplyingTo] = useState<TMessage | null>(null);
+	const { chatId } = useParams();
+	const [activeChatType, setActiveChatType] = useState<"direct" | "groups">(
+		"direct",
+	);
+	const { mutateAsync: createChat } = useCreateChat();
+	const directChats = useMemo(() => {
+		return chats?.filter((chat) => chat.type === "single");
+	}, [chats]);
+
+	const groups = useMemo(() => {
+		return chats?.filter((chat) => chat.type === "group");
+	}, [chats]);
+
+	useEffect(() => {
+		setActiveChatType(() => {
+			if (chatId) {
+				const currentChat = chats?.find((chat) => chat._id === chatId);
+				return currentChat?.type === "single" ? "direct" : "groups";
+			}
+			return "direct";
+		});
+	}, [chats, chatId]);
+
+	if (!chats) {
+		return <div>Loading chats...</div>;
+	}
 
 	return (
 		<div className="flex">
@@ -40,8 +68,44 @@ export default function ChatLayout() {
 						placeholder="Search messages..."
 					/>
 				</div>
+				<div className="m-6 text-muted flex">
+					<button
+						type="button"
+						className={cn([
+							"cursor-pointer px-3 py-0.5 rounded-xl",
+							activeChatType === "direct" && "bg-background",
+						])}
+						onClick={() => setActiveChatType("direct")}
+					>
+						Direct
+					</button>
+					<button
+						type="button"
+						className={cn([
+							"cursor-pointer  px-3 py-0.5 rounded-xl",
+							activeChatType === "groups" && "bg-background",
+						])}
+						onClick={() => setActiveChatType("groups")}
+					>
+						Groups
+					</button>
+				</div>
+				{activeChatType === "groups" && (
+					<div className="mx-6">
+						<button
+							type="button"
+							className="flex items-center text-muted gap-2 w-full outline-muted outline-[1px] hover:outline-transparent rounded-xl cursor-pointer py-2 justify-center hover:text-white hover:bg-background transition"
+							onClick={async () => await createChat("group")}
+						>
+							<span className="h-7 w-7">
+								<PlusIcon />
+							</span>
+							<span className="w-max">Create group</span>
+						</button>
+					</div>
+				)}
 				<div className="flex flex-col mt-4 p-6">
-					{chats?.map((chat) => (
+					{(activeChatType === "direct" ? directChats : groups)?.map((chat) => (
 						<ChatPreview key={chat._id} chat={chat} />
 					))}
 				</div>

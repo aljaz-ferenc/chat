@@ -33,7 +33,7 @@ import UserTag from "./UserTag.tsx";
 
 type MessageProps = {
 	message: TMessage;
-	setReplyingTo: Dispatch<SetStateAction<TMessage["_id"]>>;
+	setReplyingTo: Dispatch<SetStateAction<TMessage | null>>;
 	replyingTo: TMessage;
 };
 
@@ -218,14 +218,9 @@ type MessageMarkdownProps = {
 	isMine: boolean;
 };
 
-function MessageMarkdown({ message, isMine }: MessageMarkdownProps) {
+function MessageMarkdown({ message }: MessageMarkdownProps) {
 	return (
-		<div
-			className={cn([
-				"text-white rounded-xl p-2",
-				// isMine ? "bg-message-primary" : "bg-message-secondary",
-			])}
-		>
+		<div className={cn(["text-white rounded-xl p-2"])}>
 			<p>
 				{message.content.markdown}{" "}
 				{message.edited && (

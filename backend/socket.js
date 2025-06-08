@@ -19,9 +19,11 @@ function initSocket(app) {
 	io.on("connection", (socket) => {
 		socket.on("online", async (userId) => {
 			onlineUsers.set(userId, socket.id);
+			console.log("ONLINE_USERS: ", onlineUsers);
 			await connectToDatabase();
 			const user = await User.findById(userId).select("chats");
 			for (const chatId of user.chats) {
+				console.log("user joining chat: ", chatId.toString());
 				socket.join(chatId.toString());
 			}
 		});

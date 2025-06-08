@@ -18,7 +18,7 @@ exports.createMessage = async (req, res) => {
 			})
 			.populate({ path: "replyTo", populate: { path: "user" } });
 
-		io().to(message.chat).emit("new-message", messageWithUser);
+		io().to(message.chat.toString()).emit("new-message", messageWithUser);
 
 		res.sendStatus(204);
 	} catch (error) {

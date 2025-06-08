@@ -1,4 +1,3 @@
-import { href } from "react-router";
 import {
 	BellIcon,
 	CheckmarkIcon,
@@ -8,6 +7,7 @@ import {
 	ContactIcon,
 	EllipsisIcon,
 	EmojiIcon,
+	EnvelopeIcon,
 	FacebookIcon,
 	FilterIcon,
 	ImageIcon,
@@ -47,7 +47,8 @@ export type Icons =
 	| "facebook"
 	| "x"
 	| "instagram"
-	| "tiktok";
+	| "tiktok"
+	| "envelope";
 
 const icons = {
 	logo: <LogoIcon />,
@@ -72,6 +73,7 @@ const icons = {
 	x: <XIcon />,
 	instagram: <InstagramIcon />,
 	tiktok: <TiktokIcon />,
+	envelope: <EnvelopeIcon />,
 };
 
 type IconButtonProps = {

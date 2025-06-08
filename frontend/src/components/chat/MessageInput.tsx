@@ -19,8 +19,8 @@ import useUserStore from "../../state/useUserStore";
 import IconButton from "../ui/IconButton";
 
 type MessageInputProps = {
-	replyingTo: Message;
-	setReplyingTo: Dispatch<SetStateAction<Message>>;
+	replyingTo: Message | null;
+	setReplyingTo: Dispatch<SetStateAction<Message | null>>;
 };
 
 export default function MessageInput({
@@ -63,6 +63,7 @@ export default function MessageInput({
 				}).then(() => {
 					setMarkdown("");
 					setReplyingTo(null);
+					console.log("message sent");
 				});
 			}
 		},
