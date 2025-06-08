@@ -1,5 +1,11 @@
 import { useQueryClient } from "@tanstack/react-query";
-import { use, useEffect, useState } from "react";
+import {
+	type Dispatch,
+	type SetStateAction,
+	use,
+	useEffect,
+	useState,
+} from "react";
 import { useOutletContext, useParams } from "react-router";
 import { useShallow } from "zustand/react/shallow";
 import type { Message as TMessage } from "../../../../shared/types";
@@ -18,10 +24,13 @@ export default function Messages() {
 	const [typingUsers, setTypingUsers] = useState<Set<string>>(new Set());
 	const { data: chat } = useChat();
 	const queryClient = useQueryClient();
-	const { replyingTo, setReplyingTo } = useOutletContext();
+	const { replyingTo, setReplyingTo } = useOutletContext<{
+		replyingTo: TMessage;
+		setReplyingTo: Dispatch<SetStateAction<TMessage | null>>;
+	}>();
 
 	useEffect(() => {
-		if (!socket) return;
+		if (!socket || !chat) return;
 
 		const handleTyping = ({
 			userId,
@@ -71,7 +80,7 @@ export default function Messages() {
 			socket.off("typing", handleTyping);
 			socket.off("edit-message", handleEditedMessage);
 		};
-	}, [socket, chatId, queryClient]);
+	}, [socket, chatId, queryClient, chat]);
 
 	if (!messages) return <div>Loading messages...</div>;
 	if (!thisUserId) return <div>User not found...</div>;

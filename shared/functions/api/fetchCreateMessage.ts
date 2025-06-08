@@ -1,7 +1,7 @@
-import type {Message} from "../../types";
 import {Endpoints} from "../../Endpoints";
+import type {Chat, Message, User} from "../../types";
 
-export async function fetchCreateMessage(message: Pick<Message, 'content' | 'user' | 'chat' | 'replyTo'>){
+export async function fetchCreateMessage(message: {user: User['_id'], chat: Chat['_id'], content: Message['content'], replyTo: Message['_id'] | null}){
 
     return await fetch(Endpoints.messages(), {
         method: 'POST',

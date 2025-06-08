@@ -10,4 +10,6 @@ router
 	.patch(chatController.addUsersToChat)
 	.put(chatController.renameChat);
 
+router.route("/:chatId/leave").patch(chatController.leaveChat);
+
 module.exports = router;

@@ -3,7 +3,9 @@ import { useState } from "react";
 import { Link, useParams } from "react-router";
 import { useShallow } from "zustand/react/shallow";
 import type { Chat, User } from "../../../../shared/types.ts";
+import { ReplyIcon } from "../../assets/icons/icons.tsx";
 import useAddUsersToChat from "../../hooks/api/useAddUsersToChat.ts";
+import useLeaveChat from "../../hooks/api/useLeaveChat.ts";
 import useRenameChat from "../../hooks/api/useRenameChat.tsx";
 import useUserStore from "../../state/useUserStore.ts";
 import { cn } from "../../utils/utils.ts";
@@ -39,6 +41,7 @@ export default function ChatPreview({ chat }: ChatPreviewProps) {
 	const [groupName, setGroupName] = useState("");
 	const { mutateAsync: addUsersToChat } = useAddUsersToChat();
 	const { mutateAsync: renameChat } = useRenameChat();
+	const { mutateAsync: leaveChat } = useLeaveChat();
 	const { chatId } = useParams();
 
 	if (chat.type === "group") {
@@ -92,6 +95,13 @@ export default function ChatPreview({ chat }: ChatPreviewProps) {
 									>
 										<EditIcon />
 										Rename Group
+									</DropdownMenuItem>
+									<DropdownMenuItem
+										onSelect={async () => await leaveChat(chat._id)}
+										className="flex items-center gap-2 hover:text-white cursor-pointer transition"
+									>
+										<ReplyIcon />
+										Leave Group
 									</DropdownMenuItem>
 								</DropdownMenuContent>
 							</DropdownMenu>

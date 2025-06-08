@@ -10,6 +10,7 @@ export class Endpoints {
     public static contacts = (userId: User['_id']) => `${BASE_URL}/contacts/${userId}`
     public static searchUsers = (query: string) => `${BASE_URL}/users/search/${query}`
     public static chat = (chatId?: Chat['_id']) => `${BASE_URL}/chats` + (chatId ? `/${chatId}` : '')
+    public static leaveChat = (chatId?: Chat['_id']) => `${BASE_URL}/chats/${chatId}/leave`
     public static chats = (userId: User['_id']) => `${BASE_URL}/chats/user/${userId}`
     public static messages = (chatId?: Chat['_id']) =>
         `${BASE_URL}/messages` + (chatId ? `/${chatId}` : '');

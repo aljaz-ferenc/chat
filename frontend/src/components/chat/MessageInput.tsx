@@ -30,19 +30,25 @@ export default function MessageInput({
 	const [markdown, setMarkdown] = useState("");
 	const inputRef = useRef<HTMLTextAreaElement>(null);
 	const { mutateAsync: createMessage } = useCreateMessage();
-	const userId = useUserStore(useShallow((state) => state.user?._id));
+	const [userId, user] = useUserStore(
+		useShallow((state) => [state.user?._id, state.user]),
+	);
 	const { chatId } = useParams();
 	const isTyping = useIsTyping(inputRef as RefObject<HTMLElement>, 500);
 	const socket = use(SocketContext);
 
 	useEffect(() => {
-		socket?.emit("typing", { isTyping, userId, chatId });
-	}, [isTyping, socket, userId, chatId]);
+		socket?.emit("typing", {
+			isTyping,
+			userId,
+			chatId,
+			firstName: user?.firstName,
+		});
+	}, [isTyping, socket, userId, chatId, user]);
 
 	useEffect(() => {
 		if (replyingTo) {
-			console.log("haha");
-			setTimeout(() => inputRef.current.focus(), 10);
+			setTimeout(() => inputRef.current?.focus(), 10);
 		}
 	}, [replyingTo]);
 
@@ -63,7 +69,6 @@ export default function MessageInput({
 				}).then(() => {
 					setMarkdown("");
 					setReplyingTo(null);
-					console.log("message sent");
 				});
 			}
 		},

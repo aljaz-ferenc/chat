@@ -24,7 +24,6 @@ export default function SocketProvider({ children }: PropsWithChildren) {
 		});
 
 		socket.on("new-message", (message: Message) => {
-			console.log("new message");
 			queryClient.setQueryData(
 				["messages", { chatId: message.chat }],
 				(oldMessages: Message[]) => [...oldMessages, message],
@@ -50,6 +49,25 @@ export default function SocketProvider({ children }: PropsWithChildren) {
 					return chat;
 				});
 			});
+		});
+
+		socket.on("user-left", (data) => {
+			const { chatId, userId } = data;
+			queryClient.setQueryData(["chats"], (chats: Chat[]) => {
+				return chats.map((chat) => {
+					if (chat._id === chatId) {
+						return {
+							...chat,
+							users: chat.users.filter((u) => u._id !== userId),
+						};
+					}
+					return chat;
+				});
+			});
+		});
+
+		socket.on("added-to-group", async () => {
+			await queryClient.invalidateQueries({ queryKey: ["chats"] });
 		});
 
 		socket.on("reaction", ({ reaction, chatId, messageId }) => {
