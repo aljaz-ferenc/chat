@@ -11,7 +11,9 @@ export default function useAddUsersToChat() {
 		mutationKey: ["chat-addUsers"],
 		mutationFn: async (usersIds: User["_id"][]) =>
 			await fetchAddUsersToChat(chatId as Chat["_id"], usersIds),
-		onSuccess: async () =>
-			queryClient.invalidateQueries({ queryKey: ["chats"] }),
+		onSuccess: async () =>{
+			queryClient.invalidateQueries({ queryKey: ["chats"] })
+			queryClient.invalidateQueries({queryKey: ["chat", { chatId }]})
+		}
 	});
 }

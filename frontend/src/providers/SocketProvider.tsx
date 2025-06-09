@@ -24,6 +24,7 @@ export default function SocketProvider({ children }: PropsWithChildren) {
 		});
 
 		socket.on("new-message", (message: Message) => {
+			console.log('new-message')
 			queryClient.setQueryData(
 				["messages", { chatId: message.chat }],
 				(oldMessages: Message[]) => [...oldMessages, message],

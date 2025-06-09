@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Outlet, useParams } from "react-router";
+import {Outlet, useNavigate, useParams} from "react-router";
 import type { Message as TMessage } from "../../../shared/types.ts";
 import { FilterIcon, PlusIcon, SearchIcon } from "../assets/icons/icons.tsx";
 import ChatPreview from "../components/chat/ChatPreview.tsx";
@@ -16,6 +16,7 @@ export default function ChatLayout() {
 		"direct",
 	);
 	const { mutateAsync: createChat } = useCreateChat();
+	const navigate = useNavigate()
 	const directChats = useMemo(() => {
 		return chats?.filter((chat) => chat.type === "single");
 	}, [chats]);
@@ -95,7 +96,12 @@ export default function ChatLayout() {
 						<button
 							type="button"
 							className="flex items-center text-muted gap-2 w-full outline-muted outline-[1px] hover:outline-transparent rounded-xl cursor-pointer py-2 justify-center hover:text-white hover:bg-background transition"
-							onClick={async () => await createChat("group")}
+							onClick={async () => {
+								await createChat("group")
+									.then((data) => {
+										navigate(data.chatId)
+									})
+							}}
 						>
 							<span className="h-7 w-7">
 								<PlusIcon />

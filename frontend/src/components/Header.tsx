@@ -19,6 +19,8 @@ export default function Header() {
 			state.user?.notifications?.opened,
 		]),
 	);
+
+	// @ts-ignore
 	const { pathname } = useResolvedPath();
 
 	const existsUnread = useMemo(() => {

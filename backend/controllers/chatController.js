@@ -1,5 +1,6 @@
 const User = require("../models/User");
 const Chat = require("../models/Chat");
+const Message = require("../models/Message");
 const { connectToDatabase } = require("../models/mongoose");
 const { mongoose } = require("mongoose");
 const { io, onlineUsers } = require("../socket");
@@ -70,7 +71,7 @@ exports.createChat = async (req, res) => {
 			}
 		}
 
-		res.sendStatus(201);
+		res.status(203).json({chatId: newChat._id})
 	} catch (error) {
 		console.log(error)
 		res.status(500).json({ message: "Server error" });
@@ -165,6 +166,7 @@ exports.leaveChat = async (req, res) => {
 			});
 		} else {
 			await Chat.findByIdAndDelete(chatId);
+			await Message.deleteMany({chat:chatId})
 		}
 
 		const user = await User.findByIdAndUpdate(userId, {

@@ -19,6 +19,7 @@ exports.createMessage = async (req, res) => {
 			.populate({ path: "replyTo", populate: { path: "user" } });
 
 		io().to(message.chat.toString()).emit("new-message", messageWithUser);
+		console.log('new-message')
 
 		res.sendStatus(204);
 	} catch (error) {
@@ -30,6 +31,7 @@ exports.createMessage = async (req, res) => {
 exports.getMessagesByChat = async (req, res) => {
 	try {
 		const { chatId } = req.params;
+		await connectToDatabase()
 		const messages = await Message.find({ chat: chatId })
 			.populate("user")
 			.populate({
