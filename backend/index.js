@@ -7,6 +7,7 @@ const contactsRouter = require("./routes/contactsRouter");
 const chatsRouter = require("./routes/chatsRouter");
 const messagesRouter = require("./routes/messagesRouter");
 const bodyParser = require("body-parser");
+const cors = require('cors')
 const dotenv = require("dotenv");
 dotenv.config();
 
@@ -15,6 +16,7 @@ const port = process.env.PORT || 3000;
 const { initSocket } = require("./socket");
 const { server } = initSocket(app);
 
+app.use(cors())
 app.use(clerkMiddleware());
 app.use(bodyParser.json());
 app.use("/api/v1/users", usersRouter);
