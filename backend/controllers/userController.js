@@ -1,4 +1,4 @@
-const User = require("../models/user");
+const User = require("../models/User");
 const { connectToDatabase } = require("../models/mongoose");
 
 exports.getAllUsers = async (req, res) => {
