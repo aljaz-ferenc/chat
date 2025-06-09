@@ -22,6 +22,7 @@ exports.createMessage = async (req, res) => {
 
 		res.sendStatus(204);
 	} catch (error) {
+		console.log(error)
 		res.status(500).json({ message: "Server error", error });
 	}
 };
@@ -40,6 +41,7 @@ exports.getMessagesByChat = async (req, res) => {
 
 		res.status(200).json(messages);
 	} catch (error) {
+		console.log(error)
 		res.status(500).json({ message: "Server error", error });
 	}
 };
@@ -66,6 +68,7 @@ exports.deleteMessage = async (req, res) => {
 
 		res.sendStatus(204);
 	} catch (error) {
+		console.log(error)
 		res.status(500).json({ message: "Server error", error });
 	}
 };
@@ -87,6 +90,7 @@ exports.editMessage = async (req, res) => {
 		io().to(chatId).emit("edit-message", { messageId, markdown });
 		res.sendStatus(204);
 	} catch (error) {
+		console.log(error)
 		res.status(500).json({ message: "Server error", error });
 	}
 };
@@ -109,6 +113,7 @@ exports.addReaction = async (req, res) => {
 
 		res.sendStatus(204);
 	} catch (error) {
+		console.log(error)
 		res.status(500).json({ message: "Server error", error });
 	}
 };

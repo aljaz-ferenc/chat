@@ -8,6 +8,7 @@ exports.getAllUsers = async (req, res) => {
 
 		res.status(200).json(users);
 	} catch (error) {
+		console.log(error)
 		return res.status(500).json({ message: "Server error" });
 	}
 };
@@ -22,6 +23,7 @@ exports.getUser = async (req, res) => {
 
 		res.status(200).json(user);
 	} catch (error) {
+		console.log(error)
 		return res.status(500).json({ message: "Server error" });
 	}
 };
@@ -52,6 +54,7 @@ exports.searchUsers = async (req, res) => {
 
 		res.status(200).json(users);
 	} catch (error) {
+		console.log(error)
 		console.log(error);
 		return res.status(500).json({ message: "Server error" });
 	}

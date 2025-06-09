@@ -20,6 +20,7 @@ exports.getAllChats = async (req, res) => {
 
 		res.status(200).json(chats);
 	} catch (error) {
+		console.log(error)
 		res.status(500).json({ message: "Server error" });
 	}
 };
@@ -36,6 +37,7 @@ exports.getChat = async (req, res) => {
 
 		res.status(200).json(chat);
 	} catch (error) {
+		console.log(error)
 		res.status(500).json({ message: "Server error" });
 	}
 };
@@ -70,6 +72,7 @@ exports.createChat = async (req, res) => {
 
 		res.sendStatus(201);
 	} catch (error) {
+		console.log(error)
 		res.status(500).json({ message: "Server error" });
 	}
 };
@@ -139,6 +142,7 @@ exports.renameChat = async (req, res) => {
 
 		res.sendStatus(204);
 	} catch (error) {
+		console.log(error)
 		res.status(500).json({ message: "Server error" });
 	}
 };

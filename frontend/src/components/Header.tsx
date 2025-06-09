@@ -16,7 +16,7 @@ export default function Header() {
 	const [notifications, opened] = useUserStore(
 		useShallow((state) => [
 			state.user?.notifications,
-			state.user?.notifications.opened,
+			state.user?.notifications?.opened,
 		]),
 	);
 	const { pathname } = useResolvedPath();
