@@ -16,7 +16,7 @@ export default function SocketProvider({ children }: PropsWithChildren) {
 	const queryClient = useQueryClient();
 
 	useEffect(() => {
-		if (!userId) return;
+		if (!userId || !socket.connected) return;
 		socket.connect();
 
 		socket.on("connect", () => {
@@ -24,7 +24,7 @@ export default function SocketProvider({ children }: PropsWithChildren) {
 		});
 
 		socket.on("new-message", (message: Message) => {
-			console.log('new-message')
+			console.log("new-message");
 			queryClient.setQueryData(
 				["messages", { chatId: message.chat }],
 				(oldMessages: Message[]) => [...oldMessages, message],
@@ -148,7 +148,7 @@ export default function SocketProvider({ children }: PropsWithChildren) {
 			socket.off("connect");
 			socket.disconnect();
 		};
-	}, [userId, refetch, queryClient]);
+	}, [userId, refetch, queryClient, socket]);
 
 	return (
 		<SocketContext.Provider value={socket}>{children}</SocketContext.Provider>
