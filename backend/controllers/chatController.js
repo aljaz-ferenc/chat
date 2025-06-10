@@ -3,7 +3,7 @@ const Chat = require("../models/Chat");
 const Message = require("../models/Message");
 const { connectToDatabase } = require("../models/mongoose");
 const { mongoose } = require("mongoose");
-const { io, onlineUsers } = require("../socket");
+const {getIO , onlineUsers } = require("../socket");
 
 exports.getAllChats = async (req, res) => {
 	try {
@@ -65,7 +65,8 @@ exports.createChat = async (req, res) => {
 
 		const socketId = onlineUsers.get(userId);
 		if (socketId) {
-			const socket = io().sockets.sockets.get(socketId);
+			const io = getIO()
+			const socket = io.sockets.sockets.get(socketId);
 			if (socket) {
 				socket.join(newChat._id.toString());
 			}
@@ -109,7 +110,8 @@ exports.addUsersToChat = async (req, res) => {
 		usersIds.forEach((userId) => {
 			const socketId = onlineUsers.get(userId);
 			if (socketId) {
-				const socket = io().sockets.sockets.get(socketId);
+				const io = getIO()
+				const socket = io.sockets.sockets.get(socketId);
 				if (socket) {
 					socket.join(chatId);
 					socket.emit("added-to-group", { chatId });
@@ -138,8 +140,8 @@ exports.renameChat = async (req, res) => {
 		if (!chat) {
 			return res.status(404).json({ message: "chat not found" });
 		}
-
-		io().to(chatId).emit("chat-rename", { chatId, chatName });
+		const io = getIO()
+		io.to(chatId).emit("chat-rename", { chatId, chatName });
 
 		res.sendStatus(204);
 	} catch (error) {
@@ -177,14 +179,15 @@ exports.leaveChat = async (req, res) => {
 		}
 
 		const socketId = onlineUsers.get(userId);
+			const io = getIO()
 		if (socketId) {
-			const socket = io().sockets.sockets.get(socketId);
+			const socket = io.sockets.sockets.get(socketId);
 			if (socket) {
 				socket.leave(chatId);
 			}
 		}
 
-		io().to(chatId).emit("user-left", { chatId, userId });
+		io.to(chatId).emit("user-left", { chatId, userId });
 
 		res.sendStatus(204);
 	} catch (error) {

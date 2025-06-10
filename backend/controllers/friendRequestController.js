@@ -1,7 +1,7 @@
 const { connectToDatabase } = require("../models/mongoose");
 const User = require("../models/User");
 const Chat = require("../models/Chat");
-const { onlineUsers, io } = require("../socket");
+const { onlineUsers, getIO } = require("../socket");
 const { isOnline } = require("../utils/socket");
 
 exports.sendFriendRequest = async (req, res) => {
@@ -37,10 +37,11 @@ exports.sendFriendRequest = async (req, res) => {
 
 		if (onlineUsers.has(receiverId)) {
 			const receiver = onlineUsers.get(receiverId);
-			io().to(receiver).emit("friendRequest-incoming", {
+			const io = getIO()
+			io.to(receiver).emit("friendRequest-incoming", {
 				from: senderId,
 			});
-			io().to(receiver).emit("notification-new");
+			io.to(receiver).emit("notification-new");
 		}
 
 		return res.sendStatus(204);
@@ -75,7 +76,8 @@ exports.declineFriendRequest = async (req, res) => {
 
 		if (onlineUsers.has(receiverId)) {
 			const receiver = onlineUsers.get(receiverId);
-			io().to(receiver).emit("friendRequest-declined", {
+			const io = getIO()
+			io.to(receiver).emit("friendRequest-declined", {
 				from: senderId,
 			});
 		}
@@ -118,7 +120,8 @@ exports.acceptFriendRequest = async (req, res) => {
 
 		if (onlineUsers.has(receiverId)) {
 			const receiver = onlineUsers.get(receiverId);
-			io().to(receiver).emit("friendRequest-accepted", {
+			const io = getIO()
+			io.to(receiver).emit("friendRequest-accepted", {
 				from: senderId,
 			});
 		}
@@ -177,7 +180,8 @@ exports.cancelFriendRequest = async (req, res) => {
 
 		if (onlineUsers.has(receiverId)) {
 			const receiver = onlineUsers.get(receiverId);
-			io().to(receiver).emit("friendRequest-canceled", {
+			const io = getIO()
+			io.to(receiver).emit("friendRequest-canceled", {
 				from: senderId,
 			});
 		}
@@ -213,7 +217,8 @@ exports.unfriend = async (req, res) => {
 
 		if (onlineUsers.has(receiverId)) {
 			const receiver = onlineUsers.get(receiverId);
-			io().to(receiver).emit("friendRequest-unfriended", {
+			const io = getIO()
+			io.to(receiver).emit("friendRequest-unfriended", {
 				from: senderId,
 			});
 		}

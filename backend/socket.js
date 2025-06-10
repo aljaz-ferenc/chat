@@ -1,33 +1,34 @@
 const { Server } = require("socket.io");
-const http = require("node:http");
-const { connectToDatabase } = require("./models/mongoose");
+const http = require("http");
 const User = require("./models/User");
 
 const onlineUsers = new Map();
-let io;
+let ioInstance = null;
 
 function initSocket(app) {
 	const server = http.createServer(app);
 
-	io = new Server(server, {
+	ioInstance = new Server(server, {
 		cors: {
 			origin: process.env.FRONTEND_URL || "*",
 			methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
 		},
 	});
 
-	io.on("connection", (socket) => {
+	ioInstance.on("connection", (socket) => {
 		socket.on("online", async (userId) => {
 			onlineUsers.set(userId, socket.id);
-			await connectToDatabase();
+
 			const user = await User.findById(userId).select("chats");
+			if (!user) return;
+
 			for (const chatId of user.chats) {
 				socket.join(chatId.toString());
 			}
 		});
 
 		socket.on("typing", ({ isTyping, userId, chatId }) => {
-			io.to(chatId).emit("typing", { userId, isTyping });
+			ioInstance.to(chatId).emit("typing", { userId, isTyping });
 		});
 
 		socket.on("disconnect", () => {
@@ -40,11 +41,18 @@ function initSocket(app) {
 		});
 	});
 
-	return { server, io, onlineUsers };
+	return server; // <-- You should now use this server to start listening
+}
+
+function getIO() {
+	if (!ioInstance) {
+		throw new Error("Socket.io not initialized. Call initSocket() first.");
+	}
+	return ioInstance;
 }
 
 module.exports = {
 	initSocket,
-	io: () => io,
+	getIO,
 	onlineUsers,
 };

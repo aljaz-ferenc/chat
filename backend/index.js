@@ -14,7 +14,7 @@ dotenv.config();
 const app = express();
 const port = process.env.PORT || 3000;
 const { initSocket } = require("./socket");
-const { server } = initSocket(app);
+const  server  = initSocket(app);
 
 app.use(cors())
 app.use(clerkMiddleware());
