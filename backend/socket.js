@@ -1,6 +1,7 @@
 const { Server } = require("socket.io");
 const http = require("http");
 const User = require("./models/User");
+const {connectToDatabase} = require("./models/mongoose");
 
 const onlineUsers = new Map();
 let ioInstance = null;
@@ -8,16 +9,19 @@ let ioInstance = null;
 function initSocket(app) {
 	const server = http.createServer(app);
 
-	ioInstance = new Server(server, {
-		cors: {
-			origin: process.env.FRONTEND_URL || "*",
-			methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
-		},
-	});
+	if(!ioInstance){
+		ioInstance = new Server(server, {
+			cors: {
+				origin: process.env.FRONTEND_URL || "*",
+				methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
+			},
+		});
+	}
 
 	ioInstance.on("connection", (socket) => {
 		socket.on("online", async (userId) => {
 			onlineUsers.set(userId, socket.id);
+			await connectToDatabase()
 
 			const user = await User.findById(userId).select("chats");
 			if (!user) return;
@@ -28,6 +32,7 @@ function initSocket(app) {
 		});
 
 		socket.on("typing", ({ isTyping, userId, chatId }) => {
+			console.log('received event: typing')
 			ioInstance.to(chatId).emit("typing", { userId, isTyping });
 		});
 
@@ -39,9 +44,14 @@ function initSocket(app) {
 				}
 			}
 		});
+
+		socket.on("join-chat", (chatId) => {
+			socket.join(chatId);
+			console.log(`Socket ${socket.id} joined chat ${chatId}`);
+		});
 	});
 
-	return server; // <-- You should now use this server to start listening
+	return server;
 }
 
 function getIO() {

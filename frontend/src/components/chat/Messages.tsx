@@ -29,6 +29,11 @@ export default function Messages() {
 		setReplyingTo: Dispatch<SetStateAction<TMessage | null>>;
 	}>();
 
+	useEffect(() => {
+		if (chatId && !!socket) {
+			socket.emit("join-chat", chatId);
+		}
+	}, [chatId, socket]);
 
 	useEffect(() => {
 		if (!socket || !chat) return;
@@ -37,7 +42,7 @@ export default function Messages() {
 			userId,
 			isTyping,
 		}: { userId: string; isTyping: boolean }) => {
-			console.log('typing')
+			console.log("typing");
 			setTypingUsers((prev) => {
 				const newSet = new Set(prev);
 
@@ -84,8 +89,8 @@ export default function Messages() {
 		};
 	}, [socket, chatId, queryClient, chat]);
 
-	if(!chat) return <div>Loading chat</div>
-	console.log(chat.users)
+	if (!chat) return <div>Loading chat</div>;
+	console.log(chat.users);
 
 	if (!messages) return <div>Loading messages...</div>;
 	if (!thisUserId) return <div>User not found...</div>;
@@ -106,11 +111,9 @@ export default function Messages() {
 
 					return (
 						<p className="text-muted text-sm" key={userId}>
-							{
-								chat.users.find(
-									(u: Pick<User, "firstName" | "_id">) => u._id === userId,
-								)?.firstName || 'Someone'
-							}{" "}
+							{chat.users.find(
+								(u: Pick<User, "firstName" | "_id">) => u._id === userId,
+							)?.firstName || "Someone"}{" "}
 							is typing...
 						</p>
 					);

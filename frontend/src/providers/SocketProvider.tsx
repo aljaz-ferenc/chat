@@ -17,14 +17,18 @@ export default function SocketProvider({ children }: PropsWithChildren) {
 
 	useEffect(() => {
 		if (!userId || !socket.connected) return;
-		console.log("socket connected");
+
+		socket.on("connect_error", (err) => {
+			console.log("Socket connection error: ", err.message);
+		});
 
 		socket.on("connect", () => {
+			console.log("socket connected");
 			socket.emit("online", userId);
 		});
 
 		socket.on("new-message", (message: Message) => {
-			console.log("new-message");
+			console.log("received: new-message in Provider");
 			queryClient.setQueryData(
 				["messages", { chatId: message.chat }],
 				(oldMessages: Message[]) => [...oldMessages, message],
