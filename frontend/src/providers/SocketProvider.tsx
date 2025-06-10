@@ -6,7 +6,7 @@ import type { Chat, Message } from "../../../shared/types.ts";
 import useUser from "../hooks/api/useUser.ts";
 import useUserStore from "../state/useUserStore.ts";
 // @ts-ignore
-const socket = io(import.meta.env.VITE_BACKEND_URL, { autoConnect: false });
+const socket = io(import.meta.env.VITE_BACKEND_URL);
 
 export const SocketContext = createContext<Socket | null>(null);
 
@@ -17,7 +17,7 @@ export default function SocketProvider({ children }: PropsWithChildren) {
 
 	useEffect(() => {
 		if (!userId || !socket.connected) return;
-		socket.connect();
+		console.log("socket connected");
 
 		socket.on("connect", () => {
 			socket.emit("online", userId);
@@ -148,7 +148,7 @@ export default function SocketProvider({ children }: PropsWithChildren) {
 			socket.off("connect");
 			socket.disconnect();
 		};
-	}, [userId, refetch, queryClient, socket]);
+	}, [userId, refetch, queryClient]);
 
 	return (
 		<SocketContext.Provider value={socket}>{children}</SocketContext.Provider>
