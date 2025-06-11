@@ -95,6 +95,9 @@ export default function Messages() {
 				},
 			);
 		};
+		socket.on("new-message", () => {
+			console.log("new-message  in Messages.tsx");
+		});
 
 		socket.on("typing", handleTyping);
 
