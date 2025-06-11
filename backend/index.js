@@ -19,7 +19,7 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
 	cors: {
-		origin: process.env.FRONTEND_URL || "*",
+		origin: "*",
 		methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
 	},
 });
@@ -38,8 +38,8 @@ app.use("/api/v1/contacts", contactsRouter);
 app.use("/api/v1/chats", chatsRouter);
 app.use("/api/v1/messages", messagesRouter);
 
-io.on("connection", (socket) => {
-	console.log("connection, ", socket.id);
+io.on("connected", (socket) => {
+	console.log("connected, ", socket.id);
 	socket.on("online", async (userId) => {
 		console.log("ONLINE_USERS: ", onlineUsers);
 		onlineUsers.set(userId, socket.id);
