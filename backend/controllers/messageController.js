@@ -1,7 +1,8 @@
 const { connectToDatabase } = require("../models/mongoose");
 const Message = require("../models/Message");
 const Chat = require("../models/Chat");
-const { getIO, emitEvent, EventEmitter } = require("../socket");
+const { getIO, emitEvent } = require("../socket");
+const EventEmitter = require("../EventEmitter");
 
 exports.createMessage = async (req, res) => {
 	try {
@@ -17,11 +18,11 @@ exports.createMessage = async (req, res) => {
 				path: "user",
 			})
 			.populate({ path: "replyTo", populate: { path: "user" } });
-		const io = getIO();
-		io.to(message.chat.toString()).emit("new-message", messageWithUser);
+		// const io = getIO();
+		// io.to(message.chat.toString()).emit("new-message", messageWithUser);
 		// emitEvent(message.chat.toString(), "new-message", messageWithUser)
 		// console.log('new-message')
-		// EventEmitter.emit("new-message", messageWithUser);
+		EventEmitter.emit("new-message", messageWithUser);
 
 		res.sendStatus(204);
 	} catch (error) {
