@@ -22,7 +22,10 @@ export default function SocketProvider({ children }: PropsWithChildren) {
 			console.log("Socket connection error: ", err.message);
 		});
 
-		socket.emit("online", userId);
+		socket.on("connect", () => {
+			console.log("Online:", socket.id);
+			socket.emit("online", userId);
+		});
 
 		socket.on("new-message", (message: Message) => {
 			console.log("received: new-message in Provider");
