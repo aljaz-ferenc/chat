@@ -17,6 +17,7 @@ const EventEmitter = require("./EventEmitter");
 
 const app = express();
 const server = http.createServer(app);
+app.use(cors({ origin: "*" }));
 const io = new Server(server, {
 	cors: {
 		origin: "*",
@@ -24,11 +25,9 @@ const io = new Server(server, {
 	},
 });
 const port = process.env.PORT || 3000;
-const { initSocket } = require("./socket");
 const { connectToDatabase } = require("./models/mongoose");
 const User = require("./models/User");
 
-app.use(cors());
 app.use(clerkMiddleware());
 app.use(bodyParser.json());
 app.use("/api/v1/users", usersRouter);
