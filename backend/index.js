@@ -81,13 +81,13 @@ io.on("connection", (socket) => {
 			}
 		}
 	});
-});
 
-EventEmitter.on("new-message", (message) => {
-	console.log("new-message from emitter: ", message);
-	console.log("MESSAGE.CHAT: ", message.chat);
-	console.log("MESSAGE.CHAT.TO_STRING: ", message.chat.toString());
-	io.to(message.chat.toString()).emit("new-message", message);
+	EventEmitter.on("new-message", (message) => {
+		console.log("new-message from emitter: ", message);
+		console.log("MESSAGE.CHAT: ", message.chat);
+		console.log("MESSAGE.CHAT.TO_STRING: ", message.chat.toString());
+		io.to(message.chat.toString()).emit("new-message", message);
+	});
 });
 
 server.listen(port, () => {
