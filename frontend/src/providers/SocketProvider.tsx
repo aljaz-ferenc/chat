@@ -22,10 +22,7 @@ export default function SocketProvider({ children }: PropsWithChildren) {
 			console.log("Socket connection error: ", err.message);
 		});
 
-		socket.on("connect", () => {
-			console.log("socket connected");
-			socket.emit("online", userId);
-		});
+		socket.emit("online", userId);
 
 		socket.on("new-message", (message: Message) => {
 			console.log("received: new-message in Provider");
@@ -71,8 +68,10 @@ export default function SocketProvider({ children }: PropsWithChildren) {
 			});
 		});
 
-		socket.on("added-to-group", async () => {
+		socket.on("added-to-group", async (chatId: Chat["_id"]) => {
+			console.log(`added-to-group: ${chatId}`);
 			await queryClient.invalidateQueries({ queryKey: ["chats"] });
+			await queryClient.invalidateQueries({ queryKey: ["chat", { chatId }] });
 		});
 
 		socket.on("reaction", ({ reaction, chatId, messageId }) => {

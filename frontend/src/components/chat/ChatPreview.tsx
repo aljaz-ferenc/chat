@@ -149,6 +149,7 @@ export default function ChatPreview({ chat }: ChatPreviewProps) {
 								className="border-1 text-base hover:bg-background cursor-pointer transition rounded-xl px-3 py-1 flex items-center gap-1"
 								onClick={async () => {
 									await addUsersToChat(checkedUsers);
+									console.log(checkedUsers);
 									setAddFriendsIsOpen(false);
 									setCheckedUsers([]);
 								}}

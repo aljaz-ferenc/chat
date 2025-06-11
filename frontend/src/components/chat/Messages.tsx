@@ -8,7 +8,7 @@ import {
 } from "react";
 import { useOutletContext, useParams } from "react-router";
 import { useShallow } from "zustand/react/shallow";
-import type { Message as TMessage } from "../../../../shared/types";
+import type { Chat, Message as TMessage } from "../../../../shared/types";
 import type { User } from "../../../../shared/types.ts";
 import useChat from "../../hooks/api/useChat.ts";
 import useMessages from "../../hooks/api/useMessages.ts";
@@ -31,7 +31,25 @@ export default function Messages() {
 
 	useEffect(() => {
 		if (chatId && !!socket) {
+			console.log(`joining chat: ${chatId}`);
 			socket.emit("join-chat", chatId);
+
+			// socket.on("new-message", (message: TMessage) => {
+			// 	console.log("received: new-message in Provider");
+			// 	// queryClient.setQueryData(
+			// 	// 	["messages", { chatId: message.chat }],
+			// 	// 	(oldMessages: TMessage[]) => [...oldMessages, message],
+			// 	// );
+			// 	// queryClient.setQueryData(["chats"], (chats: Chat[]) =>
+			// 	// 	chats.map((chat) => {
+			// 	// 		if (chat._id === message.chat) {
+			// 	// 			return { ...chat, lastMessage: message };
+			// 	// 		}
+			// 	// 		return chat;
+			// 	// 	}),
+			// 	// );
+			// });
+			console.log("LISTENERS: ", socket.listeners("new-message"));
 		}
 	}, [chatId, socket]);
 
@@ -42,7 +60,6 @@ export default function Messages() {
 			userId,
 			isTyping,
 		}: { userId: string; isTyping: boolean }) => {
-			console.log("typing");
 			setTypingUsers((prev) => {
 				const newSet = new Set(prev);
 
@@ -90,8 +107,6 @@ export default function Messages() {
 	}, [socket, chatId, queryClient, chat]);
 
 	if (!chat) return <div>Loading chat</div>;
-	console.log(chat.users);
-
 	if (!messages) return <div>Loading messages...</div>;
 	if (!thisUserId) return <div>User not found...</div>;
 

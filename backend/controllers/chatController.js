@@ -3,7 +3,7 @@ const Chat = require("../models/Chat");
 const Message = require("../models/Message");
 const { connectToDatabase } = require("../models/mongoose");
 const { mongoose } = require("mongoose");
-const {getIO , onlineUsers } = require("../socket");
+const { getIO, onlineUsers } = require("../socket");
 
 exports.getAllChats = async (req, res) => {
 	try {
@@ -21,7 +21,7 @@ exports.getAllChats = async (req, res) => {
 
 		res.status(200).json(chats);
 	} catch (error) {
-		console.log(error)
+		console.log(error);
 		res.status(500).json({ message: "Server error" });
 	}
 };
@@ -38,7 +38,7 @@ exports.getChat = async (req, res) => {
 
 		res.status(200).json(chat);
 	} catch (error) {
-		console.log(error)
+		console.log(error);
 		res.status(500).json({ message: "Server error" });
 	}
 };
@@ -65,16 +65,16 @@ exports.createChat = async (req, res) => {
 
 		const socketId = onlineUsers.get(userId);
 		if (socketId) {
-			const io = getIO()
+			const io = getIO();
 			const socket = io.sockets.sockets.get(socketId);
 			if (socket) {
 				socket.join(newChat._id.toString());
 			}
 		}
 
-		res.status(203).json({chatId: newChat._id})
+		res.status(203).json({ chatId: newChat._id });
 	} catch (error) {
-		console.log(error)
+		console.log(error);
 		res.status(500).json({ message: "Server error" });
 	}
 };
@@ -83,6 +83,7 @@ exports.addUsersToChat = async (req, res) => {
 	try {
 		const { chatId } = req.params;
 		const { usersIds } = req.body;
+		console.log(usersIds);
 
 		const usersObjectIds = usersIds.map((u) => new mongoose.Types.ObjectId(u));
 
@@ -108,13 +109,15 @@ exports.addUsersToChat = async (req, res) => {
 
 		// biome-ignore lint/complexity/noForEach: <explanation>
 		usersIds.forEach((userId) => {
+			console.log("USER_ID: ", userId);
 			const socketId = onlineUsers.get(userId);
+			console.log("SOCKET_ID: ", socketId);
 			if (socketId) {
-				const io = getIO()
+				const io = getIO();
 				const socket = io.sockets.sockets.get(socketId);
 				if (socket) {
 					socket.join(chatId);
-					socket.emit("added-to-group", { chatId });
+					socket.emit("added-to-group", chatId);
 				}
 			}
 		});
@@ -140,12 +143,12 @@ exports.renameChat = async (req, res) => {
 		if (!chat) {
 			return res.status(404).json({ message: "chat not found" });
 		}
-		const io = getIO()
+		const io = getIO();
 		io.to(chatId).emit("chat-rename", { chatId, chatName });
 
 		res.sendStatus(204);
 	} catch (error) {
-		console.log(error)
+		console.log(error);
 		res.status(500).json({ message: "Server error" });
 	}
 };
@@ -168,7 +171,7 @@ exports.leaveChat = async (req, res) => {
 			});
 		} else {
 			await Chat.findByIdAndDelete(chatId);
-			await Message.deleteMany({chat:chatId})
+			await Message.deleteMany({ chat: chatId });
 		}
 
 		const user = await User.findByIdAndUpdate(userId, {
@@ -179,7 +182,7 @@ exports.leaveChat = async (req, res) => {
 		}
 
 		const socketId = onlineUsers.get(userId);
-			const io = getIO()
+		const io = getIO();
 		if (socketId) {
 			const socket = io.sockets.sockets.get(socketId);
 			if (socket) {

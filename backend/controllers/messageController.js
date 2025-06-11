@@ -1,7 +1,7 @@
 const { connectToDatabase } = require("../models/mongoose");
 const Message = require("../models/Message");
 const Chat = require("../models/Chat");
-const { getIO } = require("../socket");
+const { getIO, emitEvent, EventEmitter } = require("../socket");
 
 exports.createMessage = async (req, res) => {
 	try {
@@ -17,13 +17,15 @@ exports.createMessage = async (req, res) => {
 				path: "user",
 			})
 			.populate({ path: "replyTo", populate: { path: "user" } });
-		const io = getIO()
+		const io = getIO();
 		io.to(message.chat.toString()).emit("new-message", messageWithUser);
-		console.log('new-message')
+		// emitEvent(message.chat.toString(), "new-message", messageWithUser)
+		// console.log('new-message')
+		// EventEmitter.emit("new-message", messageWithUser);
 
 		res.sendStatus(204);
 	} catch (error) {
-		console.log(error)
+		console.log(error);
 		res.status(500).json({ message: "Server error", error });
 	}
 };
@@ -31,7 +33,7 @@ exports.createMessage = async (req, res) => {
 exports.getMessagesByChat = async (req, res) => {
 	try {
 		const { chatId } = req.params;
-		await connectToDatabase()
+		await connectToDatabase();
 		const messages = await Message.find({ chat: chatId })
 			.populate("user")
 			.populate({
@@ -43,7 +45,7 @@ exports.getMessagesByChat = async (req, res) => {
 
 		res.status(200).json(messages);
 	} catch (error) {
-		console.log(error)
+		console.log(error);
 		res.status(500).json({ message: "Server error", error });
 	}
 };
@@ -63,14 +65,12 @@ exports.deleteMessage = async (req, res) => {
 				lastMessage: new mongoose.Types.ObjectId(lastMessageId),
 			});
 		}
-		const io = getIO()
-		io
-			.to(chatId)
-			.emit("delete-message", { messageId, chatId, lastMessageId });
+		const io = getIO();
+		io.to(chatId).emit("delete-message", { messageId, chatId, lastMessageId });
 
 		res.sendStatus(204);
 	} catch (error) {
-		console.log(error)
+		console.log(error);
 		res.status(500).json({ message: "Server error", error });
 	}
 };
@@ -88,11 +88,11 @@ exports.editMessage = async (req, res) => {
 		if (!message) {
 			res.status(404).json({ message: "Message not found" });
 		}
-		const io = getIO()
+		const io = getIO();
 		io.to(chatId).emit("edit-message", { messageId, markdown });
 		res.sendStatus(204);
 	} catch (error) {
-		console.log(error)
+		console.log(error);
 		res.status(500).json({ message: "Server error", error });
 	}
 };
@@ -106,7 +106,7 @@ exports.addReaction = async (req, res) => {
 		const message = await Message.findByIdAndUpdate(messageId, {
 			$addToSet: { reactions: reaction },
 		});
-		const io = getIO()
+		const io = getIO();
 		io.to(message.chat.toString()).emit("reaction", {
 			reaction,
 			chatId: message.chat.toString(),
@@ -115,7 +115,7 @@ exports.addReaction = async (req, res) => {
 
 		res.sendStatus(204);
 	} catch (error) {
-		console.log(error)
+		console.log(error);
 		res.status(500).json({ message: "Server error", error });
 	}
 };
