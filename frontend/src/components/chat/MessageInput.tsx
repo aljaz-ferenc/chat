@@ -44,6 +44,10 @@ export default function MessageInput({
 			chatId,
 			firstName: user?.firstName,
 		});
+
+		socket?.on("new-message", () => {
+			console.log("picko materno");
+		});
 	}, [isTyping, socket, userId, chatId, user]);
 
 	useEffect(() => {

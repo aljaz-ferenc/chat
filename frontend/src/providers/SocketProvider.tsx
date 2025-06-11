@@ -29,7 +29,7 @@ export default function SocketProvider({ children }: PropsWithChildren) {
 		socket.on("connect_error", (err) => {
 			console.log("Socket connection error: ", err.message);
 		});
-
+		socket.emit("online", userId);
 		socket.on("connect", () => {
 			console.log("Online:", socket.id);
 			socket.emit("online", userId);
