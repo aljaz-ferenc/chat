@@ -15,6 +15,14 @@ export default function SocketProvider({ children }: PropsWithChildren) {
 	const { refetch } = useUser();
 	const queryClient = useQueryClient();
 
+	// useEffect(() => {
+	// 	socket?.emit("online", userId);
+	//
+	// 	socket?.on("new-message", (message) => {
+	// 		console.log("new-message: ", message);
+	// 	});
+	// }, [socket, userId]);
+
 	useEffect(() => {
 		if (!userId || !socket.connected) return;
 

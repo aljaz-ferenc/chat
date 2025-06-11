@@ -6,6 +6,7 @@ const EventEmitter = require("../EventEmitter");
 
 exports.createMessage = async (req, res) => {
 	try {
+		console.log("AAAAAAAAAAAA");
 		const { message } = req.body;
 		await connectToDatabase();
 		const newMessage = await Message.create(message);

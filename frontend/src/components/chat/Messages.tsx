@@ -8,7 +8,7 @@ import {
 } from "react";
 import { useOutletContext, useParams } from "react-router";
 import { useShallow } from "zustand/react/shallow";
-import type { Chat, Message as TMessage } from "../../../../shared/types";
+import type { Message as TMessage } from "../../../../shared/types";
 import type { User } from "../../../../shared/types.ts";
 import useChat from "../../hooks/api/useChat.ts";
 import useMessages from "../../hooks/api/useMessages.ts";
@@ -34,21 +34,21 @@ export default function Messages() {
 			console.log(`joining chat: ${chatId}`);
 			socket.emit("join-chat", chatId);
 
-			// socket.on("new-message", (message: TMessage) => {
-			// 	console.log("received: new-message in Provider");
-			// 	// queryClient.setQueryData(
-			// 	// 	["messages", { chatId: message.chat }],
-			// 	// 	(oldMessages: TMessage[]) => [...oldMessages, message],
-			// 	// );
-			// 	// queryClient.setQueryData(["chats"], (chats: Chat[]) =>
-			// 	// 	chats.map((chat) => {
-			// 	// 		if (chat._id === message.chat) {
-			// 	// 			return { ...chat, lastMessage: message };
-			// 	// 		}
-			// 	// 		return chat;
-			// 	// 	}),
-			// 	// );
-			// });
+			socket.on("new-message", (message: TMessage) => {
+				console.log("received: new-message in Provider");
+				// queryClient.setQueryData(
+				// 	["messages", { chatId: message.chat }],
+				// 	(oldMessages: TMessage[]) => [...oldMessages, message],
+				// );
+				// queryClient.setQueryData(["chats"], (chats: Chat[]) =>
+				// 	chats.map((chat) => {
+				// 		if (chat._id === message.chat) {
+				// 			return { ...chat, lastMessage: message };
+				// 		}
+				// 		return chat;
+				// 	}),
+				// );
+			});
 			console.log("LISTENERS: ", socket.listeners("new-message"));
 		}
 	}, [chatId, socket]);
