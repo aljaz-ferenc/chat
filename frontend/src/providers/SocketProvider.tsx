@@ -1,13 +1,17 @@
 import { useQueryClient } from "@tanstack/react-query";
-import { type PropsWithChildren, createContext, useEffect } from "react";
+import {
+	type PropsWithChildren,
+	createContext,
+	useEffect,
+	useRef,
+} from "react";
 import { type Socket, io } from "socket.io-client";
 import { useShallow } from "zustand/react/shallow";
 import type { Chat, Message } from "../../../shared/types.ts";
 import useUser from "../hooks/api/useUser.ts";
 import useUserStore from "../state/useUserStore.ts";
 // @ts-ignore
-const socket = io("https://chat-xbp0.onrender.com");
-console.log(socket);
+const socket = io("http://localhost:3000");
 
 export const SocketContext = createContext<Socket | null>(null);
 
@@ -15,18 +19,21 @@ export default function SocketProvider({ children }: PropsWithChildren) {
 	const userId = useUserStore(useShallow((state) => state.user?._id));
 	const { refetch } = useUser();
 	const queryClient = useQueryClient();
+	const socketRef = useRef();
 
-	// useEffect(() => {
-	// 	socket?.emit("online", userId);
-	//
-	// 	socket?.on("new-message", (message) => {
-	// 		console.log("new-message: ", message);
-	// 	});
-	// }, [socket, userId]);
+	useEffect(() => {
+		if (!userId || !socket.connected) return;
+		socket?.emit("online", userId);
+
+		socket?.on("new-message", (message) => {
+			console.log("new-message: ", message);
+		});
+	}, [userId]);
 
 	useEffect(() => {
 		if (!userId || !socket.connected) return;
 
+		console.log(socket.id);
 		socket.on("connect_error", (err) => {
 			console.log("Socket connection error: ", err.message);
 		});
@@ -136,6 +143,7 @@ export default function SocketProvider({ children }: PropsWithChildren) {
 
 		//TODO: use same event for each if they do the same thing, but wait for confirmation
 		socket.on("friendRequest-incoming", async () => {
+			console.log('friend incoming')
 			await refetch();
 		});
 

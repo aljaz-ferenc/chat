@@ -3,7 +3,7 @@ const Chat = require("../models/Chat");
 const Message = require("../models/Message");
 const { connectToDatabase } = require("../models/mongoose");
 const { mongoose } = require("mongoose");
-const { getIO, onlineUsers } = require("../socket");
+const EventEmitter = require("../EventEmitter");
 
 exports.getAllChats = async (req, res) => {
 	try {
@@ -63,14 +63,7 @@ exports.createChat = async (req, res) => {
 			$addToSet: { chats: newChat._id },
 		});
 
-		const socketId = onlineUsers.get(userId);
-		if (socketId) {
-			const io = getIO();
-			const socket = io.sockets.sockets.get(socketId);
-			if (socket) {
-				socket.join(newChat._id.toString());
-			}
-		}
+		EventEmitter.emit('create-chat', {userId, chatId: newChat._id.toString()})
 
 		res.status(203).json({ chatId: newChat._id });
 	} catch (error) {
@@ -106,21 +99,7 @@ exports.addUsersToChat = async (req, res) => {
 		});
 
 		await Promise.all(promises);
-
-		// biome-ignore lint/complexity/noForEach: <explanation>
-		usersIds.forEach((userId) => {
-			console.log("USER_ID: ", userId);
-			const socketId = onlineUsers.get(userId);
-			console.log("SOCKET_ID: ", socketId);
-			if (socketId) {
-				const io = getIO();
-				const socket = io.sockets.sockets.get(socketId);
-				if (socket) {
-					socket.join(chatId);
-					socket.emit("added-to-group", chatId);
-				}
-			}
-		});
+		EventEmitter.emit("added-to-group", { usersIds, chatId });
 
 		res.sendStatus(200);
 	} catch (error) {
@@ -143,8 +122,8 @@ exports.renameChat = async (req, res) => {
 		if (!chat) {
 			return res.status(404).json({ message: "chat not found" });
 		}
-		const io = getIO();
-		io.to(chatId).emit("chat-rename", { chatId, chatName });
+
+		EventEmitter.emit("chat-rename", { chatId, chatName });
 
 		res.sendStatus(204);
 	} catch (error) {
@@ -181,16 +160,7 @@ exports.leaveChat = async (req, res) => {
 			return res.status(404).json({ message: "user not found" });
 		}
 
-		const socketId = onlineUsers.get(userId);
-		const io = getIO();
-		if (socketId) {
-			const socket = io.sockets.sockets.get(socketId);
-			if (socket) {
-				socket.leave(chatId);
-			}
-		}
-
-		io.to(chatId).emit("user-left", { chatId, userId });
+		EventEmitter.emit("user-left", { chatId, userId });
 
 		res.sendStatus(204);
 	} catch (error) {

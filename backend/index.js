@@ -16,14 +16,16 @@ const onlineUsers = new Map();
 const EventEmitter = require("./EventEmitter");
 
 const app = express();
+app.use(cors());
 const server = http.createServer(app);
-app.use(cors({ origin: "*" }));
+
 const io = new Server(server, {
 	cors: {
-		origin: "*",
+		origin: "http://localhost:5173",
 		methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
 	},
 });
+
 const port = process.env.PORT || 3000;
 const { connectToDatabase } = require("./models/mongoose");
 const User = require("./models/User");
@@ -37,7 +39,7 @@ app.use("/api/v1/contacts", contactsRouter);
 app.use("/api/v1/chats", chatsRouter);
 app.use("/api/v1/messages", messagesRouter);
 
-io.on("connected", (socket) => {
+io.on("connection", (socket) => {
 	console.log("connected, ", socket.id);
 	socket.on("online", async (userId) => {
 		console.log("ONLINE_USERS: ", onlineUsers);
@@ -54,12 +56,12 @@ io.on("connected", (socket) => {
 	});
 
 	socket.on("join-chat", (chatId) => {
-		socket.join(chatId);
+		socket.join("join-chat", chatId);
 		console.log(`Socket ${socket.id} joined chat ${chatId}`);
 	});
 
 	socket.on("typing", ({ isTyping, userId, chatId }) => {
-		console.log("received event: typing");
+		console.log("typing");
 		io.to(chatId).emit("typing", { userId, isTyping });
 		console.log(
 			`CLIENTS in room ${chatId}: `,
@@ -68,7 +70,7 @@ io.on("connected", (socket) => {
 	});
 
 	socket.on("new-message", (message) => {
-		console.log("received event: new-message in socket.js");
+		console.log("new-message");
 	});
 
 	socket.on("disconnect", () => {
@@ -82,11 +84,102 @@ io.on("connected", (socket) => {
 	});
 
 	EventEmitter.on("new-message", (message) => {
-		console.log("new-message from emitter: ", message);
-		console.log("MESSAGE.CHAT: ", message.chat);
-		console.log("MESSAGE.CHAT.TO_STRING: ", message.chat.toString());
 		io.to(message.chat.toString()).emit("new-message", message);
 	});
+
+	EventEmitter.on("edit-message", ({ messageId, markdown, chatId }) => {
+		io.to(chatId).emit("edit-message", { messageId, markdown });
+	});
+
+	EventEmitter.on("reaction", ({ reaction, chatId, messageId }) => {
+		io.to(chatId).emit("reaction", { reaction, chatId, messageId });
+	});
+
+	EventEmitter.on("added-to-group", ({ usersIds, chatId }) => {
+		for (const userId of usersIds) {
+			const socketId = onlineUsers.get(userId);
+			if (socketId) {
+				const socket = io.sockets.sockets.get(socketId);
+				socket.join(chatId);
+				io.to(chatId).emit("added-to-group", chatId);
+			}
+		}
+	});
+
+	EventEmitter.on("delete-message", ({ messageId, chatId, lastMessageId }) => {
+		io.to(chatId).emit("delete-message", {
+			messageId,
+			chatId,
+			lastMessageId,
+		});
+	});
+
+	EventEmitter.on("chat-rename", ({ chatId, chatName }) => {
+		io.to(chatId).emit("chat-rename", { chatId, chatName });
+	});
+
+	EventEmitter.on("user-left", ({ chatId, userId }) => {
+		const socketId = onlineUsers.get(userId);
+		if (socketId) {
+			const socket = io.sockets.sockets.get(socketId);
+			socket.leave(chatId);
+
+			io.to(chatId).emit("user-left", { chatId, userId });
+		}
+	});
+
+	EventEmitter.on('create-chat', ({userId, chatId}) => {
+		const socketId = onlineUsers.get(userId)
+		if(socketId){
+			const socket = io.sockets.sockets.get(socketId)
+			socket.join(chatId)
+		}
+	})
+
+	EventEmitter.on('friendRequest-incoming', (receiverId ) => {
+		const receiverSocketId = onlineUsers.get(receiverId)
+		io.to(receiverSocketId).emit('friendRequest-incoming')
+	})
+
+	EventEmitter.on('friendRequest-declined', ({receiverId, senderId}) => {
+		const receiverSocketId = onlineUsers.get(receiverId)
+		io.to(receiverSocketId).emit('friendRequest-declined', {
+			from: senderId
+		})
+	})
+
+	EventEmitter.on('friendRequest-accepted', ({receiverId, senderId}) => {
+		const receiverSocketId = onlineUsers.get(receiverId)
+		const senderSocketId = onlineUsers.get(senderId)
+		io.to(receiverSocketId).emit('friendRequest-accepted', {
+			from: senderId
+		})
+
+		io.to(senderSocketId).emit('friendRequest-accepted', {
+			from: senderId
+		})
+	})
+
+	EventEmitter.on('friendRequest-canceled', ({senderId, receiverId}) => {
+		const receiverSocketId = onlineUsers.get(receiverId)
+		const senderSocketId = onlineUsers.get(senderId)
+
+		io.to(receiverSocketId).emit('friendRequest-canceled', {
+			from: senderId
+		})
+
+		io.to(senderSocketId).emit('friendRequest-canceled', {
+			from: senderId
+		})
+	})
+
+	EventEmitter.on('friendRequest-unfriended', ({senderId, receiverId}) => {
+		const receiverSocketId = onlineUsers.get(receiverId)
+
+		io.to(receiverSocketId).emit("friendRequest-unfriended", {
+			from: senderId,
+		})
+	})
 });
 
 server.listen(port, () => {

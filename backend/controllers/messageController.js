@@ -1,7 +1,6 @@
 const { connectToDatabase } = require("../models/mongoose");
 const Message = require("../models/Message");
 const Chat = require("../models/Chat");
-const { getIO, emitEvent } = require("../socket");
 const EventEmitter = require("../EventEmitter");
 
 exports.createMessage = async (req, res) => {
@@ -19,12 +18,7 @@ exports.createMessage = async (req, res) => {
 				path: "user",
 			})
 			.populate({ path: "replyTo", populate: { path: "user" } });
-		// const io = getIO();
-		// io.to(message.chat.toString()).emit("new-message", messageWithUser);
-		// emitEvent(message.chat.toString(), "new-message", messageWithUser)
-		// console.log('new-message')
 		EventEmitter.emit("new-message", messageWithUser);
-
 		res.sendStatus(204);
 	} catch (error) {
 		console.log(error);
@@ -67,8 +61,7 @@ exports.deleteMessage = async (req, res) => {
 				lastMessage: new mongoose.Types.ObjectId(lastMessageId),
 			});
 		}
-		const io = getIO();
-		io.to(chatId).emit("delete-message", { messageId, chatId, lastMessageId });
+		EventEmitter.emit("delete-message", { messageId, chatId, lastMessageId });
 
 		res.sendStatus(204);
 	} catch (error) {
@@ -90,8 +83,7 @@ exports.editMessage = async (req, res) => {
 		if (!message) {
 			res.status(404).json({ message: "Message not found" });
 		}
-		const io = getIO();
-		io.to(chatId).emit("edit-message", { messageId, markdown });
+		EventEmitter.emit("edit-message", { messageId, markdown, chatId });
 		res.sendStatus(204);
 	} catch (error) {
 		console.log(error);
@@ -108,8 +100,7 @@ exports.addReaction = async (req, res) => {
 		const message = await Message.findByIdAndUpdate(messageId, {
 			$addToSet: { reactions: reaction },
 		});
-		const io = getIO();
-		io.to(message.chat.toString()).emit("reaction", {
+		EventEmitter.emit("reaction", {
 			reaction,
 			chatId: message.chat.toString(),
 			messageId,

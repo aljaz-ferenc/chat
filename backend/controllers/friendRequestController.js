@@ -1,8 +1,9 @@
 const { connectToDatabase } = require("../models/mongoose");
 const User = require("../models/User");
 const Chat = require("../models/Chat");
-const { onlineUsers, getIO } = require("../socket");
+const { onlineUsers, getIO} = require("../socket");
 const { isOnline } = require("../utils/socket");
+const EventEmitter = require('../EventEmitter')
 
 exports.sendFriendRequest = async (req, res) => {
 	try {
@@ -35,14 +36,7 @@ exports.sendFriendRequest = async (req, res) => {
 			$set: { "notifications.opened": false },
 		});
 
-		if (onlineUsers.has(receiverId)) {
-			const receiver = onlineUsers.get(receiverId);
-			const io = getIO()
-			io.to(receiver).emit("friendRequest-incoming", {
-				from: senderId,
-			});
-			io.to(receiver).emit("notification-new");
-		}
+			EventEmitter.emit('friendRequest-incoming', receiverId)
 
 		return res.sendStatus(204);
 	} catch (error) {
@@ -74,13 +68,7 @@ exports.declineFriendRequest = async (req, res) => {
 			},
 		});
 
-		if (onlineUsers.has(receiverId)) {
-			const receiver = onlineUsers.get(receiverId);
-			const io = getIO()
-			io.to(receiver).emit("friendRequest-declined", {
-				from: senderId,
-			});
-		}
+		EventEmitter.emit('friendRequest-declined', {receiverId, senderId})
 
 		return res.status(204).json({ message: "success" });
 	} catch (error) {
@@ -118,13 +106,7 @@ exports.acceptFriendRequest = async (req, res) => {
 			},
 		});
 
-		if (onlineUsers.has(receiverId)) {
-			const receiver = onlineUsers.get(receiverId);
-			const io = getIO()
-			io.to(receiver).emit("friendRequest-accepted", {
-				from: senderId,
-			});
-		}
+		EventEmitter.emit('friendRequest-accepted', ({receiverId, senderId}))
 
 		const chatExists = await Chat.findOne({
 			type: "single",
@@ -178,13 +160,7 @@ exports.cancelFriendRequest = async (req, res) => {
 			},
 		});
 
-		if (onlineUsers.has(receiverId)) {
-			const receiver = onlineUsers.get(receiverId);
-			const io = getIO()
-			io.to(receiver).emit("friendRequest-canceled", {
-				from: senderId,
-			});
-		}
+		EventEmitter.emit('friendRequest-canceled', ({receiverId, senderId}))
 
 		return res.status(204).json({ message: "success" });
 	} catch (error) {
@@ -215,14 +191,7 @@ exports.unfriend = async (req, res) => {
 			},
 		});
 
-		if (onlineUsers.has(receiverId)) {
-			const receiver = onlineUsers.get(receiverId);
-			const io = getIO()
-			io.to(receiver).emit("friendRequest-unfriended", {
-				from: senderId,
-			});
-		}
-
+		EventEmitter.emit('friendRequest-unfriended', ({senderId, receiverId}))
 		return res.status(204).json({ message: "success" });
 	} catch (error) {
 		return res.status(500).json({ message: "Server error" });
