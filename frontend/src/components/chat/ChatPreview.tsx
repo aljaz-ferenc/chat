@@ -178,7 +178,7 @@ export default function ChatPreview({ chat }: ChatPreviewProps) {
 								type="button"
 								className="border-1 text-base hover:bg-background cursor-pointer transition rounded-xl px-3 py-1 flex items-center gap-1"
 								onClick={async () => {
-									await renameChat(groupName);
+									await renameChat(groupName, thisUserId);
 									setRenameDialogIsOpen(false);
 									setGroupName("");
 								}}

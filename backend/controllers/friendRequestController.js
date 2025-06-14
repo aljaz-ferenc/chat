@@ -1,8 +1,6 @@
 const { connectToDatabase } = require("../models/mongoose");
 const User = require("../models/User");
 const Chat = require("../models/Chat");
-const { onlineUsers, getIO} = require("../socket");
-const { isOnline } = require("../utils/socket");
 const EventEmitter = require('../EventEmitter')
 
 exports.sendFriendRequest = async (req, res) => {

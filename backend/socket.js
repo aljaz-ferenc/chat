@@ -65,15 +65,15 @@ function initSocket(app) {
 	return server;
 }
 
-EventEmitter.on("new-message", (message) => {
-	console.log("Emitter: new-message");
-	console.log(message.chat.toString());
-	ioInstance.to(message.chat.toString()).emit("new-message", message);
-	// console.log(
-	// 	`CLIENTS in room ${message.chat.toString()}: `,
-	// 	ioInstance.sockets.adapter.rooms.get(message.chat.toString()),
-	// );
-});
+// EventEmitter.on("new-message", (message) => {
+// 	console.log("Emitter: new-message");
+// 	console.log(message.chat.toString());
+// 	ioInstance.to(message.chat.toString()).emit("new-message", message);
+// 	// console.log(
+// 	// 	`CLIENTS in room ${message.chat.toString()}: `,
+// 	// 	ioInstance.sockets.adapter.rooms.get(message.chat.toString()),
+// 	// );
+// });
 
 function getIO() {
 	if (!ioInstance) {

@@ -1,18 +1,33 @@
 const { mongoose } = require("mongoose");
 
-const messageSchema = new mongoose.Schema(
-	{
-		user: {
-			type: mongoose.SchemaTypes.ObjectId,
-			ref: "User",
+const baseMessageSchema = new mongoose.Schema({
+	user: {
+		type: mongoose.SchemaTypes.ObjectId,
+		ref: "User",
+	},
+	chat: {
+		type: mongoose.SchemaTypes.ObjectId,
+		ref: "Chat",
+	},
+}, {
+	timestamps: true,
+	discriminatorKey: 'type'
+})
+
+const Message = mongoose.models.Message || mongoose.model("Message", baseMessageSchema);
+
+const RenameChatMessage = Message.discriminator(
+	'renameChat',
+	new mongoose.Schema({
+		newChatName: {
+			type: String,
+			required: [true, 'newChatName is required']
 		},
-		chat: {
-			type: mongoose.SchemaTypes.ObjectId,
-			ref: "Chat",
-		},
-		content: {
-			markdown: String,
-		},
+	})
+)
+
+const UserMessage = Message.discriminator('userMessage',
+	new mongoose.Schema({
 		edited: {
 			type: Boolean,
 			default: false,
@@ -28,9 +43,13 @@ const messageSchema = new mongoose.Schema(
 			ref: "Message",
 			default: null,
 		},
-	},
-	{ timestamps: true },
-);
+		content:{
+			markdown: String
+		}
+	}))
 
-module.exports =
-	mongoose.models.Message || mongoose.model("Message", messageSchema);
+module.exports = {
+	Message,
+	RenameChatMessage,
+	UserMessage
+}

@@ -44,10 +44,6 @@ export default function MessageInput({
 			chatId,
 			firstName: user?.firstName,
 		});
-
-		socket?.on("new-message", () => {
-			console.log("picko materno");
-		});
 	}, [isTyping, socket, userId, chatId, user]);
 
 	useEffect(() => {
@@ -63,6 +59,7 @@ export default function MessageInput({
 				(e.code === "Enter" || e.code === "NumpadEnter")
 			) {
 				if (!userId || !chatId) return;
+				console.log(markdown);
 				await createMessage({
 					user: userId,
 					chat: chatId,
@@ -70,6 +67,7 @@ export default function MessageInput({
 						markdown,
 					},
 					replyTo: replyingTo ? replyingTo._id : null,
+					type: "userMessage",
 				}).then(() => {
 					setMarkdown("");
 					setReplyingTo(null);

@@ -33,23 +33,6 @@ export default function Messages() {
 		if (chatId && !!socket) {
 			console.log(`joining chat: ${chatId}`);
 			socket.emit("join-chat", chatId);
-
-			socket.on("new-message", (message: TMessage) => {
-				console.log("received: new-message in Provider");
-				// queryClient.setQueryData(
-				// 	["messages", { chatId: message.chat }],
-				// 	(oldMessages: TMessage[]) => [...oldMessages, message],
-				// );
-				// queryClient.setQueryData(["chats"], (chats: Chat[]) =>
-				// 	chats.map((chat) => {
-				// 		if (chat._id === message.chat) {
-				// 			return { ...chat, lastMessage: message };
-				// 		}
-				// 		return chat;
-				// 	}),
-				// );
-			});
-			console.log("LISTENERS: ", socket.listeners("new-message"));
 		}
 	}, [chatId, socket]);
 
@@ -95,9 +78,6 @@ export default function Messages() {
 				},
 			);
 		};
-		socket.on("new-message", () => {
-			console.log("new-message  in Messages.tsx");
-		});
 
 		socket.on("typing", handleTyping);
 

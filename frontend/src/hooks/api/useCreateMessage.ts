@@ -10,6 +10,7 @@ export default function useCreateMessage() {
 			chat: Chat["_id"];
 			content: Message["content"];
 			replyTo: Message["_id"] | null;
+			type: Message["type"];
 		}) => await fetchCreateMessage(message),
 	});
 }

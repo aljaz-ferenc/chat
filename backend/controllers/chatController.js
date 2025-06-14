@@ -1,6 +1,6 @@
 const User = require("../models/User");
 const Chat = require("../models/Chat");
-const Message = require("../models/Message");
+const { Message, RenameChatMessage } = require("../models/Message");
 const { connectToDatabase } = require("../models/mongoose");
 const { mongoose } = require("mongoose");
 const EventEmitter = require("../EventEmitter");
@@ -63,7 +63,10 @@ exports.createChat = async (req, res) => {
 			$addToSet: { chats: newChat._id },
 		});
 
-		EventEmitter.emit('create-chat', {userId, chatId: newChat._id.toString()})
+		EventEmitter.emit("create-chat", {
+			userId,
+			chatId: newChat._id.toString(),
+		});
 
 		res.status(203).json({ chatId: newChat._id });
 	} catch (error) {
@@ -111,7 +114,7 @@ exports.addUsersToChat = async (req, res) => {
 exports.renameChat = async (req, res) => {
 	try {
 		const { chatId } = req.params;
-		const { chatName } = req.body;
+		const { chatName, userId } = req.body;
 
 		await connectToDatabase();
 
@@ -123,7 +126,13 @@ exports.renameChat = async (req, res) => {
 			return res.status(404).json({ message: "chat not found" });
 		}
 
-		EventEmitter.emit("chat-rename", { chatId, chatName });
+		const renameMessage = await RenameChatMessage.create({
+			newChatName: chatName,
+			user: userId,
+			chat: chatId,
+		});
+
+		EventEmitter.emit("chat-rename", renameMessage);
 
 		res.sendStatus(204);
 	} catch (error) {

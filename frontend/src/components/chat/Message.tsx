@@ -48,7 +48,7 @@ export default function Message({
 	const { mutateAsync: deleteMessage } = useDeleteMessage();
 	const [isEditing, setIsEditing] = useState(false);
 	const [editedMarkdown, setEditedMarkdown] = useState(
-		message.content.markdown,
+		message.content?.markdown || "",
 	);
 	const { chatId } = useParams();
 	const editInputRef = useRef<HTMLTextAreaElement>(null);
@@ -68,7 +68,7 @@ export default function Message({
 					markdown: editedMarkdown,
 					chatId,
 				}).then(() => {
-					setEditedMarkdown(message.content.markdown);
+					setEditedMarkdown(message.content?.markdown);
 					setIsEditing(false);
 				});
 			}
@@ -81,6 +81,16 @@ export default function Message({
 
 		return () => removeEventListener("keypress", handleKeyPress);
 	}, [handleKeyPress]);
+
+	if (message.type === "renameChat") {
+		return (
+			<p className="text-muted text-center w-full">
+				<strong>{message.user.firstName} </strong>
+				renamed the group to
+				<strong> {message.newChatName}</strong>
+			</p>
+		);
+	}
 
 	return (
 		<div
@@ -161,7 +171,7 @@ export default function Message({
 								<DropdownMenuItem
 									onClick={() => {
 										setIsEditing(true);
-										setEditedMarkdown(message.content.markdown);
+										setEditedMarkdown(message.content?.markdown);
 									}}
 									className="flex items-center gap-2 hover:text-white cursor-pointer transition"
 								>
@@ -222,7 +232,7 @@ function MessageMarkdown({ message }: MessageMarkdownProps) {
 	return (
 		<div className={cn(["text-white rounded-xl p-2"])}>
 			<p>
-				{message.content.markdown}{" "}
+				{message.content?.markdown}{" "}
 				{message.edited && (
 					<span className="text-muted/50 text-xs italic">Edited</span>
 				)}

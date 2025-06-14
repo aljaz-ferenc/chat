@@ -1,24 +1,65 @@
 const { connectToDatabase } = require("../models/mongoose");
-const Message = require("../models/Message");
+const {
+	Message,
+	UserMessage,
+	RenameChatMessage,
+} = require("../models/Message");
+const User = require("../models/User");
 const Chat = require("../models/Chat");
 const EventEmitter = require("../EventEmitter");
 
 exports.createMessage = async (req, res) => {
 	try {
-		console.log("AAAAAAAAAAAA");
 		const { message } = req.body;
+		console.log("BODY: ", req.body);
+		console.log("MESSAGE: ", message);
 		await connectToDatabase();
-		const newMessage = await Message.create(message);
+
+		const user = await User.findById(message.user);
+
+		if (!user) {
+			return res.status(400).json({ message: "User not found" });
+		}
+
+		let newMessage;
+
+		if (message.type === "renameChat") {
+			if (!message.newChatName) {
+				return res
+					.status(400)
+					.json({ message: "newChatName is required for renameChat" });
+			}
+			newMessage = await RenameChatMessage.create({
+				...message,
+				user: user._id,
+			});
+		}
+
+		if (message.type === "userMessage") {
+			if (!message.content || !message.content.markdown) {
+				return res
+					.status(400)
+					.json({ message: "Content is required for userMessage" });
+			}
+			newMessage = await UserMessage.create({
+				...message,
+				user: user._id,
+			});
+		}
+
 		await Chat.findByIdAndUpdate(message.chat, {
 			lastMessage: newMessage._id,
 		});
 
 		const messageWithUser = await Message.findById(newMessage._id)
+			.populate("user")
 			.populate({
-				path: "user",
-			})
-			.populate({ path: "replyTo", populate: { path: "user" } });
+				path: "replyTo",
+				populate: { path: "user" },
+			});
+
 		EventEmitter.emit("new-message", messageWithUser);
+
 		res.sendStatus(204);
 	} catch (error) {
 		console.log(error);

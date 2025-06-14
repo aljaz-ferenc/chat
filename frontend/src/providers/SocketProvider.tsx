@@ -1,10 +1,5 @@
 import { useQueryClient } from "@tanstack/react-query";
-import {
-	type PropsWithChildren,
-	createContext,
-	useEffect,
-	useRef,
-} from "react";
+import { type PropsWithChildren, createContext, useEffect } from "react";
 import { type Socket, io } from "socket.io-client";
 import { useShallow } from "zustand/react/shallow";
 import type { Chat, Message } from "../../../shared/types.ts";
@@ -19,32 +14,24 @@ export default function SocketProvider({ children }: PropsWithChildren) {
 	const userId = useUserStore(useShallow((state) => state.user?._id));
 	const { refetch } = useUser();
 	const queryClient = useQueryClient();
-	const socketRef = useRef();
 
 	useEffect(() => {
 		if (!userId || !socket.connected) return;
 		socket?.emit("online", userId);
-
-		socket?.on("new-message", (message) => {
-			console.log("new-message: ", message);
-		});
 	}, [userId]);
 
 	useEffect(() => {
 		if (!userId || !socket.connected) return;
 
-		console.log(socket.id);
 		socket.on("connect_error", (err) => {
 			console.log("Socket connection error: ", err.message);
 		});
 		socket.emit("online", userId);
 		socket.on("connect", () => {
-			console.log("Online:", socket.id);
 			socket.emit("online", userId);
 		});
 
 		socket.on("new-message", (message: Message) => {
-			console.log("received: new-message in Provider");
 			queryClient.setQueryData(
 				["messages", { chatId: message.chat }],
 				(oldMessages: Message[]) => [...oldMessages, message],
@@ -59,17 +46,22 @@ export default function SocketProvider({ children }: PropsWithChildren) {
 			);
 		});
 
-		socket.on("chat-rename", (data) => {
-			const { chatId, chatName } = data;
-
+		socket.on("chat-rename", (renameMessage) => {
 			queryClient.setQueryData(["chats"], (chats: Chat[]) => {
 				return chats.map((chat) => {
-					if (chat._id === chatId) {
-						return { ...chat, name: chatName };
+					if (chat._id === renameMessage.chat.toString()) {
+						return { ...chat, name: renameMessage.newChatName };
 					}
 					return chat;
 				});
 			});
+
+			queryClient.setQueryData(
+				["messages", { chatId: renameMessage.chat.toString() }],
+				(oldMessages: Message[]) => {
+					return [...oldMessages, renameMessage];
+				},
+			);
 		});
 
 		socket.on("user-left", (data) => {
@@ -88,7 +80,6 @@ export default function SocketProvider({ children }: PropsWithChildren) {
 		});
 
 		socket.on("added-to-group", async (chatId: Chat["_id"]) => {
-			console.log(`added-to-group: ${chatId}`);
 			await queryClient.invalidateQueries({ queryKey: ["chats"] });
 			await queryClient.invalidateQueries({ queryKey: ["chat", { chatId }] });
 		});
@@ -143,7 +134,6 @@ export default function SocketProvider({ children }: PropsWithChildren) {
 
 		//TODO: use same event for each if they do the same thing, but wait for confirmation
 		socket.on("friendRequest-incoming", async () => {
-			console.log('friend incoming')
 			await refetch();
 		});
 
