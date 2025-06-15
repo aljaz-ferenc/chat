@@ -82,6 +82,7 @@ export default function SocketProvider({ children }: PropsWithChildren) {
 		socket.on("added-to-group", async (chatId: Chat["_id"]) => {
 			await queryClient.invalidateQueries({ queryKey: ["chats"] });
 			await queryClient.invalidateQueries({ queryKey: ["chat", { chatId }] });
+			await refetch();
 		});
 
 		socket.on("reaction", ({ reaction, chatId, messageId }) => {

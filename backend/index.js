@@ -93,6 +93,7 @@ EventEmitter.on("reaction", ({ reaction, chatId, messageId }) => {
 EventEmitter.on("added-to-group", ({ usersIds, chatId }) => {
 	for (const userId of usersIds) {
 		const socketId = onlineUsers.get(userId);
+		console.log(socketId);
 		if (socketId) {
 			const socket = io.sockets.sockets.get(socketId);
 			socket.join(chatId);

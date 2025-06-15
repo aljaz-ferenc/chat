@@ -39,8 +39,9 @@ export type NotificationAction = 'read' | ''
 export type Notification = {
     _id: string
     read: boolean,
-    type: 'friendRequest',
+    type: 'friendRequest' | 'addedToGroup',
     from: User,
+    chatId: Chat['_id']
 }
 
 export type Chat = {

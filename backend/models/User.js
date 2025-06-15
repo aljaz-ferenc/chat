@@ -15,6 +15,10 @@ const NotificationSchema = new mongoose.Schema({
 		type: mongoose.SchemaTypes.ObjectId,
 		ref: "User",
 	},
+	chatId: {
+		type: mongoose.SchemaTypes.ObjectId,
+		ref: "Chat",
+	},
 });
 
 const userSchema = new mongoose.Schema(

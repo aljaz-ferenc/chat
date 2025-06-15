@@ -78,8 +78,7 @@ exports.createChat = async (req, res) => {
 exports.addUsersToChat = async (req, res) => {
 	try {
 		const { chatId } = req.params;
-		const { usersIds } = req.body;
-		console.log(usersIds);
+		const { usersIds, addedBy } = req.body;
 
 		const usersObjectIds = usersIds.map((u) => new mongoose.Types.ObjectId(u));
 
@@ -96,12 +95,24 @@ exports.addUsersToChat = async (req, res) => {
 		}
 
 		const promises = usersIds.map((userId) => {
+			const notification = {
+				read: false,
+				type: "addedToGroup",
+				from: addedBy,
+				chatId,
+			};
+
 			return User.findByIdAndUpdate(userId, {
-				$addToSet: { chats: chatId },
+				$addToSet: {
+					chats: chatId,
+					"notifications.notifications": notification,
+				},
+				$set: { "notifications.opened": false },
 			});
 		});
 
 		await Promise.all(promises);
+		console.log("users ids: ", usersIds);
 		EventEmitter.emit("added-to-group", { usersIds, chatId });
 
 		res.sendStatus(200);
