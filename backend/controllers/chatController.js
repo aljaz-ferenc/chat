@@ -1,6 +1,10 @@
 const User = require("../models/User");
 const Chat = require("../models/Chat");
-const { Message, RenameChatMessage } = require("../models/Message");
+const {
+	Message,
+	RenameChatMessage,
+	LeaveChatMessage,
+} = require("../models/Message");
 const { connectToDatabase } = require("../models/mongoose");
 const { mongoose } = require("mongoose");
 const EventEmitter = require("../EventEmitter");
@@ -160,6 +164,7 @@ exports.leaveChat = async (req, res) => {
 		await connectToDatabase();
 
 		const chat = await Chat.findById(chatId);
+
 		if (!chat) {
 			return res.status(404).json({ message: "chat not found" });
 		}
@@ -176,9 +181,15 @@ exports.leaveChat = async (req, res) => {
 		const user = await User.findByIdAndUpdate(userId, {
 			$pull: { chats: chatId },
 		});
+
 		if (!user) {
 			return res.status(404).json({ message: "user not found" });
 		}
+
+		const leaveChatMessage = await LeaveChatMessage.create({
+			user: user._id,
+			chat: chatId,
+		});
 
 		EventEmitter.emit("user-left", { chatId, userId });
 

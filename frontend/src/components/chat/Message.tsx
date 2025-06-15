@@ -92,6 +92,15 @@ export default function Message({
 		);
 	}
 
+	if (message.type === "leaveChat") {
+		return (
+			<p className="text-muted text-center w-full">
+				<strong>{message.user.firstName} </strong>
+				left the chat.
+			</p>
+		);
+	}
+
 	return (
 		<div
 			key={message._id}

@@ -64,8 +64,9 @@ export default function SocketProvider({ children }: PropsWithChildren) {
 			);
 		});
 
-		socket.on("user-left", (data) => {
+		socket.on("user-left", async (data) => {
 			const { chatId, userId } = data;
+
 			queryClient.setQueryData(["chats"], (chats: Chat[]) => {
 				return chats.map((chat) => {
 					if (chat._id === chatId) {
@@ -76,6 +77,9 @@ export default function SocketProvider({ children }: PropsWithChildren) {
 					}
 					return chat;
 				});
+			});
+			await queryClient.invalidateQueries({
+				queryKey: ["messages", { chatId }],
 			});
 		});
 

@@ -67,6 +67,6 @@ export type Message = {
         by: string
     };
     replyTo?: Message | null
-    type: 'userMessage' | 'renameChat',
+    type: 'userMessage' | 'renameChat' | 'leaveChat',
     newChatName?: string
 }

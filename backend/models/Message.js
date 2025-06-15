@@ -26,6 +26,13 @@ const RenameChatMessage = Message.discriminator(
 	})
 )
 
+const LeaveChatMessage = Message.discriminator(
+	'leaveChat',
+	new mongoose.Schema({
+
+	})
+)
+
 const UserMessage = Message.discriminator('userMessage',
 	new mongoose.Schema({
 		edited: {
@@ -51,5 +58,6 @@ const UserMessage = Message.discriminator('userMessage',
 module.exports = {
 	Message,
 	RenameChatMessage,
-	UserMessage
+	UserMessage,
+	LeaveChatMessage
 }
