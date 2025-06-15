@@ -36,16 +36,10 @@ function initSocket(app) {
 
 		socket.on("join-chat", (chatId) => {
 			socket.join(chatId);
-			console.log(`Socket ${socket.id} joined chat ${chatId}`);
 		});
 
 		socket.on("typing", ({ isTyping, userId, chatId }) => {
-			console.log("received event: typing");
 			ioInstance.to(chatId).emit("typing", { userId, isTyping });
-			console.log(
-				`CLIENTS in room ${chatId}: `,
-				ioInstance.sockets.adapter.rooms.get(chatId),
-			);
 		});
 
 		socket.on("new-message", (message) => {

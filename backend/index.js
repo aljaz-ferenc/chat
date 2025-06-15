@@ -40,12 +40,10 @@ app.use("/api/v1/chats", chatsRouter);
 app.use("/api/v1/messages", messagesRouter);
 
 io.on("connection", (socket) => {
-	console.log("connected, ", socket.id);
 	socket.removeAllListeners();
 	socket.on("online", async (userId) => {
 		console.log("ONLINE_USERS: ", onlineUsers);
 		onlineUsers.set(userId, socket.id);
-		console.log(`Came online: ${userId} ${socket.id}`);
 		await connectToDatabase();
 
 		const user = await User.findById(userId).select("chats");
@@ -58,7 +56,6 @@ io.on("connection", (socket) => {
 
 	socket.on("join-chat", (chatId) => {
 		socket.join("join-chat", chatId);
-		console.log(`Socket ${socket.id} joined chat ${chatId}`);
 	});
 
 	socket.on("typing", ({ isTyping, userId, chatId }) => {
@@ -82,9 +79,7 @@ io.on("connection", (socket) => {
 });
 
 EventEmitter.on("new-message", (message) => {
-	console.log("MESSAGE IN EMITTER: ", message);
 	io.to(message.chat.toString()).emit("new-message", message);
-	console.log("new messageeeee");
 });
 
 EventEmitter.on("edit-message", ({ messageId, markdown, chatId }) => {

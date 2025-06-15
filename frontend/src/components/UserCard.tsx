@@ -33,7 +33,7 @@ export default function UserCard({
 				alt="user"
 				className="w-12 aspect-square rounded-[5px]"
 			/>
-			<div className="flex flex-col items-start gap-1">
+			<div className="flex flex-col items-start">
 				<div className="flex flex-col items-start justify-center">
 					<h3 className="font-bold text-white">
 						{highlightText(user.firstName as string, highlight as string)}

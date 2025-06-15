@@ -14,13 +14,12 @@ exports.getAllUsers = async (req, res) => {
 };
 
 exports.getUser = async (req, res) => {
-	console.log("getUser");
 	try {
 		const { clerkId } = req.params;
 		await connectToDatabase();
 		const user = await User.findOne({ clerkId }).populate(
-			"friends.pendingRequests friends.incomingRequests friends.friends friends.blocked",
-		);
+			"friends.pendingRequests friends.incomingRequests friends.friends friends.blocked notifications.notifications.from notifications.notifications.type",
+		).populate({path: 'notifications.notifications.from'});
 
 		res.status(200).json(user);
 	} catch (error) {
@@ -55,7 +54,6 @@ exports.searchUsers = async (req, res) => {
 
 		res.status(200).json(users);
 	} catch (error) {
-		console.log(error);
 		console.log(error);
 		return res.status(500).json({ message: "Server error" });
 	}

@@ -31,7 +31,6 @@ export default function Messages() {
 
 	useEffect(() => {
 		if (chatId && !!socket) {
-			console.log(`joining chat: ${chatId}`);
 			socket.emit("join-chat", chatId);
 		}
 	}, [chatId, socket]);

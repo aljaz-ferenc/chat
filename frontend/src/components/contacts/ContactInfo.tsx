@@ -199,7 +199,8 @@ export function FriendStatusButtons({
 	contactId,
 	thisUser,
 	className = "",
-}: { contactId: User["_id"]; thisUser: User; className?: string }) {
+	shortAccept = false
+}: { contactId: User["_id"]; thisUser: User; className?: string, shortAccept?: boolean }) {
 	const { mutateAsync } = useFriendRequest();
 
 	function BaseButton({
@@ -237,7 +238,7 @@ export function FriendStatusButtons({
 	if (isIncomingRequest(contactId, thisUser)) {
 		return (
 			<div className="flex gap-3">
-				<BaseButton action={"accept"} text="Accept Friend Request" />
+				<BaseButton action={"accept"} text={shortAccept ? "Accept" : "Accept Friend Request"} />
 				<BaseButton action={"decline"} text="Decline" />
 			</div>
 		);
