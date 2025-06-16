@@ -37,7 +37,7 @@ export default function Header() {
 		return notifications?.notifications.some((n) => !n.read);
 	}, [notifications]);
 
-	if (!notifications) return;
+	// if (!notifications) return;
 
 	return (
 		<header className="h-full bg-primary w-full flex items-center border-b border-border">
@@ -79,19 +79,21 @@ export default function Header() {
 							</DropdownMenuItem>
 						)}
 
-						{notifications?.notifications.length > 0 && (
-							<DropdownMenuItem className="text-muted text-sm underline">
-								<button
-									type="button"
-									onClick={async () => deleteNotifications()}
-									className="cursor-pointer"
-								>
-									Clear all
-								</button>
-							</DropdownMenuItem>
-						)}
+						{!!notifications?.notifications.length &&
+							notifications?.notifications.length > 0 && (
+								<DropdownMenuItem className="text-muted text-sm underline">
+									<button
+										type="button"
+										onClick={async () => deleteNotifications()}
+										className="cursor-pointer"
+									>
+										Clear all
+									</button>
+								</DropdownMenuItem>
+							)}
 
-						{notifications?.notifications.length > 0 &&
+						{!!notifications?.notifications.length &&
+							notifications?.notifications.length > 0 &&
 							notifications?.notifications.map((n) => (
 								<DropdownMenuItem key={n._id}>
 									<Notification notification={n} />

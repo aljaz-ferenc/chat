@@ -54,13 +54,13 @@ export default function ChatPreview({ chat }: ChatPreviewProps) {
 						chatId === chat._id && "bg-background",
 					])}
 				>
-					<div className="flex mr-2">
+					<div className="flex mr-2 h-8">
 						{chat.users.slice(0, 2).map((user) => (
 							<img
 								key={user._id}
 								src="https://picsum.photos/id/100/50/50"
 								alt="user"
-								className="-mr-2 h-8 aspect-square rounded-full border-2 border-background"
+								className="-mr-4 w-8 min-w-8 aspect-square rounded-full border-2 border-background"
 							/>
 						))}
 					</div>
@@ -178,7 +178,7 @@ export default function ChatPreview({ chat }: ChatPreviewProps) {
 								type="button"
 								className="border-1 text-base hover:bg-background cursor-pointer transition rounded-xl px-3 py-1 flex items-center gap-1"
 								onClick={async () => {
-									await renameChat(groupName, thisUserId);
+									await renameChat(groupName, thisUserId as User["_id"]);
 									setRenameDialogIsOpen(false);
 									setGroupName("");
 								}}

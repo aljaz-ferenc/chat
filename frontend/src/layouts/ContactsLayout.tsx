@@ -8,9 +8,9 @@ export default function ContactsLayout() {
 	const { data: contacts, isPending } = useContacts();
 	const navigate = useNavigate();
 
-	if (isPending) {
-		return <div>Loading contacts...</div>;
-	}
+	// if (isPending) {
+	// 	return;
+	// }
 
 	return (
 		<div className="flex">

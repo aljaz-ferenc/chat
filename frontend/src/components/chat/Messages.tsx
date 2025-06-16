@@ -93,7 +93,7 @@ export default function Messages() {
 	if (!thisUserId) return <div>User not found...</div>;
 
 	return (
-		<div className="h-full flex flex-col gap-8 items-start bg-background w-full p-6">
+		<div className="h-[calc(100vh-160px)] flex flex-col gap-8 items-start bg-background w-full p-6 overflow-y-auto">
 			{messages?.map((message) => (
 				<Message
 					key={message._id}

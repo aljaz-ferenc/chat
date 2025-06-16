@@ -17,6 +17,7 @@ import useIsTyping from "../../hooks/useIsTyping.tsx";
 import { SocketContext } from "../../providers/SocketProvider.tsx";
 import useUserStore from "../../state/useUserStore";
 import IconButton from "../ui/IconButton";
+import EmojiPickerPopover from "./EmojiPicker.tsx";
 
 type MessageInputProps = {
 	replyingTo: Message | null;
@@ -36,6 +37,7 @@ export default function MessageInput({
 	const { chatId } = useParams();
 	const isTyping = useIsTyping(inputRef as RefObject<HTMLElement>, 500);
 	const socket = use(SocketContext);
+	const [emojiPickerIsOpen, setEmojiPickerIsOpen] = useState(false);
 
 	useEffect(() => {
 		socket?.emit("typing", {
@@ -83,7 +85,7 @@ export default function MessageInput({
 	}, [handleKeyPress]);
 
 	return (
-		<div className=" bg-primary border-t border-border p-2">
+		<div className="bg-primary border-t border-border p-2">
 			{replyingTo && (
 				<div className="text-muted/50 mb-3 flex items-center gap-2">
 					<button
@@ -100,6 +102,14 @@ export default function MessageInput({
 				</div>
 			)}
 			<div className="flex items-center gap-5">
+				<EmojiPickerPopover
+					onOpenChange={(open) => setEmojiPickerIsOpen(open)}
+					isOpen={emojiPickerIsOpen}
+					onSelect={(emoji) => {
+						setMarkdown((prev) => prev + emoji);
+						setEmojiPickerIsOpen(false);
+					}}
+				/>
 				<textarea
 					className="w-full h-full text-white p-2 bg-background rounded"
 					value={markdown}

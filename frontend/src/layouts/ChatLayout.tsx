@@ -1,9 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
-import {Outlet, useNavigate, useParams} from "react-router";
+import { Outlet, useNavigate, useParams } from "react-router";
 import type { Message as TMessage } from "../../../shared/types.ts";
 import { FilterIcon, PlusIcon, SearchIcon } from "../assets/icons/icons.tsx";
 import ChatPreview from "../components/chat/ChatPreview.tsx";
 import MessageInput from "../components/chat/MessageInput.tsx";
+// import Spinner from "../components/ui/Spinner.tsx";
 import useChats from "../hooks/api/useChats.ts";
 import useCreateChat from "../hooks/api/useCreateChat.ts";
 import { cn } from "../utils/utils.ts";
@@ -16,7 +17,7 @@ export default function ChatLayout() {
 		"direct",
 	);
 	const { mutateAsync: createChat } = useCreateChat();
-	const navigate = useNavigate()
+	const navigate = useNavigate();
 	const directChats = useMemo(() => {
 		return chats?.filter((chat) => chat.type === "single");
 	}, [chats]);
@@ -35,9 +36,13 @@ export default function ChatLayout() {
 		});
 	}, [chats, chatId]);
 
-	if (!chats) {
-		return <div>Loading chats...</div>;
-	}
+	// if (!chats) {
+	// 	return (
+	// 		<div className="h-full w-full">
+	// 			<Spinner />
+	// 		</div>
+	// 	);
+	// }
 
 	return (
 		<div className="flex">
@@ -97,10 +102,9 @@ export default function ChatLayout() {
 							type="button"
 							className="flex items-center text-muted gap-2 w-full outline-muted outline-[1px] hover:outline-transparent rounded-xl cursor-pointer py-2 justify-center hover:text-white hover:bg-background transition"
 							onClick={async () => {
-								await createChat("group")
-									.then((data) => {
-										navigate(data.chatId)
-									})
+								await createChat("group").then((data) => {
+									navigate(data.chatId);
+								});
 							}}
 						>
 							<span className="h-7 w-7">
@@ -116,9 +120,17 @@ export default function ChatLayout() {
 					))}
 				</div>
 			</div>
+
 			<div className="w-full bg-primary flex flex-col">
-				<Outlet context={{ replyingTo, setReplyingTo }} />
-				<MessageInput replyingTo={replyingTo} setReplyingTo={setReplyingTo} />
+				{chatId && (
+					<div className="max-h-[calc(100vh-160px)]">
+						<Outlet context={{ replyingTo, setReplyingTo }} />
+						<MessageInput
+							replyingTo={replyingTo}
+							setReplyingTo={setReplyingTo}
+						/>
+					</div>
+				)}
 			</div>
 		</div>
 	);
