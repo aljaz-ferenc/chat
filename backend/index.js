@@ -21,7 +21,7 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
 	cors: {
-		origin: "http://localhost:5173",
+		origin: "*",
 		methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
 	},
 });
@@ -59,12 +59,7 @@ io.on("connection", (socket) => {
 	});
 
 	socket.on("typing", ({ isTyping, userId, chatId }) => {
-		// console.log("typing");
 		io.to(chatId).emit("typing", { userId, isTyping });
-		// console.log(
-		// 	`CLIENTS in room ${chatId}: `,
-		// 	io.sockets.adapter.rooms.get(chatId),
-		// );
 	});
 
 	socket.on("disconnect", () => {

@@ -57,7 +57,8 @@ export type Message = {
     user: User;
     chat: Chat['_id'];
     content:{
-        markdown: string
+        markdown: string,
+        files: string[]
     };
     edited: boolean;
     createdAt: Date;

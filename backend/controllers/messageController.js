@@ -11,8 +11,6 @@ const EventEmitter = require("../EventEmitter");
 exports.createMessage = async (req, res) => {
 	try {
 		const { message } = req.body;
-		console.log("BODY: ", req.body);
-		console.log("MESSAGE: ", message);
 		await connectToDatabase();
 
 		const user = await User.findById(message.user);
@@ -36,7 +34,7 @@ exports.createMessage = async (req, res) => {
 		}
 
 		if (message.type === "userMessage") {
-			if (!message.content || !message.content.markdown) {
+			if (message.content.files.length === 0 && !message.content.markdown) {
 				return res
 					.status(400)
 					.json({ message: "Content is required for userMessage" });

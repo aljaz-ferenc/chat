@@ -1,5 +1,5 @@
 const { Server } = require("socket.io");
-const http = require("http");
+const http = require("node:http");
 const User = require("./models/User");
 const { connectToDatabase } = require("./models/mongoose");
 const Emitter = require("node:events");

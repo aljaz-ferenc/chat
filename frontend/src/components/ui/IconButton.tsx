@@ -18,6 +18,7 @@ import {
 	PlusIcon,
 	ProfileIcon,
 	SearchIcon,
+	SendIcon,
 	SidebarIcon,
 	TiktokIcon,
 	TrashIcon,
@@ -48,7 +49,8 @@ export type Icons =
 	| "x"
 	| "instagram"
 	| "tiktok"
-	| "envelope";
+	| "envelope"
+	| "send";
 
 const icons = {
 	logo: <LogoIcon />,
@@ -74,6 +76,7 @@ const icons = {
 	instagram: <InstagramIcon />,
 	tiktok: <TiktokIcon />,
 	envelope: <EnvelopeIcon />,
+	send: <SendIcon />,
 };
 
 type IconButtonProps = {

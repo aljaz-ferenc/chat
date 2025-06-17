@@ -1,5 +1,6 @@
 import type { PropsWithChildren, ReactNode } from "react";
 import ClerkProviderComponent from "./ClerkProvider.tsx";
+import FileStorageProvider from "./FileStorageProvider.tsx";
 import ReactQueryProvider from "./ReactQueryProvider.tsx";
 import RouterProvider from "./RouterProvider.tsx";
 import SocketProvider from "./SocketProvider.tsx";
@@ -37,6 +38,7 @@ const Providers = composeProviders([
 	ClerkProviderComponent,
 	SocketProvider,
 	RouterProvider,
+	FileStorageProvider,
 ]);
 
 export default function Provider({ children }: ProviderProps) {
