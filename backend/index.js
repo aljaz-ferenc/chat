@@ -6,7 +6,7 @@ const notificationsRouter = require("./routes/notificationsRouter");
 const contactsRouter = require("./routes/contactsRouter");
 const chatsRouter = require("./routes/chatsRouter");
 const messagesRouter = require("./routes/messagesRouter");
-const webhooksRouter = require("./routes/webhooksRouter");
+// const webhooksRouter = require("./routes/webhooksRouter");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const http = require("node:http");
@@ -15,7 +15,7 @@ const { Server } = require("socket.io");
 dotenv.config();
 const onlineUsers = new Map();
 const EventEmitter = require("./EventEmitter");
-const { users } = require("controllers/webhooksController");
+const { users } = require("./controllers/webhooksController");
 
 const app = express();
 app.use(cors());
