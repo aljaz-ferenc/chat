@@ -6,7 +6,7 @@ import type { Chat, Message } from "../../../shared/types.ts";
 import useUser from "../hooks/api/useUser.ts";
 import useUserStore from "../state/useUserStore.ts";
 // @ts-ignore
-const socket = io("http://localhost:3000");
+const socket = io("https://chat-xbp0.onrender.com");
 
 export const SocketContext = createContext<Socket | null>(null);
 

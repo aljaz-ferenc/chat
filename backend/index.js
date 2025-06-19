@@ -6,6 +6,7 @@ const notificationsRouter = require("./routes/notificationsRouter");
 const contactsRouter = require("./routes/contactsRouter");
 const chatsRouter = require("./routes/chatsRouter");
 const messagesRouter = require("./routes/messagesRouter");
+const webhooksRouter = require("./routes/webhooksRouter");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const http = require("node:http");
@@ -38,6 +39,7 @@ app.use("/api/v1/notifications", notificationsRouter);
 app.use("/api/v1/contacts", contactsRouter);
 app.use("/api/v1/chats", chatsRouter);
 app.use("/api/v1/messages", messagesRouter);
+app.use("/api/v1/webhooks", webhooksRouter);
 
 io.on("connection", (socket) => {
 	socket.removeAllListeners();
