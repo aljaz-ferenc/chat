@@ -47,6 +47,11 @@ const userSchema = new mongoose.Schema(
 			trim: true,
 			required: [true, "username is required"],
 		},
+		imageUrl: {
+			type: String,
+			required: [true, "imageUrl is required"],
+			default: "",
+		},
 		about: {
 			type: String,
 			trim: true,

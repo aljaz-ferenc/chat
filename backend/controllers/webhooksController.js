@@ -10,9 +10,9 @@ exports.users = async (req, res) => {
 			secret: WEBHOOK_SECRET,
 		});
 
-		if (evt.type === "user.created") {
-			const { data } = evt;
+		const { data } = evt;
 
+		if (evt.type === "user.created") {
 			const primaryEmail = data.email_addresses.find(
 				(e) => e.id === data.primary_email_address_id,
 			)?.email_address;
@@ -23,9 +23,36 @@ exports.users = async (req, res) => {
 				lastName: data.last_name,
 				email: primaryEmail,
 				username: data.username,
+				imageUrl: data.image_url,
 			});
 
 			console.log("New user created:", newUser);
+		}
+
+		if (evt.type === "user.updated") {
+			const primaryEmail = data.email_addresses.find(
+				(e) => e.id === data.primary_email_address_id,
+			)?.email_address;
+
+			const updatedUser = await User.findOneAndUpdate(
+				{ clerkId: data.id },
+				{
+					firstName: data.first_name,
+					lastName: data.last_name,
+					email: primaryEmail,
+					username: data.username,
+					imageUrl: data.image_url,
+				},
+				{ new: true },
+			);
+
+			console.log("User updated:", updatedUser);
+		}
+
+		if (evt.type === "user.deleted") {
+			const deletedUser = await User.findOneAndDelete({ clerkId: data.id });
+
+			console.log("User deleted:", deletedUser);
 		}
 
 		return res.send("Webhook received");
