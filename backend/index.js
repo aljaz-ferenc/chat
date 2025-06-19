@@ -15,6 +15,7 @@ const { Server } = require("socket.io");
 dotenv.config();
 const onlineUsers = new Map();
 const EventEmitter = require("./EventEmitter");
+const { users } = require("controllers/webhooksController");
 
 const app = express();
 app.use(cors());
@@ -31,10 +32,10 @@ const port = process.env.PORT || 3000;
 const { connectToDatabase } = require("./models/mongoose");
 const User = require("./models/User");
 
-app.use(
+app.post(
 	"/api/v1/webhooks/clerk",
 	express.raw({ type: "application/json" }),
-	webhooksRouter,
+	users,
 );
 
 app.use(clerkMiddleware());

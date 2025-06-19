@@ -5,12 +5,9 @@ const WEBHOOK_SECRET = process.env.CLERK_WEBHOOK_SECRET;
 console.log("WEBHOOK_SECRET: ", WEBHOOK_SECRET);
 
 exports.users = async (req, res) => {
-	console.log("REQ: ", req);
+	// console.log("REQ: ", req);
 	try {
-		const evt = await verifyWebhook({
-			req,
-			secret: WEBHOOK_SECRET,
-		});
+		const evt = await verifyWebhook(req);
 
 		console.log("EVT: ", evt);
 
