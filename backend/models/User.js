@@ -84,12 +84,15 @@ const userSchema = new mongoose.Schema(
 			default: "",
 		},
 		socials: {
-			type: {
-				facebook: String,
-				x: String,
-				instagram: String,
-				tiktok: String,
-			},
+			type: new mongoose.Schema(
+				{
+					facebook: String,
+					x: String,
+					instagram: String,
+					tiktok: String,
+				},
+				{ _id: false },
+			),
 			default: {},
 		},
 		friends: {
