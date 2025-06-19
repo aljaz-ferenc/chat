@@ -31,6 +31,7 @@ const port = process.env.PORT || 3000;
 const { connectToDatabase } = require("./models/mongoose");
 const User = require("./models/User");
 
+app.use("/api/v1/webhooks", webhooksRouter);
 app.use(clerkMiddleware());
 app.use(bodyParser.json());
 app.use("/api/v1/users", usersRouter);
@@ -39,7 +40,6 @@ app.use("/api/v1/notifications", notificationsRouter);
 app.use("/api/v1/contacts", contactsRouter);
 app.use("/api/v1/chats", chatsRouter);
 app.use("/api/v1/messages", messagesRouter);
-app.use("/api/v1/webhooks", webhooksRouter);
 
 io.on("connection", (socket) => {
 	socket.removeAllListeners();
