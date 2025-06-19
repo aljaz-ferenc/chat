@@ -31,7 +31,12 @@ const port = process.env.PORT || 3000;
 const { connectToDatabase } = require("./models/mongoose");
 const User = require("./models/User");
 
-app.use("/api/v1/webhooks", webhooksRouter);
+app.use(
+	"/api/v1/webhooks/clerk",
+	express.raw({ type: "application/json" }),
+	webhooksRouter,
+);
+
 app.use(clerkMiddleware());
 app.use(bodyParser.json());
 app.use("/api/v1/users", usersRouter);

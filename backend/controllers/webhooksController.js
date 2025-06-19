@@ -55,7 +55,7 @@ exports.users = async (req, res) => {
 			console.log("User deleted:", deletedUser);
 		}
 
-		return res.send("Webhook received");
+		res.send("Webhook received");
 	} catch (error) {
 		console.error("Webhook error:", error);
 		res.status(500).json({ message: "Server error" });
