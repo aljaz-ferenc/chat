@@ -1,0 +1,110 @@
+import { useAuth } from "@clerk/clerk-react";
+import { useQueryClient } from "@tanstack/react-query";
+import { ID } from "appwrite";
+import { type ChangeEvent, use, useEffect, useRef, useState } from "react";
+import { useShallow } from "zustand/react/shallow";
+import type { Contact } from "../../../../shared/types.ts";
+import { EditIcon } from "../../assets/icons/icons.tsx";
+import useUpdateUser from "../../hooks/api/useUpdateUser.ts";
+import { FileStorageContext } from "../../providers/FileStorageProvider.tsx";
+import useUserStore from "../../state/useUserStore.ts";
+
+const BUCKET_ID = import.meta.env.VITE_APPWRITE_BUCKET_ID;
+
+type ProfileHeaderProps = {
+	user: Contact;
+	editable?: boolean;
+};
+
+export function ProfileHeader({ user, editable = false }: ProfileHeaderProps) {
+	const imageInputRef = useRef<HTMLInputElement>();
+	const [bgImageId, clerkId] = useUserStore(
+		useShallow((state) => [state.user?.bgImage, state.user?.clerkId]),
+	);
+	const { storage } = use(FileStorageContext);
+	const { mutateAsync: updateUser } = useUpdateUser();
+	const [bgImage, setBgImage] = useState("");
+
+	const handleEditImage = async (e: ChangeEvent<HTMLInputElement>) => {
+		const image = e.target.files[0];
+		if (!image) return;
+
+		try {
+			const uploadedImage = await storage.createFile(
+				BUCKET_ID,
+				ID.unique(),
+				image,
+			);
+			await updateUser({ bgImage: uploadedImage.$id });
+			setBgImage(storage.getFileView(BUCKET_ID, uploadedImage.$id));
+		} catch (error) {
+			console.error(error);
+		}
+	};
+
+	useEffect(() => {
+		if (!storage || !bgImageId) return;
+		const imageUrl = storage.getFileView(BUCKET_ID, bgImageId);
+		setBgImage(imageUrl);
+	}, [storage, bgImageId]);
+
+	return (
+		<div className="bg-primary rounded-2xl overflow-hidden w-full max-w-6xl mx-auto">
+			{/*BACKGROUND IMAGE*/}
+			<div className="w-full h-[500px] relative overflow-hidden group">
+				<button
+					type="button"
+					onClick={() => imageInputRef.current.click()}
+					className="absolute top-3 right-3 z-30 h-8 w-8 cursor-pointer hidden group-hover:block [&_svg]:fill-[var(--muted)]"
+				>
+					<EditIcon />
+				</button>
+				{bgImage && (
+					<img
+						className="absolute inset-0 object-cover w-full h-full object-center group-hover:brightness-50 transition"
+						src={bgImage}
+						alt=""
+					/>
+				)}
+				<input
+					type="file"
+					className="hidden"
+					ref={imageInputRef}
+					onChange={handleEditImage}
+				/>
+			</div>
+			<div className="px-8 ">
+				{/*PROFILE PIC*/}
+				<div className="flex gap-5 text-white">
+					<div className="relative h-[150px] w-[150px] border-border border-2 rounded-xl overflow-hidden -translate-y-8">
+						<img
+							src={user.imageUrl || "https://picsum.photos/300"}
+							alt=""
+							className="w-full h-full object-cover"
+						/>
+					</div>
+					<div className="mt-6">
+						<h3>
+							<span className="font-bold text-lg">
+								{user.firstName} {user.lastName}
+							</span>{" "}
+							<span className="text-sm text-muted">@{user.username}</span>
+						</h3>
+						<div>
+							<span className="text-sm text-muted">
+								{user.friends.friends.length} Contacts
+							</span>
+							{!!user?.mutualFriends && (
+								<span className="text-xs text-muted">
+									{" "}
+									&bull; {user?.mutualFriends.length} Mutual
+								</span>
+							)}
+						</div>
+						{/*TODO: mutual contacts*/}
+					</div>
+				</div>
+			</div>
+		</div>
+	);
+}

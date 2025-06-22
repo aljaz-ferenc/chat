@@ -17,9 +17,11 @@ exports.getUser = async (req, res) => {
 	try {
 		const { clerkId } = req.params;
 		await connectToDatabase();
-		const user = await User.findOne({ clerkId }).populate(
-			"friends.pendingRequests friends.incomingRequests friends.friends friends.blocked notifications.notifications.from notifications.notifications.type",
-		).populate({path: 'notifications.notifications.from'});
+		const user = await User.findOne({ clerkId })
+			.populate(
+				"friends.pendingRequests friends.incomingRequests friends.friends friends.blocked notifications.notifications.from notifications.notifications.type",
+			)
+			.populate({ path: "notifications.notifications.from" });
 
 		res.status(200).json(user);
 	} catch (error) {
@@ -53,6 +55,20 @@ exports.searchUsers = async (req, res) => {
 		]);
 
 		res.status(200).json(users);
+	} catch (error) {
+		console.log(error);
+		return res.status(500).json({ message: "Server error" });
+	}
+};
+
+exports.updateUser = async (req, res) => {
+	try {
+		const { clerkId } = req.params;
+		const { updates } = req.body;
+		const user = await User.findOneAndUpdate({ clerkId }, updates);
+
+		if (!user) return res.status(404).json({ message: "User not found" });
+		return res.status(200).json(user);
 	} catch (error) {
 		console.log(error);
 		return res.status(500).json({ message: "Server error" });

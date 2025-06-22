@@ -36,7 +36,7 @@ export default function UserCard({
 			<div className="flex flex-col items-start">
 				<div className="flex flex-col items-start justify-center">
 					<h3 className="font-bold text-white">
-						{highlightText(user.firstName as string, highlight as string)}
+						{highlightText(user.firstName as string, highlight as string)}{" "}
 						{highlightText(user.lastName as string, highlight as string)}
 					</h3>
 					{showUsername && (

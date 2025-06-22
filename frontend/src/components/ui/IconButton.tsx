@@ -5,6 +5,7 @@ import {
 	ChevronUpIcon,
 	CloseIcon,
 	ContactIcon,
+	EditIcon,
 	EllipsisIcon,
 	EmojiIcon,
 	EnvelopeIcon,
@@ -50,7 +51,8 @@ export type Icons =
 	| "instagram"
 	| "tiktok"
 	| "envelope"
-	| "send";
+	| "send"
+	| "edit";
 
 const icons = {
 	logo: <LogoIcon />,
@@ -77,6 +79,7 @@ const icons = {
 	tiktok: <TiktokIcon />,
 	envelope: <EnvelopeIcon />,
 	send: <SendIcon />,
+	edit: <EditIcon />,
 };
 
 type IconButtonProps = {

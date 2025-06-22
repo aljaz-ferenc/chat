@@ -3,7 +3,10 @@ const userController = require("../controllers/userController");
 
 router.route("/").get(userController.getAllUsers);
 
-router.route("/:clerkId").get(userController.getUser);
+router
+	.route("/:clerkId")
+	.get(userController.getUser)
+	.patch(userController.updateUser);
 
 router.route("/search/:query").get(userController.searchUsers);
 

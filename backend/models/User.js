@@ -83,6 +83,11 @@ const userSchema = new mongoose.Schema(
 			trim: true,
 			default: "",
 		},
+		bgImage: {
+			type: String,
+			trim: true,
+			default: "",
+		},
 		socials: {
 			type: new mongoose.Schema(
 				{

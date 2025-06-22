@@ -12,6 +12,8 @@ export type User = {
     city: string,
     country: string,
     phoneNumber: string,
+    imageUrl: string,
+    bgImage: string,
     socials: {
         facebook: string,
         x: string,

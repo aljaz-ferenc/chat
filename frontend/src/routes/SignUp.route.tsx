@@ -1,5 +1,9 @@
 import { SignUp } from "@clerk/clerk-react";
 
 export default function SignUpRoute() {
-	return <SignUp signInUrl="/" />;
+	return (
+		<div className="grid place-items-center w-full h-full bg-primary">
+			<SignUp signInUrl="/" />
+		</div>
+	);
 }

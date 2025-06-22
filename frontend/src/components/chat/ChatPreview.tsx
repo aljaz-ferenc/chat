@@ -6,7 +6,7 @@ import type { Chat, User } from "../../../../shared/types.ts";
 import { ReplyIcon } from "../../assets/icons/icons.tsx";
 import useAddUsersToChat from "../../hooks/api/useAddUsersToChat.ts";
 import useLeaveChat from "../../hooks/api/useLeaveChat.ts";
-import useRenameChat from "../../hooks/api/useRenameChat.tsx";
+import useRenameChat from "../../hooks/api/useRenameChat.ts";
 import useUserStore from "../../state/useUserStore.ts";
 import { cn } from "../../utils/utils.ts";
 import UserCard from "../UserCard.tsx";

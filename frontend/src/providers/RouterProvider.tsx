@@ -1,5 +1,6 @@
 import { RouterProvider as Provider, createBrowserRouter } from "react-router";
 import { Routes } from "../../../shared/Routes.enum.ts";
+import Profile from "../components/Profile.tsx";
 import SearchUsers from "../components/SearchUsers.tsx";
 import Messages from "../components/chat/Messages.tsx";
 import Contact from "../components/contacts/Contact.tsx";
@@ -18,6 +19,10 @@ const router = createBrowserRouter([
 	{
 		path: Routes.SIGN_UP,
 		element: <SignUpRoute />,
+	},
+	{
+		path: Routes.PROFILE,
+		element: <Profile />,
 	},
 	{
 		path: Routes.HOME,

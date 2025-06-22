@@ -24,10 +24,11 @@ export default function Header() {
 	const { mutateAsync: readNotification } = useReadNotification();
 	const { mutateAsync: deleteNotifications } = useDeleteNotifications();
 	const { refetch } = useUser();
-	const [notifications, opened] = useUserStore(
+	const [notifications, opened, imageUrl] = useUserStore(
 		useShallow((state) => [
 			state.user?.notifications,
 			state.user?.notifications?.opened,
+			state.user?.imageUrl,
 		]),
 	);
 	// @ts-ignore
@@ -45,17 +46,23 @@ export default function Header() {
 				<LogoIcon />
 			</div>
 			<div className="flex px-4 gap-4 w-full">
-				<NavLink to={Routes.CHATS}>
+				<NavLink to={`/${Routes.CHATS}`}>
 					<IconButton
 						isActive={pathname.startsWith(`/${Routes.CHATS}`)}
 						icon="message"
 					/>
 				</NavLink>
-				<NavLink to={Routes.CONTACTS}>
+				<NavLink to={`/${Routes.CONTACTS}`}>
 					<IconButton
 						isActive={pathname.startsWith(`/${Routes.CONTACTS}`)}
 						icon="contact"
 					/>
+				</NavLink>
+				<NavLink
+					to={`/${Routes.PROFILE}`}
+					className="h-12 aspect-square rounded-full overflow-hidden relative"
+				>
+					<img src={imageUrl} alt="" className="absolute inset-0" />
 				</NavLink>
 				<DropdownMenu
 					onOpenChange={async (open) => {
@@ -101,7 +108,6 @@ export default function Header() {
 							))}
 					</DropdownMenuContent>
 				</DropdownMenu>
-
 				<UserButton />
 			</div>
 		</header>
