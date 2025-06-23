@@ -21,6 +21,11 @@ export default function Profile() {
 		Instagram: user?.socials?.instagram || "",
 		TikTok: user?.socials?.tiktok || "",
 	});
+	const [basicInfo, setBasicInfo] = useState({
+		city: "",
+		country: "",
+		phone: "",
+	});
 	const [birthday, setBirthday] = useState<Date>(() => {
 		if (user?.birthday) {
 			return new Date(user?.birthday);
@@ -43,6 +48,11 @@ export default function Profile() {
 		if (user.birthday) {
 			setBirthday(new Date(user.birthday));
 		}
+		setBasicInfo({
+			city: user.city,
+			country: user.country,
+			phone: user.phoneNumber,
+		});
 	}, [user]);
 
 	useEffect(() => {
@@ -54,16 +64,19 @@ export default function Profile() {
 			socials.Facebook === user.socials.facebook &&
 			socials.TikTok === user.socials.tiktok &&
 			socials.Instagram === user.socials.instagram &&
-			isSameDay(user.birthday, birthday);
+			isSameDay(user.birthday, birthday) &&
+			basicInfo.city === user.city &&
+			basicInfo.country === user.country &&
+			basicInfo.phone === user.phoneNumber;
 
 		setHasChanged(!areInputsSame);
-	}, [about, socials, birthday, user]);
+	}, [about, socials, birthday, user, basicInfo]);
 
 	if (!user) return null;
 
 	return (
 		<div className="bg-background h-full w-full flex flex-col">
-			<div className="h-[72px] mb-6">
+			<div className="h-[98px] mb-6">
 				<Header />
 			</div>
 			<ProfileHeader user={user as Contact} />
@@ -92,8 +105,8 @@ export default function Profile() {
 											value={value}
 											className="bg-background rounded w-md p-1 px-2"
 											onChange={(e) =>
-												setSocials(() => {
-													return { ...socials, [social]: e.target.value };
+												setSocials((prev) => {
+													return { ...prev, [social]: e.target.value };
 												})
 											}
 										/>
@@ -140,6 +153,30 @@ export default function Profile() {
 						</Popover>
 					</div>
 				</div>
+				<div className="flex flex-col gap-2">
+					<span className="font-bold">Basic info</span>
+					<div>
+						<div className="flex flex-col gap-2">
+							{Object.entries(basicInfo).map(([info, value]) => {
+								return (
+									<div key={info} className="flex">
+										<div className="w-23 capitalize">{info}</div>
+										<input
+											type="text"
+											value={value}
+											className="bg-background rounded w-md p-1 px-2"
+											onChange={(e) =>
+												setBasicInfo((prev) => {
+													return { ...prev, [info]: e.target.value };
+												})
+											}
+										/>
+									</div>
+								);
+							})}
+						</div>
+					</div>
+				</div>
 				<Button
 					disabled={!hasChanged}
 					className="text-left w-fit px-3 py-1 rounded-xl"
@@ -154,6 +191,9 @@ export default function Profile() {
 								tiktok: socials.TikTok,
 							},
 							birthday,
+							city: basicInfo.city,
+							country: basicInfo.country,
+							phoneNumber: basicInfo.phone,
 						}).then(() => setHasChanged(false))
 					}
 				>

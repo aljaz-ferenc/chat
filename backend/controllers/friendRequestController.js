@@ -1,7 +1,7 @@
 const { connectToDatabase } = require("../models/mongoose");
 const User = require("../models/User");
 const Chat = require("../models/Chat");
-const EventEmitter = require('../EventEmitter')
+const EventEmitter = require("../EventEmitter");
 
 exports.sendFriendRequest = async (req, res) => {
 	try {
@@ -34,7 +34,7 @@ exports.sendFriendRequest = async (req, res) => {
 			$set: { "notifications.opened": false },
 		});
 
-			EventEmitter.emit('friendRequest-incoming', receiverId)
+		EventEmitter.emit("friendRequest-incoming", receiverId);
 
 		return res.sendStatus(204);
 	} catch (error) {
@@ -66,11 +66,11 @@ exports.declineFriendRequest = async (req, res) => {
 			},
 		});
 
-		EventEmitter.emit('friendRequest-declined', {receiverId, senderId})
+		EventEmitter.emit("friendRequest-declined", { receiverId, senderId });
 
 		return res.status(204).json({ message: "success" });
 	} catch (error) {
-		console.log(error)
+		console.log(error);
 		return res.status(500).json({ message: "Server error" });
 	}
 };
@@ -104,7 +104,7 @@ exports.acceptFriendRequest = async (req, res) => {
 			},
 		});
 
-		EventEmitter.emit('friendRequest-accepted', ({receiverId, senderId}))
+		EventEmitter.emit("friendRequest-accepted", { receiverId, senderId });
 
 		const chatExists = await Chat.findOne({
 			type: "single",
@@ -130,7 +130,7 @@ exports.acceptFriendRequest = async (req, res) => {
 
 		return res.status(204).json({ message: "success" });
 	} catch (error) {
-		console.log(error)
+		console.log(error);
 		return res.status(500).json({ message: "Server error" });
 	}
 };
@@ -158,7 +158,7 @@ exports.cancelFriendRequest = async (req, res) => {
 			},
 		});
 
-		EventEmitter.emit('friendRequest-canceled', ({receiverId, senderId}))
+		EventEmitter.emit("friendRequest-canceled", { receiverId, senderId });
 
 		return res.status(204).json({ message: "success" });
 	} catch (error) {
@@ -189,7 +189,7 @@ exports.unfriend = async (req, res) => {
 			},
 		});
 
-		EventEmitter.emit('friendRequest-unfriended', ({senderId, receiverId}))
+		EventEmitter.emit("friendRequest-unfriended", { senderId, receiverId });
 		return res.status(204).json({ message: "success" });
 	} catch (error) {
 		return res.status(500).json({ message: "Server error" });

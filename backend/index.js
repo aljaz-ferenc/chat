@@ -137,6 +137,8 @@ EventEmitter.on("create-chat", ({ userId, chatId }) => {
 
 EventEmitter.on("friendRequest-incoming", (receiverId) => {
 	const receiverSocketId = onlineUsers.get(receiverId);
+	console.log(`fr to ${receiverSocketId}`);
+	console.log("ONLINE: ", onlineUsers);
 	io.to(receiverSocketId).emit("friendRequest-incoming");
 });
 

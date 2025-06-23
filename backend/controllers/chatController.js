@@ -20,7 +20,7 @@ exports.getAllChats = async (req, res) => {
 		}
 
 		const chats = await Chat.find({ users: userId })
-			.populate("users", "firstName lastName username")
+			.populate("users", "firstName lastName username imageUrl")
 			.populate("lastMessage");
 
 		res.status(200).json(chats);
@@ -147,7 +147,11 @@ exports.renameChat = async (req, res) => {
 			chat: chatId,
 		});
 
-		EventEmitter.emit("chat-rename", renameMessage);
+		const message = await RenameChatMessage.findById(
+			renameMessage._id,
+		).populate("user", "firstName");
+
+		EventEmitter.emit("chat-rename", message);
 
 		res.sendStatus(204);
 	} catch (error) {
