@@ -1,1 +1,2 @@
-/// <reference types.ts="vite/client" />
+/// <reference types="vite/client" />
+/// <reference types="vite/types/importMeta.d.ts" />

@@ -1,5 +1,5 @@
 import { EditIcon, UserIcon } from "lucide-react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Link, useParams } from "react-router";
 import { useShallow } from "zustand/react/shallow";
 import type { Chat, User } from "../../../../shared/types.ts";
@@ -44,6 +44,15 @@ export default function ChatPreview({ chat }: ChatPreviewProps) {
 	const { mutateAsync: leaveChat } = useLeaveChat();
 	const { chatId } = useParams();
 
+	const usersIds = useMemo(() => {
+		return chat.users.map((u) => u._id);
+	}, [chat]);
+
+	const friendsNotInChat = useMemo(() => {
+		if (!thisUser) return;
+		return thisUser.friends.friends.filter((u) => !usersIds.includes(u._id));
+	}, [thisUser, usersIds]);
+
 	if (chat.type === "group") {
 		return (
 			<>
@@ -55,22 +64,22 @@ export default function ChatPreview({ chat }: ChatPreviewProps) {
 					])}
 				>
 					<div className="flex mr-2 h-8">
-						{chat.users.slice(0, 2).map((user) => (
+						{chat.users.slice(0, 3).map((user) => (
 							<img
 								key={user._id}
-								src="https://picsum.photos/id/100/50/50"
+								src={user.imageUrl}
 								alt="user"
 								className="-mr-4 w-8 min-w-8 aspect-square rounded-full border-2 border-background"
 							/>
 						))}
 					</div>
 					<div className="flex flex-col items-start gap-1 w-full">
-						<div className="flex items-center w-full">
-							<h3 className="font-bold text-white">
+						<div className="flex items-center w-full ">
+							<h3 className="font-bold text-white text-ellipsis">
 								{chat.name
 									? chat.name
 									: chat.users
-											.slice(0, 2)
+											.slice(0, 3)
 											.map((u) => u.firstName)
 											.join(", ")}
 							</h3>
@@ -115,48 +124,54 @@ export default function ChatPreview({ chat }: ChatPreviewProps) {
 						<DialogHeader>
 							<DialogTitle>Add Friends to Group</DialogTitle>
 						</DialogHeader>
-						{thisUser?.friends.friends.map((friend) => (
-							<button
-								type="button"
-								key={friend._id}
-								className={cn([
-									"flex items-center justify-between rounded-xl hover:bg-background p-2 px-3 cursor-pointer",
-									checkedUsers.includes(friend._id) && "bg-background",
-								])}
-								onClick={() =>
-									setCheckedUsers((prev) =>
-										prev.includes(friend._id)
-											? prev.filter((u) => u !== friend._id)
-											: [...prev, friend._id],
-									)
-								}
-							>
-								<Label className="flex items-center gap-2">
-									<span>
-										{friend.firstName} {friend.lastName}
-									</span>
-								</Label>
-								<Checkbox
-									className="cursor-pointer"
-									value={friend._id}
-									checked={checkedUsers.includes(friend._id)}
-								/>
-							</button>
-						))}
-						<DialogFooter className="[&_svg]:h-5">
-							<button
-								type="button"
-								className="border-1 text-base hover:bg-background cursor-pointer transition rounded-xl px-3 py-1 flex items-center gap-1"
-								onClick={async () => {
-									await addUsersToChat(checkedUsers);
-									console.log(checkedUsers);
-									setAddFriendsIsOpen(false);
-									setCheckedUsers([]);
-								}}
-							>
-								<span>Add</span>
-							</button>
-						</DialogFooter>
+						{friendsNotInChat && friendsNotInChat.length > 0 ? (
+							friendsNotInChat?.map((friend) => (
+								<button
+									type="button"
+									key={friend._id}
+									className={cn([
+										"flex items-center justify-between rounded-xl hover:bg-background p-2 px-3 cursor-pointer",
+										checkedUsers.includes(friend._id) && "bg-background",
+									])}
+									onClick={() =>
+										setCheckedUsers((prev) =>
+											prev.includes(friend._id)
+												? prev.filter((u) => u !== friend._id)
+												: [...prev, friend._id],
+										)
+									}
+								>
+									<Label className="flex items-center gap-2">
+										<span>
+											{friend.firstName} {friend.lastName}
+										</span>
+									</Label>
+									<Checkbox
+										className="cursor-pointer"
+										value={friend._id}
+										checked={checkedUsers.includes(friend._id)}
+									/>
+								</button>
+							))
+						) : (
+							<span>All your friends are already in the group.</span>
+						)}
+						{friendsNotInChat && friendsNotInChat.length > 0 && (
+							<DialogFooter className="[&_svg]:h-5">
+								<button
+									type="button"
+									className="border-1 text-base hover:bg-background cursor-pointer transition rounded-xl px-3 py-1 flex items-center gap-1"
+									onClick={async () => {
+										await addUsersToChat(checkedUsers);
+										console.log(checkedUsers);
+										setAddFriendsIsOpen(false);
+										setCheckedUsers([]);
+									}}
+								>
+									<span>Add</span>
+								</button>
+							</DialogFooter>
+						)}
 					</DialogContent>
 				</Dialog>
 
@@ -178,7 +193,7 @@ export default function ChatPreview({ chat }: ChatPreviewProps) {
 								type="button"
 								className="border-1 text-base hover:bg-background cursor-pointer transition rounded-xl px-3 py-1 flex items-center gap-1"
 								onClick={async () => {
-									await renameChat(groupName, thisUserId as User["_id"]);
+									await renameChat(groupName);
 									setRenameDialogIsOpen(false);
 									setGroupName("");
 								}}

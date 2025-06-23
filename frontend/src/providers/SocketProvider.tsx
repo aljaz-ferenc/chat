@@ -5,8 +5,12 @@ import { useShallow } from "zustand/react/shallow";
 import type { Chat, Message } from "../../../shared/types.ts";
 import useUser from "../hooks/api/useUser.ts";
 import useUserStore from "../state/useUserStore.ts";
-// @ts-ignore
-const socket = io("https://chat-xbp0.onrender.com");
+
+const socket = io(
+	process.env.NODE_ENV === "development"
+		? "http://localhost:3000"
+		: import.meta.env.VITE_BACKEND_URL,
+);
 
 export const SocketContext = createContext<Socket | null>(null);
 
@@ -139,6 +143,7 @@ export default function SocketProvider({ children }: PropsWithChildren) {
 
 		//TODO: use same event for each if they do the same thing, but wait for confirmation
 		socket.on("friendRequest-incoming", async () => {
+			console.log("friend request");
 			await refetch();
 		});
 

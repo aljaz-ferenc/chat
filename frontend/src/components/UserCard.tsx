@@ -29,7 +29,7 @@ export default function UserCard({
 			className={cn(["flex items-center gap-4", className])}
 		>
 			<img
-				src="https://picsum.photos/id/100/50/50"
+				src={user.imageUrl}
 				alt="user"
 				className="w-12 aspect-square rounded-[5px]"
 			/>
