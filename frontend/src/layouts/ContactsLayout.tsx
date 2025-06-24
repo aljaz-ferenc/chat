@@ -5,12 +5,8 @@ import useContacts from "../hooks/api/useContacts.ts";
 import { cn } from "../utils/utils.ts";
 
 export default function ContactsLayout() {
-	const { data: contacts, isPending } = useContacts();
+	const { data: contacts } = useContacts();
 	const navigate = useNavigate();
-
-	// if (isPending) {
-	// 	return;
-	// }
 
 	return (
 		<div className="flex">

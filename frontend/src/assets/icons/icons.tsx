@@ -507,15 +507,15 @@ export function DownloadIcon() {
 	);
 }
 
-export function TxtFileIcon() {
+export function FileIcon() {
 	return (
 		<svg
 			xmlns="http://www.w3.org/2000/svg"
 			shapeRendering="geometricPrecision"
 			textRendering="geometricPrecision"
 			imageRendering="optimizeQuality"
-			fill-rule="evenodd"
-			clip-rule="evenodd"
+			fillRule="evenodd"
+			clipRule="evenodd"
 			viewBox="0 0 421 511.605"
 		>
 			<title>text file</title>
@@ -533,23 +533,18 @@ export function TxtFileIcon() {
 			/>
 			<path
 				fill="#CD4445"
-				fill-rule="nonzero"
+				fillRule="nonzero"
 				d="M0 431.901V253.404l.028-1.261c.668-16.446 14.333-29.706 30.936-29.706h7.238v50.589h342.975c12.862 0 23.373 10.51 23.373 23.371v135.504c0 12.83-10.543 23.373-23.373 23.373H23.373C10.541 455.274 0 444.75 0 431.901z"
 			/>
 			<path
 				fill="#963232"
-				fill-rule="nonzero"
+				fillRule="nonzero"
 				d="M143.448 240.364a8.496 8.496 0 01-8.496-8.497 8.496 8.496 0 018.496-8.497h163.176a8.496 8.496 0 018.496 8.497 8.496 8.496 0 01-8.496 8.497H143.448zm0-59.176a8.496 8.496 0 010-16.993h172.304a8.496 8.496 0 110 16.993H143.448z"
 			/>
 			<path
 				fill="#fff"
-				fill-rule="nonzero"
+				fillRule="nonzero"
 				d="M11.329 276.171v154.728c0 7.793 6.38 14.178 14.179 14.178H380.175c7.799 0 14.178-6.379 14.178-14.178V297.405c0-7.798-6.388-14.178-14.178-14.178H37.892c-12.618-.096-19.586-1.638-26.563-7.056z"
-			/>
-			<path
-				fill="#1A1A1A"
-				fill-rule="nonzero"
-				d="M159.472 340.643h-18.999v60.929h-26.206v-60.929H95.268v-20.965h64.204v20.965zm34.33-20.965l9.041 21.884h1.31l9.04-21.884h28.434l-18.214 39.571 18.214 42.323h-29.089l-9.826-23.585h-1.18l-9.695 23.585h-27.779l17.819-41.535-17.819-40.359h29.744zm116.615 20.965h-18.999v60.929h-26.206v-60.929h-18.999v-20.965h64.204v20.965z"
 			/>
 		</svg>
 	);

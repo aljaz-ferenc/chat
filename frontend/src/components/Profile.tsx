@@ -79,7 +79,7 @@ export default function Profile() {
 			<div className="h-[98px] mb-6">
 				<Header />
 			</div>
-			<ProfileHeader user={user as Contact} />
+			<ProfileHeader user={user as Contact} editable />
 			<div className="w-full max-w-6xl mx-auto mt-6 bg-primary rounded-xl px-6 py-3 text-muted flex flex-col gap-10 overflow-y-scroll mb-6">
 				<div className="flex flex-col gap-2">
 					<span className="font-bold">About</span>

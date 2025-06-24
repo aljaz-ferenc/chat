@@ -19,6 +19,7 @@ import useIsTyping from "../../hooks/useIsTyping.tsx";
 import { FileStorageContext } from "../../providers/FileStorageProvider.tsx";
 import { SocketContext } from "../../providers/SocketProvider.tsx";
 import useUserStore from "../../state/useUserStore";
+import FileIcon, { type MimeType } from "../FileIcon.tsx";
 import IconButton from "../ui/IconButton";
 import EmojiPickerPopover from "./EmojiPicker.tsx";
 
@@ -142,10 +143,10 @@ export default function MessageInput({
 					</span>
 				</div>
 			)}
-			<div className="flex mb-2 gap-3">
+			<div className="flex flex-col justify-start mb-2 gap-3">
 				{newFiles.map((file) => (
 					<div
-						className="border border-muted text-white p-2 gap-3 flex items-center relative"
+						className="border border-muted/50 rounded-md text-white p-3 gap-3 flex items-center relative"
 						key={file.id}
 					>
 						<IconButton
@@ -155,10 +156,13 @@ export default function MessageInput({
 								setNewFiles((prev) => prev.filter((f) => f.id !== file.id))
 							}
 						/>
-						<div className="h-20 w-20 grid place-items-center">image</div>
+						<div className="h-15 mx-auto">
+							<FileIcon
+								extension={file.name.split(".").slice(-1)[0] as MimeType}
+							/>
+						</div>
 						<div className="flex flex-col">
 							<span>{file.name}</span>
-							<span>{file.size}</span>
 						</div>
 					</div>
 				))}
@@ -172,7 +176,10 @@ export default function MessageInput({
 						setEmojiPickerIsOpen(false);
 					}}
 				/>
-				<IconButton icon="image" onClick={() => fileInputRef.current.click()} />
+				<IconButton
+					icon="image"
+					onClick={() => fileInputRef.current?.click()}
+				/>
 				<input
 					type="file"
 					className="hidden"

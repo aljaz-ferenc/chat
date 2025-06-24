@@ -1,5 +1,3 @@
-import { useAuth } from "@clerk/clerk-react";
-import { useQueryClient } from "@tanstack/react-query";
 import { ID } from "appwrite";
 import { type ChangeEvent, use, useEffect, useRef, useState } from "react";
 import { useShallow } from "zustand/react/shallow";
@@ -18,8 +16,8 @@ type ProfileHeaderProps = {
 
 export function ProfileHeader({ user, editable = false }: ProfileHeaderProps) {
 	const imageInputRef = useRef<HTMLInputElement>();
-	const [bgImageId, clerkId] = useUserStore(
-		useShallow((state) => [state.user?.bgImage, state.user?.clerkId]),
+	const [bgImageId] = useUserStore(
+		useShallow((state) => [state.user?.bgImage]),
 	);
 	const { storage } = use(FileStorageContext);
 	const { mutateAsync: updateUser } = useUpdateUser();
@@ -52,13 +50,15 @@ export function ProfileHeader({ user, editable = false }: ProfileHeaderProps) {
 		<div className="bg-primary rounded-2xl overflow-hidden w-full max-w-6xl mx-auto">
 			{/*BACKGROUND IMAGE*/}
 			<div className="w-full h-[500px] relative overflow-hidden group">
-				<button
-					type="button"
-					onClick={() => imageInputRef.current.click()}
-					className="absolute top-3 right-3 z-30 h-8 w-8 cursor-pointer hidden group-hover:block [&_svg]:fill-[var(--muted)]"
-				>
-					<EditIcon />
-				</button>
+				{editable && (
+					<button
+						type="button"
+						onClick={() => imageInputRef.current.click()}
+						className="absolute top-3 right-3 z-30 h-8 w-8 cursor-pointer hidden group-hover:block [&_svg]:fill-[var(--muted)]"
+					>
+						<EditIcon />
+					</button>
+				)}
 				{bgImage && (
 					<img
 						className="absolute inset-0 object-cover w-full h-full object-center group-hover:brightness-50 transition"

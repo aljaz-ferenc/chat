@@ -93,29 +93,32 @@ export default function Messages() {
 	if (!thisUserId) return <div>User not found...</div>;
 
 	return (
-		<div className="h-[calc(100vh-160px)] flex flex-col gap-8 items-start bg-background w-full p-6 overflow-y-auto">
-			{messages?.map((message) => (
-				<Message
-					key={message._id}
-					message={message}
-					setReplyingTo={setReplyingTo}
-					replyingTo={replyingTo}
-				/>
-			))}
-			<div className="mt-auto">
-				{Array.from(typingUsers).map((userId) => {
-					if (userId === thisUserId) return null;
+		<div className="flex">
+			<div className="h-[calc(100vh-160px)] flex flex-col gap-8 items-start bg-background w-full p-6 overflow-y-auto">
+				{messages?.map((message) => (
+					<Message
+						key={message._id}
+						message={message}
+						setReplyingTo={setReplyingTo}
+						replyingTo={replyingTo}
+					/>
+				))}
+				<div className="mt-auto">
+					{Array.from(typingUsers).map((userId) => {
+						if (userId === thisUserId) return null;
 
-					return (
-						<p className="text-muted text-sm" key={userId}>
-							{chat.users.find(
-								(u: Pick<User, "firstName" | "_id">) => u._id === userId,
-							)?.firstName || "Someone"}{" "}
-							is typing...
-						</p>
-					);
-				})}
+						return (
+							<p className="text-muted text-sm" key={userId}>
+								{chat.users.find(
+									(u: Pick<User, "firstName" | "_id">) => u._id === userId,
+								)?.firstName || "Someone"}{" "}
+								is typing...
+							</p>
+						);
+					})}
+				</div>
 			</div>
+			{/*{chatId && <SharedFiles chatId={chatId} />}*/}
 		</div>
 	);
 }

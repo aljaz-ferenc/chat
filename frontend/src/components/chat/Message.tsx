@@ -17,12 +17,7 @@ import {
 import { useParams } from "react-router";
 import { useShallow } from "zustand/react/shallow";
 import type { Message as TMessage } from "../../../../shared/types.ts";
-import {
-	DownloadIcon,
-	ReplyIcon,
-	TrashIcon,
-	TxtFileIcon,
-} from "../../assets/icons/icons.tsx";
+import { ReplyIcon, TrashIcon } from "../../assets/icons/icons.tsx";
 import useDeleteMessage from "../../hooks/api/useDeleteMessage.ts";
 import useEditMessage from "../../hooks/api/useEditMessage.ts";
 import useReactToMessage from "../../hooks/api/useReactToMessage.ts";
@@ -36,6 +31,8 @@ import {
 	DropdownMenuTrigger,
 } from "../ui/DropdownMenu.tsx";
 import IconButton from "../ui/IconButton.tsx";
+import MessageFiles from "./MessageFiles.tsx";
+import MessageMarkdown from "./MessageMarkdown.tsx";
 import UserTag from "./UserTag.tsx";
 const BUCKET_ID = import.meta.env.VITE_APPWRITE_BUCKET_ID;
 
@@ -137,7 +134,7 @@ export default function Message({
 				<div className="flex gap-2 items-center">
 					<div className="rounded-full overflow-hidden h-[32px] aspect-square">
 						<img
-							src="https://picsum.photos/32"
+							src={message.user.imageUrl}
 							className="h-full w-full object-cover"
 							alt=""
 						/>
@@ -147,15 +144,24 @@ export default function Message({
 					</span>
 				</div>
 				{message.replyTo?.user?.firstName && (
-					<div className="text-muted mt-2 flex items-center gap-2">
-						<div className="h-4 [&_svg]:h-full">
-							<ReplyIcon />
+					<>
+						<div className="text-muted mt-2 flex items-center gap-2 mb-6">
+							<div className="h-4 [&_svg]:h-full">
+								<ReplyIcon />
+							</div>
+							<UserTag user={message.replyTo.user} className="text-sm" />
+							{message.replyTo?.content?.markdown && (
+								<span className="text-muted/50 text-sm">
+									{message.replyTo?.content?.markdown}
+								</span>
+							)}
 						</div>
-						<UserTag user={message.replyTo.user} className="text-sm" />
-						<span className="text-muted/50 text-sm">
-							{message.replyTo?.content?.markdown}
-						</span>
-					</div>
+						{message.replyTo.content.files.length > 0 && (
+							<div className="mb-6">
+								<MessageFiles files={message.replyTo.content.files} />
+							</div>
+						)}
+					</>
 				)}
 
 				<div className="flex gap-2  items-center">
@@ -241,104 +247,6 @@ export default function Message({
 				user={thisUserId}
 				counters={message.reactions}
 			/>
-		</div>
-	);
-}
-
-type MessageMarkdownProps = {
-	message: TMessage;
-	isMine: boolean;
-};
-
-function MessageMarkdown({ message }: MessageMarkdownProps) {
-	return (
-		<div className={cn(["text-white rounded-xl p-2"])}>
-			<p>
-				{message.content?.markdown}{" "}
-				{message.edited && (
-					<span className="text-muted/50 text-xs italic">Edited</span>
-				)}
-			</p>
-		</div>
-	);
-}
-
-type MessageFilesProps = {
-	files: TMessage["content"]["files"];
-};
-
-function MessageFiles({ files }: MessageFilesProps) {
-	const { storage } = use(FileStorageContext);
-	const [previews, setPreviews] = useState<
-		{
-			previewUrl: string;
-			fileId: string;
-			mimeType: string;
-			name: string;
-			sizeOriginal: number;
-		}[]
-	>([]);
-
-	useEffect(() => {
-		const loadPreviews = async () => {
-			const previewUrls = await Promise.all(
-				files.map(async (file) => {
-					const { mimeType, name, sizeOriginal } = await storage.getFile(
-						BUCKET_ID,
-						file,
-					);
-					return {
-						previewUrl: storage.getFileView(BUCKET_ID, file),
-						fileId: file,
-						mimeType,
-						name,
-						sizeOriginal,
-					};
-				}),
-			);
-			setPreviews(previewUrls);
-		};
-
-		loadPreviews();
-	}, [files, storage]);
-
-	const handleDownloadFile = (fileId: string) => {
-		const downloadUrl = storage.getFileDownload(BUCKET_ID, fileId);
-		const a = document.createElement("a");
-		a.href = downloadUrl;
-		a.download = downloadUrl;
-		a.click();
-	};
-
-	return (
-		<div className="flex flex-wrap gap-3">
-			{previews.map((preview) => (
-				// biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
-				<div
-					onClick={() => handleDownloadFile(preview.fileId)}
-					key={preview.fileId}
-					className="h-30 w-30 rounded-xl overflow-hidden relative group/preview cursor-pointer"
-				>
-					{preview.mimeType.startsWith("image") ? (
-						<img
-							className="h-full w-full object-cover group-hover/preview:brightness-30 group-hover/preview:blur-xs transition"
-							src={preview.previewUrl}
-							alt=""
-						/>
-					) : (
-						// TODO: handle other mime types and display icons accordingly
-						<div className="h-full [&_svg]:h-full group-hover/preview:brightness-30 group-hover/preview:blur-xs transition flex flex-col">
-							<TxtFileIcon />
-							<span className="text-muted text-center text-ellipsis">
-								{preview.name}
-							</span>
-						</div>
-					)}
-					<div className="z-40 absolute top-1/2 left-1/2 w-1/2 h-1/2 -translate-1/2 opacity-0  group-hover/preview:opacity-100 transition">
-						<DownloadIcon />
-					</div>
-				</div>
-			))}
 		</div>
 	);
 }
