@@ -75,7 +75,7 @@ export default function ChatPreview({ chat }: ChatPreviewProps) {
 					</div>
 					<div className="flex flex-col items-start gap-1 w-full">
 						<div className="flex items-center w-full ">
-							<h3 className="font-bold text-white text-ellipsis">
+							<h3 className="font-bold text-white text-ellipsis truncate">
 								{chat.name
 									? chat.name
 									: chat.users

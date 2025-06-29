@@ -49,6 +49,7 @@ exports.searchUsers = async (req, res) => {
 					firstName: 1,
 					lastName: 1,
 					username: 1,
+					imageUrl: 1,
 					_id: 1,
 				},
 			},

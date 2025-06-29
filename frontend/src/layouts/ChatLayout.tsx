@@ -49,20 +49,20 @@ export default function ChatLayout() {
 			<div className="min-w-[320px] h-full bg-primary border-r border-border">
 				<div className="py-5 px-6 flex gap-4">
 					<h3 className="font-bold text-2xl mr-auto text-white">Chats</h3>
-					<button
-						type="button"
-						className="flex gap-2 items-center text-muted [&_svg]:fill-muted font-bold text-xs hover:text-message-primary hover:[&_svg]:fill-message-primary cursor-pointer"
-					>
-						<PlusIcon />
-						<span>New</span>
-					</button>
-					<button
-						type="button"
-						className="flex gap-2 items-center text-muted [&_svg]:fill-muted font-bold text-xs hover:text-message-primary hover:[&_svg]:fill-message-primary cursor-pointer"
-					>
-						<FilterIcon />
-						<span>Filter</span>
-					</button>
+					{/*<button*/}
+					{/*	type="button"*/}
+					{/*	className="flex gap-2 items-center text-muted [&_svg]:fill-muted font-bold text-xs hover:text-message-primary hover:[&_svg]:fill-message-primary cursor-pointer"*/}
+					{/*>*/}
+					{/*	<PlusIcon />*/}
+					{/*	<span>New</span>*/}
+					{/*</button>*/}
+					{/*<button*/}
+					{/*	type="button"*/}
+					{/*	className="flex gap-2 items-center text-muted [&_svg]:fill-muted font-bold text-xs hover:text-message-primary hover:[&_svg]:fill-message-primary cursor-pointer"*/}
+					{/*>*/}
+					{/*	<FilterIcon />*/}
+					{/*	<span>Filter</span>*/}
+					{/*</button>*/}
 				</div>
 				<div className="flex items-center gap-2 [&_svg]:fill-muted relative px-6">
 					<span className="absolute top-1/2 -translate-y-1/2 left-9 [&_svg]:p-[1px]">
@@ -121,9 +121,9 @@ export default function ChatLayout() {
 				</div>
 			</div>
 
-			<div className="w-full bg-primary flex flex-col">
+			<div className="w-full h-[calc(100vh-72px)] bg-primary flex flex-col relative">
 				{chatId && (
-					<div className="max-h-[calc(100vh-160px)]">
+					<div className="">
 						<Outlet context={{ replyingTo, setReplyingTo }} />
 						<MessageInput
 							replyingTo={replyingTo}

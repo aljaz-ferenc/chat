@@ -14,6 +14,7 @@ import useChat from "../../hooks/api/useChat.ts";
 import useMessages from "../../hooks/api/useMessages.ts";
 import { SocketContext } from "../../providers/SocketProvider.tsx";
 import useUserStore from "../../state/useUserStore.ts";
+import Spinner from "../ui/Spinner.tsx";
 import Message from "./Message.tsx";
 
 export default function Messages() {
@@ -88,8 +89,12 @@ export default function Messages() {
 		};
 	}, [socket, chatId, queryClient, chat]);
 
-	if (!chat) return <div>Loading chat</div>;
-	if (!messages) return <div>Loading messages...</div>;
+	if (!chat || !messages)
+		return (
+			<div className="w-full h-[calc(100vh-160px)] flex flex-col justify-center">
+				<Spinner />
+			</div>
+		);
 	if (!thisUserId) return <div>User not found...</div>;
 
 	return (

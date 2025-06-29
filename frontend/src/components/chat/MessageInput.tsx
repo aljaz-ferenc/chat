@@ -63,6 +63,11 @@ export default function MessageInput({
 		}
 	}, [replyingTo]);
 
+	useEffect(() => {
+		if (!chatId) return;
+		setNewFiles([]);
+	}, [chatId]);
+
 	const sendMessage = useCallback(async () => {
 		if (!userId || !chatId || (!markdown && newFiles.length === 0)) return;
 
@@ -119,6 +124,7 @@ export default function MessageInput({
 			const appFile = Object.assign(file, { id: crypto.randomUUID() });
 			setNewFiles((prev) => [...prev, appFile]);
 		}
+		e.target.value = "";
 	};
 
 	useEffect(() => {
@@ -127,7 +133,7 @@ export default function MessageInput({
 	}, [handleKeyPress]);
 
 	return (
-		<div className="bg-primary border-t border-border p-2">
+		<div className="bg-primary border-t border-border p-2 absolute bottom-0 left-0 right-0 pb-3">
 			{replyingTo && (
 				<div className="text-muted/50 mb-3 flex items-center gap-2">
 					<button
@@ -143,10 +149,10 @@ export default function MessageInput({
 					</span>
 				</div>
 			)}
-			<div className="flex flex-col justify-start mb-2 gap-3">
+			<div className="flex flex-col justify-start mb-2 gap-3 w-full max-w-60">
 				{newFiles.map((file) => (
 					<div
-						className="border border-muted/50 rounded-md text-white p-3 gap-3 flex items-center relative"
+						className="border border-muted/50 rounded-md text-white p-3 gap-3 flex items-center w-full relative"
 						key={file.id}
 					>
 						<IconButton
@@ -156,17 +162,18 @@ export default function MessageInput({
 								setNewFiles((prev) => prev.filter((f) => f.id !== file.id))
 							}
 						/>
-						<div className="h-15 mx-auto">
+						<div className="flex-shrink-0 h-15 w-10">
 							<FileIcon
 								extension={file.name.split(".").slice(-1)[0] as MimeType}
 							/>
 						</div>
-						<div className="flex flex-col">
-							<span>{file.name}</span>
+						<div className="flex flex-col overflow-hidden w-full">
+							<span className="truncate block text-sm">{file.name}</span>
 						</div>
 					</div>
 				))}
 			</div>
+
 			<div className="flex items-center gap-5">
 				<EmojiPickerPopover
 					onOpenChange={(open) => setEmojiPickerIsOpen(open)}
