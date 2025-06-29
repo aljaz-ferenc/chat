@@ -33,7 +33,7 @@ export type User = {
     chats: Chat[] | string[]
 }
 
-export type Contact = User & {mutualFriends: string[]}
+export type Contact = User & {mutualFriends: Pick<User, '_id' | 'firstName' | 'lastName' | 'username' | 'imageUrl'>[]}
 
 export type FriendRequestAction = 'send' | 'accept' | 'cancel' | 'decline' | 'unfriend'
 export type NotificationAction = 'read' | ''

@@ -12,6 +12,7 @@ export default function Contact() {
 		isPending,
 		error,
 	} = useContact(contactId as User["_id"]);
+	console.log("CONTACT: ", contact);
 
 	if (isPending) {
 		return (

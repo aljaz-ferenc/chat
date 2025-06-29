@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router";
 import { useShallow } from "zustand/react/shallow";
 import {
 	formatDate,
@@ -98,7 +99,7 @@ export default function ContactInfo({ contact }: ContactInfoProps) {
 								<p className="text-muted max-w-sm">{contact.about}</p>
 							</div>
 						)}
-						{contact.socials && Object.entries(contact.socials).length && (
+						{contact.socials && Object.entries(contact.socials).length > 0 && (
 							<div className="flex gap-3 mt-6">
 								{Object.entries(contact.socials).map((link) => (
 									<SocialLink key={link[0]} link={link} />
@@ -163,7 +164,6 @@ export default function ContactInfo({ contact }: ContactInfoProps) {
 						</div>
 					</div>
 				)}
-				{/*TODO: mutual contacts*/}
 				{activeTab === "mutualContacts" && (
 					<div>
 						{!contact.mutualFriends.length ? (
@@ -172,10 +172,26 @@ export default function ContactInfo({ contact }: ContactInfoProps) {
 							</p>
 						) : (
 							<>
-								<h3>Mutual Contacts</h3>
-								{contact.mutualFriends.map((friend, index) => (
-									<div key={`${friend}-${index + 1}`}>{friend}</div>
-								))}
+								<div className="flex gap-3 flex-wrap">
+									{contact.mutualFriends.map((friend, index) => (
+										<Link
+											key={`${friend}-${index + 1}`}
+											to={`/contacts/${friend._id}`}
+											className="text-center border rounded-xl border-muted w-[168px] h-[178px] flex items-center flex-col justify-center"
+										>
+											<div className="rounded-full overflow-hidden h-[72px] aspect-square">
+												<img src={friend.imageUrl} alt="" />
+											</div>
+											<div className="text-muted text-sm mt-3">
+												@{friend.username}
+											</div>
+											<div className="text-white">
+												<span>{friend.firstName}</span>{" "}
+												<span>{friend.lastName}</span>
+											</div>
+										</Link>
+									))}
+								</div>
 							</>
 						)}
 					</div>

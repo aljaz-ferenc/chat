@@ -10,55 +10,23 @@ exports.getContact = async (req, res) => {
 		const objectUserId = new mongoose.Types.ObjectId(userId);
 		const objectContactId = new mongoose.Types.ObjectId(contactId);
 
-		const result = await User.aggregate([
-			{ $match: { _id: objectContactId } },
-			{
-				$lookup: {
-					from: "users",
-					localField: "friends.friends",
-					foreignField: "_id",
-					as: "contactFriends",
-				},
-			},
-			{
-				$lookup: {
-					from: "users",
-					let: { userId: objectUserId },
-					pipeline: [
-						{ $match: { $expr: { $eq: ["$_id", "$$userId"] } } },
-						{
-							$project: {
-								friendsList: "$friends.friends",
-							},
-						},
-					],
-					as: "userDoc",
-				},
-			},
-			{ $unwind: "$userDoc" },
-			{
-				$addFields: {
-					mutualFriends: {
-						$setIntersection: ["$userDoc.friendsList", "$friends.friends"],
-					},
-				},
-			},
-			{
-				$project: {
-					userDoc: 0,
-					// mutualFriendIds: 0,
-					contactFriends: 0,
-				},
-			},
-		]);
+		const user = await User.findById(userId);
+		const contact = await User.findById(contactId);
 
-		if (!result.length) {
-			return res.status(404).json({ message: "Contact not found" });
-		}
+		const userFriendIds = user.friends.friends.map((id) => id.toString());
+		const contactFriendIds = contact.friends.friends.map((id) => id.toString());
 
-		return res.status(200).json(result[0]);
+		const mutualFriendIds = userFriendIds.filter((id) =>
+			contactFriendIds.includes(id),
+		);
+
+		const mutualFriends = await User.find({
+			_id: { $in: mutualFriendIds },
+		}).select("firstName lastName username imageUrl");
+
+		return res.status(200).json({ ...contact._doc, mutualFriends });
 	} catch (error) {
-		console.log(error)
+		console.log(error);
 		return res.status(500).json({ message: "Server error" });
 	}
 };
