@@ -4,6 +4,7 @@ const router = require("express").Router();
 
 router.route("/").post(chatController.createChat);
 router.route("/user/:userId").get(chatController.getAllChats);
+router.route("/:userId1/:userId2").get(chatController.getChatByUsers);
 router
 	.route("/:chatId")
 	.get(chatController.getChat)

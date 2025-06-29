@@ -30,7 +30,7 @@ export type User = {
         notifications: Notification[],
         opened: boolean
     },
-    chats: string[]
+    chats: Chat[] | string[]
 }
 
 export type Contact = User & {mutualFriends: string[]}

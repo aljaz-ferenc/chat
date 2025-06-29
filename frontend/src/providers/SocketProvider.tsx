@@ -99,6 +99,7 @@ export default function SocketProvider({ children }: PropsWithChildren) {
 				(oldMessages: Message[]) => {
 					return oldMessages.map((m) => {
 						if (m._id === messageId) {
+							// @ts-ignore
 							const updatedReactions = [...m.reactions, reaction];
 
 							return {

@@ -19,7 +19,7 @@ exports.getUser = async (req, res) => {
 		await connectToDatabase();
 		const user = await User.findOne({ clerkId })
 			.populate(
-				"friends.pendingRequests friends.incomingRequests friends.friends friends.blocked notifications.notifications.from notifications.notifications.type",
+				"friends.pendingRequests friends.incomingRequests friends.friends friends.blocked notifications.notifications.from notifications.notifications.type chats",
 			)
 			.populate({ path: "notifications.notifications.from" });
 
@@ -50,6 +50,7 @@ exports.searchUsers = async (req, res) => {
 					lastName: 1,
 					username: 1,
 					imageUrl: 1,
+					chats: 1,
 					_id: 1,
 				},
 			},

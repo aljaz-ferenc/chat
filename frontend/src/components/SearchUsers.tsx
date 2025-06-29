@@ -8,6 +8,7 @@ import {
 	isIncomingRequest,
 	isPendingRequest,
 } from "../../../shared/functions/utils.tsx";
+import type { Chat } from "../../../shared/types.ts";
 import useFriendRequest from "../hooks/api/useFriendRequest.ts";
 import useSearchUsers from "../hooks/api/useSearchUsers.ts";
 import useUserStore from "../state/useUserStore.ts";
@@ -60,7 +61,21 @@ export default function SearchUsers() {
 								>
 									<UserCard highlight={debouncedQuery} user={user} />
 									<IconButton
-										onClick={() => navigate(`/chats/${user._id}`)}
+										onClick={() =>
+											navigate(
+												`/chats/${
+													(
+														thisUser.chats.find(
+															(chat) =>
+																(chat as Chat).type === "single" &&
+																(user.chats as string[]).includes(
+																	(chat as Chat)._id,
+																),
+														) as Chat
+													)?._id
+												}`,
+											)
+										}
 										icon="message"
 									/>
 									{/*<span>Friends</span>*/}

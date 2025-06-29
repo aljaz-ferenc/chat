@@ -47,6 +47,26 @@ exports.getChat = async (req, res) => {
 	}
 };
 
+exports.getChatByUsers = async (req, res) => {
+	try {
+		const { userId1, userId2 } = req.body;
+		const chat = await Chat.findOne({
+			type: "single",
+			users: {
+				$all: [
+					new mongoose.Types.ObjectId(userId1),
+					new mongoose.Types.ObjectId(userId2),
+				],
+			},
+		});
+
+		return res.status(200).json(chat);
+	} catch (error) {
+		console.log(error);
+		res.status(500).json({ message: "Server error" });
+	}
+};
+
 exports.createChat = async (req, res) => {
 	try {
 		const { userId, chatType } = req.body;
