@@ -1,6 +1,6 @@
 import { EditIcon, UserIcon } from "lucide-react";
 import { useMemo, useState } from "react";
-import { Link, useParams } from "react-router";
+import { Link, useParams, useResolvedPath } from "react-router";
 import { useShallow } from "zustand/react/shallow";
 import type { Chat, User } from "../../../../shared/types.ts";
 import { ReplyIcon } from "../../assets/icons/icons.tsx";
@@ -43,6 +43,8 @@ export default function ChatPreview({ chat }: ChatPreviewProps) {
 	const { mutateAsync: renameChat } = useRenameChat();
 	const { mutateAsync: leaveChat } = useLeaveChat();
 	const { chatId } = useParams();
+	// @ts-ignore
+	const { pathname } = useResolvedPath();
 
 	const usersIds = useMemo(() => {
 		return chat.users.map((u) => u._id);
@@ -163,7 +165,6 @@ export default function ChatPreview({ chat }: ChatPreviewProps) {
 									className="border-1 text-base hover:bg-background cursor-pointer transition rounded-xl px-3 py-1 flex items-center gap-1"
 									onClick={async () => {
 										await addUsersToChat(checkedUsers);
-										console.log(checkedUsers);
 										setAddFriendsIsOpen(false);
 										setCheckedUsers([]);
 									}}
@@ -210,14 +211,22 @@ export default function ChatPreview({ chat }: ChatPreviewProps) {
 	if (chat.type === "single") {
 		const otherUser = chat.users.find((u) => u._id !== thisUserId);
 		if (!otherUser) return null;
+
 		return (
-			<UserCard
-				user={otherUser}
-				bottomText={chat.lastMessage?.content.markdown}
-				showUsername={false}
-				navigateTo={chat._id}
-				className={cn([chat._id === chatId && "bg-background p-2 rounded-xl"])}
-			/>
+			<div className="flex justify-between items-center">
+				<UserCard
+					user={otherUser}
+					bottomText={chat.lastMessage?.content.markdown}
+					showUsername={false}
+					navigateTo={chat._id}
+					className={cn([
+						chat._id === chatId && "bg-background p-2 rounded-xl",
+					])}
+				/>
+				{thisUserId && !chat.readBy.includes(thisUserId) && (
+					<div className="h-3 w-3 bg-red-500 rounded-full" />
+				)}
+			</div>
 		);
 	}
 }

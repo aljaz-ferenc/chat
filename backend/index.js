@@ -16,6 +16,7 @@ dotenv.config();
 const onlineUsers = new Map();
 const EventEmitter = require("./EventEmitter");
 const { users } = require("./controllers/webhooksController");
+const Chat = require("./models/Chat");
 
 const app = express();
 app.use(cors());
@@ -62,22 +63,32 @@ io.on("connection", (socket) => {
 		}
 	});
 
-	socket.on("join-chat", (chatId) => {
+	socket.on("join-chat", async ({ chatId, userId }) => {
 		socket.join("join-chat", chatId);
+		await connectToDatabase();
+		await Chat.findByIdAndUpdate(chatId, {
+			$addToSet: { readBy: userId },
+		});
 	});
 
 	socket.on("typing", ({ isTyping, userId, chatId }) => {
-		io.to(chatId).emit("typing", { userId, isTyping });
+		io.to(chatId).emit("typing", { userId, isTyping, typingChatId: chatId });
 	});
 
 	socket.on("disconnect", () => {
-		console.log("disconnect");
 		for (const [userId, socketId] of onlineUsers.entries()) {
 			if (socketId === socket.id) {
 				onlineUsers.delete(userId);
 				break;
 			}
 		}
+	});
+
+	socket.on("read-message", async ({ chatId, userId }, callback) => {
+		callback({ status: "ok" });
+		await Chat.findByIdAndUpdate(chatId, {
+			$addToSet: { readBy: userId },
+		});
 	});
 });
 
@@ -137,7 +148,6 @@ EventEmitter.on("create-chat", ({ userId, chatId }) => {
 
 EventEmitter.on("friendRequest-incoming", (receiverId) => {
 	const receiverSocketId = onlineUsers.get(receiverId);
-	console.log(`fr to ${receiverSocketId}`);
 	console.log("ONLINE: ", onlineUsers);
 	io.to(receiverSocketId).emit("friendRequest-incoming");
 });

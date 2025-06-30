@@ -36,18 +36,10 @@ export default function SocketProvider({ children }: PropsWithChildren) {
 		});
 
 		socket.on("new-message", (message: Message) => {
-			queryClient.setQueryData(
-				["messages", { chatId: message.chat }],
-				(oldMessages: Message[]) => [...oldMessages, message],
-			);
-			queryClient.setQueryData(["chats"], (chats: Chat[]) =>
-				chats.map((chat) => {
-					if (chat._id === message.chat) {
-						return { ...chat, lastMessage: message };
-					}
-					return chat;
-				}),
-			);
+			queryClient.invalidateQueries({ queryKey: ["chats"] });
+			queryClient.invalidateQueries({
+				queryKey: ["messages", { chatId: message.chat }],
+			});
 		});
 
 		socket.on("chat-rename", (renameMessage) => {
@@ -144,7 +136,6 @@ export default function SocketProvider({ children }: PropsWithChildren) {
 
 		//TODO: use same event for each if they do the same thing, but wait for confirmation
 		socket.on("friendRequest-incoming", async () => {
-			console.log("friend request");
 			await refetch();
 		});
 

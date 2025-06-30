@@ -51,7 +51,8 @@ export type Chat = {
     type: 'single' | 'group',
     users: User[],
     lastMessage: Message,
-    name: string
+    name: string,
+    readBy: string[]
 }
 
 export type Message = {

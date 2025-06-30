@@ -23,7 +23,6 @@ function initSocket(app) {
 	ioInstance.on("connection", (socket) => {
 		socket.on("online", async (userId) => {
 			onlineUsers.set(userId, socket.id);
-			console.log(`Came online: ${userId} ${socket.id}`);
 			await connectToDatabase();
 
 			const user = await User.findById(userId).select("chats");

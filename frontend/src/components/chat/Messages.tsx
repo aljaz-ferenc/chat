@@ -8,7 +8,7 @@ import {
 } from "react";
 import { useOutletContext, useParams } from "react-router";
 import { useShallow } from "zustand/react/shallow";
-import type { Message as TMessage } from "../../../../shared/types";
+import type { Chat, Message as TMessage } from "../../../../shared/types";
 import type { User } from "../../../../shared/types.ts";
 import useChat from "../../hooks/api/useChat.ts";
 import useMessages from "../../hooks/api/useMessages.ts";
@@ -31,10 +31,18 @@ export default function Messages() {
 	}>();
 
 	useEffect(() => {
-		if (chatId && !!socket) {
-			socket.emit("join-chat", chatId);
-		}
-	}, [chatId, socket]);
+		if (!socket || !messages) return;
+		socket.emit("join-chat", { chatId, userId: thisUserId });
+		socket.emit(
+			"read-message",
+			{ chatId, userId: thisUserId },
+			(response: { status: string }) => {
+				if (response.status === "ok") {
+					queryClient.invalidateQueries({ queryKey: ["chats"] });
+				}
+			},
+		);
+	}, [messages, chatId, socket, thisUserId, queryClient]);
 
 	useEffect(() => {
 		if (!socket || !chat) return;
@@ -42,7 +50,9 @@ export default function Messages() {
 		const handleTyping = ({
 			userId,
 			isTyping,
-		}: { userId: string; isTyping: boolean }) => {
+			typingChatId,
+		}: { userId: string; isTyping: boolean; typingChatId: Chat["_id"] }) => {
+			if (chatId !== typingChatId) return;
 			setTypingUsers((prev) => {
 				const newSet = new Set(prev);
 

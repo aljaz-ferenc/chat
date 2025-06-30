@@ -7,7 +7,7 @@ router.route("/user/:userId").get(chatController.getAllChats);
 router.route("/:userId1/:userId2").get(chatController.getChatByUsers);
 router
 	.route("/:chatId")
-	.get(chatController.getChat)
+	.post(chatController.getChat)
 	.patch(chatController.addUsersToChat)
 	.put(chatController.renameChat);
 

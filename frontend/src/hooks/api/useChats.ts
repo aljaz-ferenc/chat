@@ -5,7 +5,6 @@ import useUserStore from "../../state/useUserStore.ts";
 
 export default function useChats() {
 	const userId = useUserStore(useShallow((state) => state.user?._id));
-
 	return useQuery({
 		queryKey: ["chats"],
 		queryFn: async () => await fetchChats(userId as string),

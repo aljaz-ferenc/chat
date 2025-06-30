@@ -33,8 +33,11 @@ exports.getAllChats = async (req, res) => {
 exports.getChat = async (req, res) => {
 	try {
 		const { chatId } = req.params;
+		const { userId } = req.body;
 		await connectToDatabase();
-		const chat = await Chat.findById(chatId).populate("users", "firstName");
+		const chat = await Chat.findByIdAndUpdate(chatId, {
+			$addToSet: { readBy: userId },
+		}).populate("users", "firstName");
 
 		if (!chat) {
 			return res.status(404).json({ message: "Chat not found" });

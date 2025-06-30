@@ -14,6 +14,9 @@ exports.createMessage = async (req, res) => {
 		await connectToDatabase();
 
 		const user = await User.findById(message.user);
+		await Chat.findByIdAndUpdate(message.chat, {
+			$set: { readBy: [message.user] },
+		});
 
 		if (!user) {
 			return res.status(400).json({ message: "User not found" });

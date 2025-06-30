@@ -20,6 +20,10 @@ const chatSchema = new mongoose.Schema(
 		name: {
 			type: String,
 		},
+		readBy: {
+			type: [String],
+			default: [],
+		},
 	},
 	{ timestamps: true },
 );
