@@ -121,16 +121,15 @@ export default function SocketProvider({ children }: PropsWithChildren) {
 				) as Message[];
 
 				//@ts-ignore
-				const lastMessage = updatedMessages.at(-1) ?? null;
-
-				queryClient.setQueryData(["chats"], (chats: Chat[] = []) =>
-					chats.map((chat) => {
+				const lastMessage = updatedMessages.at(-1) || null;
+				queryClient.setQueryData(["chats"], (chats: Chat[] = []) => {
+					return chats.map((chat) => {
 						if (chat._id === chatId) {
 							return { ...chat, lastMessage };
 						}
 						return chat;
-					}),
-				);
+					});
+				});
 			},
 		);
 

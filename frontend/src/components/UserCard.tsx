@@ -49,7 +49,7 @@ export default function UserCard({
 					{/*)}*/}
 				</div>
 				<div className="flex items-center gap-2">
-					<p className="text-muted text-xs truncate max-w-40 text-left">
+					<p className="text-muted text-xs truncate max-w-40 text-left italic">
 						{bottomText}
 					</p>
 					{/*{showLastMessageTime && (*/}

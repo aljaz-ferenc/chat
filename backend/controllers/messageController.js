@@ -90,24 +90,30 @@ exports.getMessagesByChat = async (req, res) => {
 
 exports.deleteMessage = async (req, res) => {
 	try {
-		const { messageId, chatId, lastMessageId } = req.body;
+		const { messageId, chatId } = req.body;
 		await connectToDatabase();
-		const deletedMessage = await Message.findByIdAndDelete(messageId);
 
+		const deletedMessage = await Message.findByIdAndDelete(messageId);
 		if (!deletedMessage) {
 			return res.sendStatus(404);
 		}
 
-		if (lastMessageId && messageId === lastMessageId) {
+		const chat = await Chat.findById(chatId);
+		if (chat?.lastMessage?.toString() === messageId) {
+			const newLastMessage = await Message.findOne({ chat: chatId })
+				.sort({ createdAt: -1 })
+				.limit(1);
+
 			await Chat.findByIdAndUpdate(chatId, {
-				lastMessage: new mongoose.Types.ObjectId(lastMessageId),
+				lastMessage: newLastMessage?._id || null,
 			});
 		}
-		EventEmitter.emit("delete-message", { messageId, chatId, lastMessageId });
+
+		EventEmitter.emit("delete-message", { messageId, chatId });
 
 		res.sendStatus(204);
 	} catch (error) {
-		console.log(error);
+		console.error(error);
 		res.status(500).json({ message: "Server error", error });
 	}
 };

@@ -1,6 +1,6 @@
 import { EditIcon, UserIcon } from "lucide-react";
 import { useMemo, useState } from "react";
-import { Link, useParams, useResolvedPath } from "react-router";
+import { Link, useParams } from "react-router";
 import { useShallow } from "zustand/react/shallow";
 import type { Chat, User } from "../../../../shared/types.ts";
 import { ReplyIcon } from "../../assets/icons/icons.tsx";
@@ -43,8 +43,6 @@ export default function ChatPreview({ chat }: ChatPreviewProps) {
 	const { mutateAsync: renameChat } = useRenameChat();
 	const { mutateAsync: leaveChat } = useLeaveChat();
 	const { chatId } = useParams();
-	// @ts-ignore
-	const { pathname } = useResolvedPath();
 
 	const usersIds = useMemo(() => {
 		return chat.users.map((u) => u._id);
@@ -212,15 +210,23 @@ export default function ChatPreview({ chat }: ChatPreviewProps) {
 		const otherUser = chat.users.find((u) => u._id !== thisUserId);
 		if (!otherUser) return null;
 
+		const bottomText = chat.lastMessage?.content.markdown
+			? chat.lastMessage?.content.markdown
+			: !chat.lastMessage?.content.markdown &&
+					chat.lastMessage?.content.files.length
+				? `${otherUser.firstName} sent a file`
+				: "";
+
 		return (
 			<div className="flex justify-between items-center">
 				<UserCard
 					user={otherUser}
-					bottomText={chat.lastMessage?.content.markdown}
+					bottomText={bottomText}
 					showUsername={false}
 					navigateTo={chat._id}
 					className={cn([
-						chat._id === chatId && "bg-background p-2 rounded-xl",
+						"w-full p-2",
+						chat._id === chatId && "bg-background rounded-xl",
 					])}
 				/>
 				{thisUserId && !chat.readBy.includes(thisUserId) && (

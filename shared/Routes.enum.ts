@@ -1,3 +1,4 @@
+// @ts-ignore
 export enum Routes {
     HOME = '/',
     CHATS = 'chats',

@@ -28,7 +28,6 @@ const router = createBrowserRouter([
 		path: Routes.HOME,
 		element: (
 			<ProtectedRoute>
-				{" "}
 				<RootLayout />
 			</ProtectedRoute>
 		),

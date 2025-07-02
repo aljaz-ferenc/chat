@@ -31,8 +31,7 @@ export default function Header() {
 			state.user?.imageUrl,
 		]),
 	);
-	// @ts-ignore
-	const { pathname } = useResolvedPath();
+	const { pathname } = useResolvedPath({});
 
 	const existsUnread = useMemo(() => {
 		return notifications?.notifications.some((n) => !n.read);

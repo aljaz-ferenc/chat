@@ -14,7 +14,7 @@ import {
 	useRef,
 	useState,
 } from "react";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { useShallow } from "zustand/react/shallow";
 import type { Message as TMessage } from "../../../../shared/types.ts";
 import { ReplyIcon, TrashIcon } from "../../assets/icons/icons.tsx";
@@ -60,6 +60,7 @@ export default function Message({
 	const [reactionsAreOpen, setReactionsAreOpen] = useState(false);
 	const { mutateAsync: react } = useReactToMessage();
 	const { storage } = use(FileStorageContext);
+	const navigate = useNavigate();
 
 	const handleKeyPress = useCallback(
 		async (e: KeyboardEvent) => {
@@ -98,7 +99,7 @@ export default function Message({
 				await storage.deleteFile(BUCKET_ID, file);
 			}
 		}
-		if (replyingTo._id === message._id) {
+		if (replyingTo?._id === message?._id) {
 			setReplyingTo(null);
 		}
 	};
@@ -131,7 +132,11 @@ export default function Message({
 			])}
 		>
 			<div className={cn(["group w-full"])}>
-				<div className="flex gap-2 items-center">
+				<button
+					type="button"
+					onClick={() => navigate(`/contacts/${message.user._id}`)}
+					className="flex gap-2 items-center cursor-pointer"
+				>
 					<div className="rounded-full overflow-hidden h-[32px] aspect-square">
 						<img
 							src={message.user.imageUrl}
@@ -142,7 +147,7 @@ export default function Message({
 					<span className="text-white">
 						{message.user.firstName} {message.user.lastName}
 					</span>
-				</div>
+				</button>
 				{message.replyTo?.user?.firstName && (
 					<>
 						<div className="text-muted mt-2 flex items-center gap-2 mb-6">
