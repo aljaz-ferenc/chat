@@ -1,8 +1,17 @@
 import {Endpoints} from "../../Endpoints";
 import type {Chat, Message} from "../../types";
 
-export async function fetchMessages(chatId: Chat['_id']): Promise<Message[]>{
-    const res = await fetch(Endpoints.messages(chatId))
+export type ResponseType = {
+    messages: Message[];
+    hasNext: boolean;
+    nextCursor: number;
+    currentPage: number;
+    totalMessages: number
+};
+
+export async function fetchMessages(chatId: Chat['_id'], page: number): Promise<ResponseType>{
+    const res = await fetch(Endpoints.messages(chatId, page))
     const data = await res.json()
+    console.log(data.hasNext)
     return data
 }

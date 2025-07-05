@@ -13,8 +13,8 @@ export class Endpoints {
     public static chatByUsers = (userId1: User['_id'], userId2: User['_id']) => `${BASE_URL}/chats/${userId1}/${userId2}`
     public static leaveChat = (chatId?: Chat['_id']) => `${BASE_URL}/chats/${chatId}/leave`
     public static chats = (userId: User['_id']) => `${BASE_URL}/chats/user/${userId}`
-    public static messages = (chatId?: Chat['_id']) =>
-        `${BASE_URL}/messages` + (chatId ? `/${chatId}` : '');
+    public static messages = (chatId?: Chat['_id'], page?: number) =>
+        `${BASE_URL}/messages` + (chatId ? `/${chatId}/${page}` : '');
     public static message = (messageId: Message['_id']) => `${BASE_URL}/messages/${messageId}`
     public static reactions = (messageId: Message['_id']) => `${BASE_URL}/messages/${messageId}/reactions`
 }

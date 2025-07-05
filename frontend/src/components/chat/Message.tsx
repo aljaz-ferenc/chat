@@ -123,6 +123,7 @@ export default function Message({
 		);
 	}
 
+	// @ts-ignore
 	return (
 		<div
 			key={message._id}

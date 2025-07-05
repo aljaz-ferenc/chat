@@ -6,7 +6,7 @@ router
 	.post(messageController.createMessage)
 	.delete(messageController.deleteMessage);
 
-router.route("/:chatId").get(messageController.getMessagesByChat);
+router.route("/:chatId/:page").get(messageController.getMessagesByChat);
 
 router.route("/:messageId").patch(messageController.editMessage);
 

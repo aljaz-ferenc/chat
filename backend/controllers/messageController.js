@@ -70,9 +70,16 @@ exports.createMessage = async (req, res) => {
 
 exports.getMessagesByChat = async (req, res) => {
 	try {
-		const { chatId } = req.params;
+		const { chatId, page } = req.params;
+		const limit = 20;
+		const currentPage = Number.parseInt(page, 10);
+
 		await connectToDatabase();
+
 		const messages = await Message.find({ chat: chatId })
+			.sort({ createdAt: -1 })
+			.skip((currentPage - 1) * limit)
+			.limit(limit)
 			.populate("user")
 			.populate({
 				path: "replyTo",
@@ -80,8 +87,18 @@ exports.getMessagesByChat = async (req, res) => {
 					path: "user",
 				},
 			});
+		messages.reverse();
 
-		res.status(200).json(messages);
+		const totalMessages = await Message.countDocuments({ chat: chatId });
+		const hasNext = currentPage * limit < totalMessages;
+
+		res.status(200).json({
+			messages,
+			hasNext,
+			nextCursor: currentPage + 1,
+			currentPage: page,
+			totalMessages,
+		});
 	} catch (error) {
 		console.log(error);
 		res.status(500).json({ message: "Server error", error });

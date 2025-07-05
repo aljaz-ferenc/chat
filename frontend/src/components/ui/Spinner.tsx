@@ -1,9 +1,13 @@
 import { MoonLoader } from "react-spinners";
 
-export default function Spinner() {
+type SpinnerProps = {
+	size?: number;
+};
+
+export default function Spinner({ size = 30 }: SpinnerProps) {
 	return (
-		<div className="bg-primary h-full w-full grid place-items-center">
-			<MoonLoader color={"var(--muted)"} />
+		<div className="bg-transparent h-full w-full grid place-items-center">
+			<MoonLoader size={size} color={"var(--muted)"} />
 		</div>
 	);
 }

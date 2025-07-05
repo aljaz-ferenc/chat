@@ -48,6 +48,8 @@ export default function ChatPreview({ chat }: ChatPreviewProps) {
 		return chat.users.map((u) => u._id);
 	}, [chat]);
 
+	console.log(chatId === chat._id);
+
 	const friendsNotInChat = useMemo(() => {
 		if (!thisUser) return;
 		return thisUser.friends.friends.filter((u) => !usersIds.includes(u._id));
@@ -218,7 +220,7 @@ export default function ChatPreview({ chat }: ChatPreviewProps) {
 				: "";
 
 		return (
-			<div className="flex justify-between items-center">
+			<div className="flex justify-between items-center relative">
 				<UserCard
 					user={otherUser}
 					bottomText={bottomText}
@@ -229,9 +231,11 @@ export default function ChatPreview({ chat }: ChatPreviewProps) {
 						chat._id === chatId && "bg-background rounded-xl",
 					])}
 				/>
-				{thisUserId && !chat.readBy.includes(thisUserId) && (
-					<div className="h-3 w-3 bg-red-500 rounded-full" />
-				)}
+				{thisUserId &&
+					!chat.readBy.includes(thisUserId) &&
+					chat._id !== chatId && (
+						<div className="h-3 w-3 bg-red-500 rounded-full absolute top-1/2 right-2 -translate-y-1/2" />
+					)}
 			</div>
 		);
 	}

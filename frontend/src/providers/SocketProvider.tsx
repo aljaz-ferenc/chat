@@ -2,6 +2,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { type PropsWithChildren, createContext, useEffect } from "react";
 import { type Socket, io } from "socket.io-client";
 import { useShallow } from "zustand/react/shallow";
+import type { ResponseType } from "../../../shared/functions/api/fetchMessages.ts";
 import type { Chat, Message } from "../../../shared/types.ts";
 import useUser from "../hooks/api/useUser.ts";
 import useUserStore from "../state/useUserStore.ts";
@@ -38,7 +39,7 @@ export default function SocketProvider({ children }: PropsWithChildren) {
 		socket.on("new-message", (message: Message) => {
 			queryClient.invalidateQueries({ queryKey: ["chats"] });
 			queryClient.invalidateQueries({
-				queryKey: ["messages", { chatId: message.chat }],
+				queryKey: ["messages", message.chat],
 			});
 		});
 
@@ -114,22 +115,41 @@ export default function SocketProvider({ children }: PropsWithChildren) {
 				messageId: Message["_id"];
 				chatId: Message["chat"];
 			}) => {
-				const updatedMessages = queryClient.setQueryData(
-					["messages", { chatId }],
-					(oldMessages: Message[] = []) =>
-						oldMessages.filter((m) => m._id !== messageId),
-				) as Message[];
+				queryClient.setQueryData(
+					["messages", chatId],
+					(
+						oldData:
+							| {
+									pages: ResponseType[];
+							  }
+							| undefined,
+					) => {
+						console.log("OLD_DATA: ", oldData);
+						if (!oldData) return oldData;
 
-				//@ts-ignore
-				const lastMessage = updatedMessages.at(-1) || null;
-				queryClient.setQueryData(["chats"], (chats: Chat[] = []) => {
-					return chats.map((chat) => {
-						if (chat._id === chatId) {
-							return { ...chat, lastMessage };
-						}
-						return chat;
-					});
-				});
+						const updatedPages = oldData.pages.map((page) => ({
+							...page,
+							messages: page.messages.filter((m) => m._id !== messageId),
+						}));
+
+						const allMessages = updatedPages.flatMap((page) => page.messages);
+
+						// @ts-ignore
+						const lastMessage = allMessages.at(-1) || null;
+
+						// Update the chat list with new last message
+						queryClient.setQueryData(["chats"], (chats: Chat[] = []) =>
+							chats.map((chat) =>
+								chat._id === chatId ? { ...chat, lastMessage } : chat,
+							),
+						);
+
+						return {
+							...oldData,
+							pages: updatedPages,
+						};
+					},
+				);
 			},
 		);
 

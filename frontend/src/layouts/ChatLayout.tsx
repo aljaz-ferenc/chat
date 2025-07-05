@@ -101,7 +101,7 @@ export default function ChatLayout() {
 
 			<div className="w-full h-[calc(100vh-72px)] bg-primary flex flex-col relative">
 				{chatId && (
-					<div className="">
+					<div>
 						<Outlet context={{ replyingTo, setReplyingTo }} />
 						<MessageInput
 							replyingTo={replyingTo}
