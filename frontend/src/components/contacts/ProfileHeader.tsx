@@ -15,7 +15,7 @@ type ProfileHeaderProps = {
 };
 
 export function ProfileHeader({ user, editable = false }: ProfileHeaderProps) {
-	const imageInputRef = useRef<HTMLInputElement>();
+	const imageInputRef = useRef<HTMLInputElement>(null);
 	const [bgImageId] = useUserStore(
 		useShallow((state) => [state.user?.bgImage]),
 	);
@@ -24,6 +24,7 @@ export function ProfileHeader({ user, editable = false }: ProfileHeaderProps) {
 	const [bgImage, setBgImage] = useState("");
 
 	const handleEditImage = async (e: ChangeEvent<HTMLInputElement>) => {
+		if (!e.target.files) return;
 		const image = e.target.files[0];
 		if (!image) return;
 
@@ -47,13 +48,13 @@ export function ProfileHeader({ user, editable = false }: ProfileHeaderProps) {
 	}, [storage, bgImageId]);
 
 	return (
-		<div className="bg-primary rounded-2xl overflow-hidden w-full max-w-6xl mx-auto">
+		<div className="bg-primary rounded-2xl overflow-hidden w-full max-w-6xl mx-auto relative">
 			{/*BACKGROUND IMAGE*/}
 			<div className="w-full h-[500px] relative overflow-hidden group">
 				{editable && (
 					<button
 						type="button"
-						onClick={() => imageInputRef.current.click()}
+						onClick={() => imageInputRef.current?.click()}
 						className="absolute top-3 right-3 z-30 h-8 w-8 cursor-pointer hidden group-hover:block [&_svg]:fill-[var(--muted)]"
 					>
 						<EditIcon />
@@ -73,7 +74,7 @@ export function ProfileHeader({ user, editable = false }: ProfileHeaderProps) {
 					onChange={handleEditImage}
 				/>
 			</div>
-			<div className="px-8 ">
+			<div className="px-8 absolute bottom-0">
 				{/*PROFILE PIC*/}
 				<div className="flex gap-5 text-white">
 					<div className="relative h-[150px] w-[150px] border-border border-2 rounded-xl overflow-hidden -translate-y-8">
