@@ -1,4 +1,5 @@
 import { UserButton } from "@clerk/clerk-react";
+import { UserIcon } from "lucide-react";
 import { useMemo } from "react";
 import { NavLink, useNavigate, useResolvedPath } from "react-router";
 import { useShallow } from "zustand/react/shallow";
@@ -24,7 +25,7 @@ export default function Header() {
 	const { mutateAsync: readNotification } = useReadNotification();
 	const { mutateAsync: deleteNotifications } = useDeleteNotifications();
 	const { refetch } = useUser();
-	const [notifications, opened, imageUrl] = useUserStore(
+	const [notifications, opened] = useUserStore(
 		useShallow((state) => [
 			state.user?.notifications,
 			state.user?.notifications?.opened,
@@ -56,12 +57,6 @@ export default function Header() {
 						isActive={pathname.startsWith(`/${Routes.CONTACTS}`)}
 						icon="contact"
 					/>
-				</NavLink>
-				<NavLink
-					to={`/${Routes.PROFILE}`}
-					className="h-12 aspect-square rounded-full overflow-hidden relative"
-				>
-					<img src={imageUrl} alt="" className="absolute inset-0" />
 				</NavLink>
 				<DropdownMenu
 					onOpenChange={async (open) => {
@@ -107,7 +102,15 @@ export default function Header() {
 							))}
 					</DropdownMenuContent>
 				</DropdownMenu>
-				<UserButton />
+				<UserButton>
+					<UserButton.MenuItems>
+						<UserButton.Link
+							label="Profile"
+							labelIcon={<UserIcon size={17} />}
+							href={`/${Routes.PROFILE}`}
+						/>
+					</UserButton.MenuItems>
+				</UserButton>
 			</div>
 		</header>
 	);
