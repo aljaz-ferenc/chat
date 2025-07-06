@@ -1,4 +1,5 @@
 import {
+	AttachmentIcon,
 	BellIcon,
 	CheckmarkIcon,
 	ChevronDownIcon,
@@ -52,7 +53,8 @@ export type Icons =
 	| "tiktok"
 	| "envelope"
 	| "send"
-	| "edit";
+	| "edit"
+	| "attachment";
 
 const icons = {
 	logo: <LogoIcon />,
@@ -80,6 +82,7 @@ const icons = {
 	envelope: <EnvelopeIcon />,
 	send: <SendIcon />,
 	edit: <EditIcon />,
+	attachment: <AttachmentIcon />,
 };
 
 type IconButtonProps = {

@@ -3,7 +3,7 @@ import { FileIcon as FileIconComponent } from "../assets/icons/icons.tsx";
 export type MimeType = "txt";
 
 type FileIconProps = {
-	extension: MimeType;
+	extension?: MimeType;
 };
 
 export default function FileIcon({ extension }: FileIconProps) {

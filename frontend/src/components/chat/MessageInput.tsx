@@ -149,29 +149,41 @@ export default function MessageInput({
 					</span>
 				</div>
 			)}
-			<div className="flex flex-col justify-start mb-2 gap-3 w-full max-w-60">
-				{newFiles.map((file) => (
-					<div
-						className="border border-muted/50 rounded-md text-white p-3 gap-3 flex items-center w-full relative"
-						key={file.id}
-					>
-						<IconButton
-							icon="close"
-							className="absolute top-1 right-1 h-5 w-5 p-1"
-							onClick={() =>
-								setNewFiles((prev) => prev.filter((f) => f.id !== file.id))
-							}
-						/>
-						<div className="flex-shrink-0 h-15 w-10">
-							<FileIcon
-								extension={file.name.split(".").slice(-1)[0] as MimeType}
+			<div className="flex flex-col justify-start gap-3 w-full max-w-60 mb-1">
+				{newFiles.map((file) => {
+					return (
+						<div
+							className="border border-muted/50 rounded-md text-white p-3 gap-5 flex items-center w-full relative"
+							key={file.id}
+						>
+							<IconButton
+								icon="close"
+								className="absolute top-1 right-1 h-5 w-5 p-1"
+								onClick={() =>
+									setNewFiles((prev) => prev.filter((f) => f.id !== file.id))
+								}
 							/>
+							<div className="flex-shrink-0 h-15 w-10">
+								{file.type.startsWith("image") ? (
+									<div className="overflow-hidden h-full aspect-[2/2.4] relative rounded">
+										<img
+											src={URL.createObjectURL(file)}
+											alt=""
+											className="absolute inset-0 object-cover h-full w-full"
+										/>
+									</div>
+								) : (
+									<FileIcon
+										extension={file.name.split(".").slice(-1)[0] as MimeType}
+									/>
+								)}
+							</div>
+							<div className="flex flex-col overflow-hidden w-full">
+								<span className="truncate block text-sm">{file.name}</span>
+							</div>
 						</div>
-						<div className="flex flex-col overflow-hidden w-full">
-							<span className="truncate block text-sm">{file.name}</span>
-						</div>
-					</div>
-				))}
+					);
+				})}
 			</div>
 
 			<div className="flex items-center gap-5">
@@ -184,7 +196,7 @@ export default function MessageInput({
 					}}
 				/>
 				<IconButton
-					icon="image"
+					icon="attachment"
 					onClick={() => fileInputRef.current?.click()}
 				/>
 				<input
