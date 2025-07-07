@@ -2,7 +2,7 @@ const { verifyWebhook } = require("@clerk/express/webhooks");
 const User = require("../models/User");
 
 const WEBHOOK_SECRET = process.env.CLERK_WEBHOOK_SECRET;
-console.log("WEBHOOK_SECRET: ", WEBHOOK_SECRET);
+if(!WEBHOOK_SECRET) console.error('missing WEBHOOK_SECRET')
 
 exports.users = async (req, res) => {
 	try {

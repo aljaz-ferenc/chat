@@ -1,4 +1,7 @@
+import type { IGif } from "@giphy/js-types";
+import { Gif } from "@giphy/react-components";
 import { ID } from "appwrite";
+import { X } from "lucide-react";
 import {
 	type ChangeEvent,
 	type Dispatch,
@@ -22,6 +25,7 @@ import useUserStore from "../../state/useUserStore";
 import FileIcon, { type MimeType } from "../FileIcon.tsx";
 import IconButton from "../ui/IconButton";
 import EmojiPickerPopover from "./EmojiPicker.tsx";
+import Giphy from "./Giphy.tsx";
 
 type MessageInputProps = {
 	replyingTo: Message | null;
@@ -47,6 +51,8 @@ export default function MessageInput({
 	const { storage } = use(FileStorageContext);
 	const fileInputRef = useRef<HTMLInputElement>(null);
 	const [newFiles, setNewFiles] = useState<(File & { id: string })[]>([]);
+	const [gifs, setGifs] = useState<IGif[]>([]);
+	const [gifsOpen, setGifsOpen] = useState(false);
 
 	useEffect(() => {
 		socket?.emit("typing", {
@@ -69,7 +75,8 @@ export default function MessageInput({
 	}, [chatId]);
 
 	const sendMessage = useCallback(async () => {
-		if (!userId || !chatId || (!markdown && newFiles.length === 0)) return;
+		console.log('sending')
+		if (!userId || !chatId || (!markdown && newFiles.length === 0 && gifs.length === 0) ) return;
 
 		try {
 			const uploadedFiles = await Promise.all(
@@ -84,6 +91,7 @@ export default function MessageInput({
 				content: {
 					markdown,
 					files: uploadedFiles.map((file) => file.$id),
+					gifs,
 				},
 				replyTo: replyingTo ? replyingTo._id : null,
 				type: "userMessage",
@@ -91,6 +99,7 @@ export default function MessageInput({
 				setMarkdown("");
 				setReplyingTo(null);
 				setNewFiles([]);
+				setGifs([])
 			});
 		} catch (error) {
 			console.error(error);
@@ -104,6 +113,7 @@ export default function MessageInput({
 		setReplyingTo,
 		newFiles,
 		storage,
+		gifs,
 	]);
 
 	const handleKeyPress = useCallback(
@@ -184,8 +194,35 @@ export default function MessageInput({
 						</div>
 					);
 				})}
+				<div className="flex gap-3">
+					{gifs.map((gif, index) => {
+						return (
+							<div
+								key={`input-gif-${index + 1}-${gif.id}`}
+								className="relative group"
+							>
+								<Gif
+									className="cursor-auto"
+									gif={gif}
+									width={200}
+									onGifClick={(_gif, event) => event.preventDefault()}
+								/>
+								<button
+									type="button"
+									className="opacity-0 group-hover:opacity-100 flex items-center justify-center cursor-pointer absolute h-5 w-5 top-1 right-1 bg-background/30 p-1 rounded-full hover:bg-background/70 transition"
+									onClick={() =>
+										setGifs((prev) => {
+											return prev.filter((g) => g.id !== gif.id);
+										})
+									}
+								>
+									<X color="var(--muted)" size={15} />
+								</button>
+							</div>
+						);
+					})}
+				</div>
 			</div>
-
 			<div className="flex items-center gap-5">
 				<EmojiPickerPopover
 					onOpenChange={(open) => setEmojiPickerIsOpen(open)}
@@ -198,6 +235,14 @@ export default function MessageInput({
 				<IconButton
 					icon="attachment"
 					onClick={() => fileInputRef.current?.click()}
+				/>
+				<Giphy
+					open={gifsOpen}
+					setOpen={setGifsOpen}
+					onGifSelect={(gif) => {
+						setGifs((prev) => [...prev, gif]);
+						setGifsOpen(false);
+					}}
 				/>
 				<input
 					type="file"

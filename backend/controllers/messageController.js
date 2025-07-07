@@ -11,6 +11,7 @@ const EventEmitter = require("../EventEmitter");
 exports.createMessage = async (req, res) => {
 	try {
 		const { message } = req.body;
+		console.log(message)
 		await connectToDatabase();
 
 		const user = await User.findById(message.user);
@@ -37,7 +38,7 @@ exports.createMessage = async (req, res) => {
 		}
 
 		if (message.type === "userMessage") {
-			if (message.content.files.length === 0 && !message.content.markdown) {
+			if (message.content.files.length === 0 && !message.content.markdown && message.content.gifs.length === 0) {
 				return res
 					.status(400)
 					.json({ message: "Content is required for userMessage" });
@@ -141,9 +142,11 @@ exports.editMessage = async (req, res) => {
 		const { markdown, chatId } = req.body;
 
 		await connectToDatabase();
-		const message = await Message.findByIdAndUpdate(messageId, {
+		const doc = await Message.findById(messageId);
+
+		const message = await UserMessage.findByIdAndUpdate(messageId, {
 			$set: { "content.markdown": markdown, edited: true },
-		});
+		}, {new: true});
 
 		if (!message) {
 			res.status(404).json({ message: "Message not found" });
@@ -162,9 +165,10 @@ exports.addReaction = async (req, res) => {
 		const { reaction } = req.body;
 
 		await connectToDatabase();
-		const message = await Message.findByIdAndUpdate(messageId, {
+		const message = await UserMessage.findByIdAndUpdate(messageId, {
 			$addToSet: { reactions: reaction },
 		});
+
 		EventEmitter.emit("reaction", {
 			reaction,
 			chatId: message.chat.toString(),

@@ -48,8 +48,6 @@ export default function ChatPreview({ chat }: ChatPreviewProps) {
 		return chat.users.map((u) => u._id);
 	}, [chat]);
 
-	console.log(chatId === chat._id);
-
 	const friendsNotInChat = useMemo(() => {
 		if (!thisUser) return;
 		return thisUser.friends.friends.filter((u) => !usersIds.includes(u._id));
@@ -217,7 +215,23 @@ export default function ChatPreview({ chat }: ChatPreviewProps) {
 			: !chat.lastMessage?.content.markdown &&
 					chat.lastMessage?.content.files.length
 				? `${otherUser.firstName} sent a file`
-				: "";
+				: chat.lastMessage?.content.gifs.length
+					? `${otherUser.firstName} sent a gif`
+					: "";
+
+		console.log(chat.lastMessage?.content);
+
+		// let bottomText = "";
+		//
+		// if (chat.lastMessage?.content.markdown) {
+		// 	bottomText = chat.lastMessage?.content.markdown;
+		// } else if (chat.lastMessage?.content.files.length) {
+		// 	bottomText = `${otherUser.firstName} sent a file`;
+		// } else if (chat.lastMessage?.content.gifs.length) {
+		// 	bottomText = `${otherUser.firstName} sent a gif`;
+		// }
+
+		console.log(chat.lastMessage?.content.gifs.length);
 
 		return (
 			<div className="flex justify-between items-center relative">

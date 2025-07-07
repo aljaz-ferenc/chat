@@ -61,7 +61,8 @@ export type Message = {
     chat: Chat['_id'];
     content:{
         markdown: string,
-        files: string[]
+        files: string[],
+        gifs: any[]
     };
     edited: boolean;
     createdAt: Date;

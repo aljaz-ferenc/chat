@@ -118,28 +118,11 @@ export default function Messages() {
 			});
 		};
 
-		const handleEditedMessage = (message: {
+		const handleEditedMessage = (_message: {
 			messageId: string;
 			markdown: string;
 		}) => {
-			queryClient.setQueryData(
-				["messages", { chatId }],
-				(oldMessages: TMessage[]) => {
-					return oldMessages.map((m) => {
-						if (m._id === message.messageId) {
-							return {
-								...m,
-								content: {
-									...m.content,
-									markdown: message.markdown,
-								},
-								edited: true,
-							};
-						}
-						return m;
-					});
-				},
-			);
+			queryClient.invalidateQueries({queryKey: ['messages', chatId]})
 		};
 
 		socket.on("typing", handleTyping);

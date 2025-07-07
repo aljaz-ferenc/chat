@@ -32,6 +32,7 @@ import {
 } from "../ui/DropdownMenu.tsx";
 import IconButton from "../ui/IconButton.tsx";
 import MessageFiles from "./MessageFiles.tsx";
+import MessageGifs from "./MessageGifs.tsx";
 import MessageMarkdown from "./MessageMarkdown.tsx";
 import UserTag from "./UserTag.tsx";
 const BUCKET_ID = import.meta.env.VITE_APPWRITE_BUCKET_ID;
@@ -128,6 +129,7 @@ export default function Message({
 		<div
 			key={message._id}
 			className={cn([
+				"w-full",
 				message.replyTo &&
 					"ml-2 relative after:content-[''] after:absolute after:w-px after:h-full after:-left-2 after:top-0 after:bg-white",
 			])}
@@ -170,7 +172,7 @@ export default function Message({
 					</>
 				)}
 
-				<div className="flex gap-2  items-center">
+				<div className="flex gap-2 items-center">
 					<div>
 						{!isEditing ? (
 							<MessageMarkdown message={message} isMine={isMine} />
@@ -179,10 +181,13 @@ export default function Message({
 								ref={editInputRef}
 								value={editedMarkdown}
 								onChange={(e) => setEditedMarkdown(e.target.value)}
-								className="w-full h-10 text-white border-white border outline-none p-1"
+								className="w-full h-10 text-white border-muted/30 mt-2 border outline-none p-1 rounded"
 							/>
 						)}
+						<div className='flex flex-col gap-2'>
 						<MessageFiles files={message.content.files} />
+						<MessageGifs gifs={message.content.gifs} />
+						</div>
 					</div>
 					<div className="h-full flex items-center z-20">
 						<div className="flex gap-2">

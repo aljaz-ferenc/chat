@@ -54,7 +54,7 @@ export default function SocketProvider({ children }: PropsWithChildren) {
 			});
 
 			queryClient.setQueryData(
-				["messages", { chatId: renameMessage.chat.toString() }],
+				["messages",  renameMessage.chat.toString() ],
 				(oldMessages: Message[]) => {
 					return [...oldMessages, renameMessage];
 				},
@@ -76,7 +76,7 @@ export default function SocketProvider({ children }: PropsWithChildren) {
 				});
 			});
 			await queryClient.invalidateQueries({
-				queryKey: ["messages", { chatId }],
+				queryKey: ["messages",  chatId ],
 			});
 		});
 
@@ -86,24 +86,9 @@ export default function SocketProvider({ children }: PropsWithChildren) {
 			await refetch();
 		});
 
+		// @ts-ignore
 		socket.on("reaction", ({ reaction, chatId, messageId }) => {
-			queryClient.setQueryData(
-				["messages", { chatId }],
-				(oldMessages: Message[]) => {
-					return oldMessages.map((m) => {
-						if (m._id === messageId) {
-							// @ts-ignore
-							const updatedReactions = [...m.reactions, reaction];
-
-							return {
-								...m,
-								reactions: updatedReactions,
-							};
-						}
-						return m;
-					});
-				},
-			);
+			queryClient.invalidateQueries({queryKey: ['messages', chatId]})
 		});
 
 		socket.on(
@@ -124,7 +109,6 @@ export default function SocketProvider({ children }: PropsWithChildren) {
 							  }
 							| undefined,
 					) => {
-						console.log("OLD_DATA: ", oldData);
 						if (!oldData) return oldData;
 
 						const updatedPages = oldData.pages.map((page) => ({

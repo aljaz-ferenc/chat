@@ -12,6 +12,5 @@ export type ResponseType = {
 export async function fetchMessages(chatId: Chat['_id'], page: number): Promise<ResponseType>{
     const res = await fetch(Endpoints.messages(chatId, page))
     const data = await res.json()
-    console.log(data.hasNext)
     return data
 }

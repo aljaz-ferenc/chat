@@ -58,6 +58,9 @@ const UserMessage = Message.discriminator(
 			files: {
 				type: [String],
 			},
+			gifs: {
+				type: [Object],
+			},
 		},
 	}),
 );
