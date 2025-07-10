@@ -21,12 +21,16 @@ export default function SharedFiles({ chatId }: { chatId: Chat["_id"] }) {
 
 			const allFiles: Models.File[] = [];
 
-			for (const m of messages) {
-				if (m.content.files.length) {
-					const fetchedFiles = await Promise.all(
-						m.content.files.map((fileId) => storage.getFile(BUCKET_ID, fileId)),
-					);
-					allFiles.push(...fetchedFiles);
+			for (const page of messages.pages) {
+				for (const m of page.messages) {
+					if (m.content.files.length) {
+						const fetchedFiles = await Promise.all(
+							m.content.files.map((fileId: Models.File["$id"]) =>
+								storage.getFile(BUCKET_ID, fileId)
+							)
+						);
+						allFiles.push(...fetchedFiles);
+					}
 				}
 			}
 

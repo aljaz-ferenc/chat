@@ -1,6 +1,6 @@
 import type {Chat, FriendRequestAction, Message, NotificationAction, User} from "./types";
 
-const BASE_URL = process.env.NODE_ENV === 'development' ? '/api/v1' : 'https://chat-xbp0.onrender.com/api/v1'
+const BASE_URL = 'https://chat-xbp0.onrender.com/api/v1'
 
 export class Endpoints {
     public static users = (userId?: User['clerkId']) => `${BASE_URL}/users${userId ? `/${userId}` : ''}`

@@ -1,8 +1,25 @@
 import { Link } from "react-router";
-import { highlightText } from "../../../shared/functions/utils.tsx";
+// import { highlightText } from "../../../shared/functions/utils.tsx";
 import type { User } from "../../../shared/types.ts";
 import { cn } from "../utils/utils.ts";
 import { Skeleton } from "./ui/Skeleton.tsx";
+
+function highlightText(text: string, query: string) {
+	if (!query) return text;
+
+	const regex = new RegExp(`(${query})`, "gi");
+	const parts = text.split(regex);
+
+	return parts.map((part, index) =>
+		regex.test(part) ? (
+			<mark key={index} className="bg-yellow-300">
+                {part}
+            </mark>
+		) : (
+			part
+		)
+	);
+}
 
 export default function UserCard({
 	user,

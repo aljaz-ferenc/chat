@@ -1,6 +1,5 @@
 import {Endpoints} from "../../Endpoints";
-import {useAuth} from "@clerk/clerk-react";
-import {User} from "../../types";
+import type {User} from "../../types";
 
 export async function fetchUpdateUser(clerkId: User['clerkId'], updates: Partial<User>){
 

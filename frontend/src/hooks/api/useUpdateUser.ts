@@ -7,9 +7,9 @@ export default function useUpdateUser() {
 	const { userId } = useAuth();
 
 	return useMutation({
-		mutationKey: "user-update",
+		mutationKey: ["user-update"],
 		mutationFn: async (updates: Partial<User>) => {
-			await fetchUpdateUser(userId, updates);
+			await fetchUpdateUser(userId as User['_id'], updates);
 		},
 	});
 }

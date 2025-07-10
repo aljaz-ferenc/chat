@@ -70,7 +70,7 @@ export type Message = {
     reactions: {
         emoji: string,
         by: string
-    };
+    }[];
     replyTo?: Message | null
     type: 'userMessage' | 'renameChat' | 'leaveChat',
     newChatName?: string

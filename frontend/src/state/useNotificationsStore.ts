@@ -11,4 +11,4 @@ const useNotificationsStore = create<NotificationsStore>((set) => ({
 	setNotifications: (notifications) => set({ notifications }),
 }));
 
-export default useUserStore;
+export default useNotificationsStore;
