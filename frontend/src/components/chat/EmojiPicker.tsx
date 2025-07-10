@@ -20,7 +20,7 @@ export default function EmojiPickerPopover({
 			</PopoverTrigger>
 			<PopoverContent className="border-none">
 				<EmojiPicker.Root className="isolate flex h-[368px] w-fit flex-col bg-white dark:bg-background border-2 border-muted/50 rounded-xl">
-					<EmojiPicker.Search className="z-10 mx-2 mt-2 appearance-none rounded-md bg-neutral-100 px-2.5 py-2 text-sm dark:bg-background placeholder:text-muted" />
+					<EmojiPicker.Search className="z-10 mx-2 mt-2 text-white appearance-none rounded-md bg-neutral-100 px-2.5 py-2 text-sm dark:bg-background placeholder:text-muted" />
 					<EmojiPicker.Viewport className="relative flex-1 outline-hidden">
 						<EmojiPicker.Loading className="absolute inset-0 flex items-center justify-center text-neutral-400 text-sm dark:text-neutral-500">
 							Loading…

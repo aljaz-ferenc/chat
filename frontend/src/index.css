@@ -25,3 +25,8 @@
 	--color-icon-background: var(--icon-background);
 	--color-icon-background-active: var(--icon-background-active);
 }
+
+.cl-avatarBox {
+	width: 48px;
+	height: 48px;
+}

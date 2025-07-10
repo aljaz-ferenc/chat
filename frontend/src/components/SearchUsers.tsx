@@ -59,7 +59,7 @@ export default function SearchUsers() {
 									key={user._id}
 									className="flex justify-between items-center text-muted font-bold"
 								>
-									<UserCard highlight={debouncedQuery} user={user} />
+									<UserCard highlight={query} user={user} />
 									<IconButton
 										onClick={() =>
 											navigate(

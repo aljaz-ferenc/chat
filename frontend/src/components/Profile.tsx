@@ -60,10 +60,10 @@ export default function Profile() {
 
 		const areInputsSame =
 			about === user.about &&
-			socials.X === user.socials.x &&
-			socials.Facebook === user.socials.facebook &&
-			socials.TikTok === user.socials.tiktok &&
-			socials.Instagram === user.socials.instagram &&
+			socials.X === user.socials?.x &&
+			socials.Facebook === user.socials?.facebook &&
+			socials.TikTok === user.socials?.tiktok &&
+			socials.Instagram === user.socials?.instagram &&
 			isSameDay(user.birthday, birthday) &&
 			basicInfo.city === user.city &&
 			basicInfo.country === user.country &&
@@ -84,6 +84,7 @@ export default function Profile() {
 				<div className="flex flex-col gap-2">
 					<span className="font-bold">About</span>
 					<textarea
+						spellCheck={false}
 						className="rounded-xl bg-background p-2"
 						name="about"
 						id="about"

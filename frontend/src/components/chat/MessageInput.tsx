@@ -251,6 +251,7 @@ export default function MessageInput({
 					onChange={handleAddFile}
 				/>
 				<textarea
+					spellCheck={false}
 					className="w-full h-full text-white p-2 bg-background rounded"
 					value={markdown}
 					onChange={(e) => setMarkdown(e.target.value)}

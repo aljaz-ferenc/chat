@@ -101,9 +101,10 @@ export default function ContactInfo({ contact }: ContactInfoProps) {
 						)}
 						{contact.socials && Object.entries(contact.socials).length > 0 && (
 							<div className="flex gap-3 mt-6">
-								{Object.entries(contact.socials).map((link) => (
-									<SocialLink key={link[0]} link={link} />
-								))}
+								{Object.entries(contact.socials).map(([social, value]) => {
+									if(!value) return null
+									return <SocialLink key={social} link={[social, value]} />
+								})}
 							</div>
 						)}
 						<div className="text-white">

@@ -20,7 +20,7 @@ type GiphyProps = {
 export default function Giphy({ onGifSelect, open, setOpen }: GiphyProps) {
 	return (
 		<Popover open={open} onOpenChange={setOpen}>
-			<PopoverTrigger>GIF</PopoverTrigger>
+			<PopoverTrigger className='text-muted'>GIF</PopoverTrigger>
 			<PopoverContent className="h-[400px] w-[800px] overflow-y-scroll bg-background border-muted/50 [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-primary [&::-webkit-scrollbar-thumb]:bg-muted [&::-webkit-scrollbar-thumb]:rounded">
 				<SearchContextManager
 					apiKey={GIPHY_KEY}

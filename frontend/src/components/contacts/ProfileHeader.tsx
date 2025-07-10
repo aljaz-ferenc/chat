@@ -1,11 +1,9 @@
 import { ID } from "appwrite";
 import { type ChangeEvent, use, useEffect, useRef, useState } from "react";
-import { useShallow } from "zustand/react/shallow";
 import type { Contact } from "../../../../shared/types.ts";
 import { EditIcon } from "../../assets/icons/icons.tsx";
 import useUpdateUser from "../../hooks/api/useUpdateUser.ts";
 import { FileStorageContext } from "../../providers/FileStorageProvider.tsx";
-import useUserStore from "../../state/useUserStore.ts";
 
 const BUCKET_ID = import.meta.env.VITE_APPWRITE_BUCKET_ID;
 
@@ -16,9 +14,6 @@ type ProfileHeaderProps = {
 
 export function ProfileHeader({ user, editable = false }: ProfileHeaderProps) {
 	const imageInputRef = useRef<HTMLInputElement>(null);
-	const [bgImageId] = useUserStore(
-		useShallow((state) => [state.user?.bgImage]),
-	);
 	const { storage } = use(FileStorageContext);
 	const { mutateAsync: updateUser } = useUpdateUser();
 	const [bgImage, setBgImage] = useState("");
@@ -42,15 +37,15 @@ export function ProfileHeader({ user, editable = false }: ProfileHeaderProps) {
 	};
 
 	useEffect(() => {
-		if (!storage || !bgImageId) return;
-		const imageUrl = storage.getFileView(BUCKET_ID, bgImageId);
+		if (!storage || !user?.bgImage) return;
+		const imageUrl = storage.getFileView(BUCKET_ID, user.bgImage);
 		setBgImage(imageUrl);
-	}, [storage, bgImageId]);
+	}, [storage, user]);
 
 	return (
-		<div className="bg-primary rounded-2xl overflow-hidden w-full max-w-6xl mx-auto relative">
+		<div className="bg-primary rounded-2xl overflow-hidden w-full max-w-6xl mx-auto relative ">
 			{/*BACKGROUND IMAGE*/}
-			<div className="w-full h-[500px] relative overflow-hidden group">
+			<div className="w-full h-[500px] relative overflow-hidden group ">
 				{editable && (
 					<button
 						type="button"
@@ -74,9 +69,9 @@ export function ProfileHeader({ user, editable = false }: ProfileHeaderProps) {
 					onChange={handleEditImage}
 				/>
 			</div>
-			<div className="px-8 absolute bottom-0">
+			<div className="px-8 absolute bottom-0 ">
 				{/*PROFILE PIC*/}
-				<div className="flex gap-5 text-white">
+				<div className="flex gap-5 text-white ">
 					<div className="relative h-[150px] w-[150px] border-border border-2 rounded-xl overflow-hidden -translate-y-8">
 						<img
 							src={user.imageUrl || "https://picsum.photos/300"}
@@ -84,7 +79,7 @@ export function ProfileHeader({ user, editable = false }: ProfileHeaderProps) {
 							className="w-full h-full object-cover"
 						/>
 					</div>
-					<div className="mt-6">
+					<div className="mt-6 bg-black/50 rounded-xl p-3 h-fit">
 						<h3>
 							<span className="font-bold text-lg">
 								{user.firstName} {user.lastName}

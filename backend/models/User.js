@@ -98,7 +98,12 @@ const userSchema = new mongoose.Schema(
 				},
 				{ _id: false },
 			),
-			default: {},
+			default: {
+				facebook: '',
+				x: '',
+				instagram: '',
+				tiktok: ''
+			},
 		},
 		friends: {
 			incomingRequests: [
