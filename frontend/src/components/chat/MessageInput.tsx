@@ -75,8 +75,12 @@ export default function MessageInput({
 	}, [chatId]);
 
 	const sendMessage = useCallback(async () => {
-		console.log('sending')
-		if (!userId || !chatId || (!markdown && newFiles.length === 0 && gifs.length === 0) ) return;
+		if (
+			!userId ||
+			!chatId ||
+			(!markdown && newFiles.length === 0 && gifs.length === 0)
+		)
+			return;
 
 		try {
 			const uploadedFiles = await Promise.all(
@@ -99,7 +103,7 @@ export default function MessageInput({
 				setMarkdown("");
 				setReplyingTo(null);
 				setNewFiles([]);
-				setGifs([])
+				setGifs([]);
 			});
 		} catch (error) {
 			console.error(error);

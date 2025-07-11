@@ -53,12 +53,9 @@ export default function SocketProvider({ children }: PropsWithChildren) {
 				});
 			});
 
-			queryClient.setQueryData(
-				["messages",  renameMessage.chat.toString() ],
-				(oldMessages: Message[]) => {
-					return [...oldMessages, renameMessage];
-				},
-			);
+			queryClient.invalidateQueries({
+				queryKey: ["messages", renameMessage.chat.toString()],
+			});
 		});
 
 		socket.on("user-left", async (data) => {
@@ -76,7 +73,7 @@ export default function SocketProvider({ children }: PropsWithChildren) {
 				});
 			});
 			await queryClient.invalidateQueries({
-				queryKey: ["messages",  chatId ],
+				queryKey: ["messages", chatId],
 			});
 		});
 
@@ -88,7 +85,7 @@ export default function SocketProvider({ children }: PropsWithChildren) {
 
 		// @ts-ignore
 		socket.on("reaction", ({ reaction, chatId, messageId }) => {
-			queryClient.invalidateQueries({queryKey: ['messages', chatId]})
+			queryClient.invalidateQueries({ queryKey: ["messages", chatId] });
 		});
 
 		socket.on(

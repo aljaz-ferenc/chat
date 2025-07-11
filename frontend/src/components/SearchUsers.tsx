@@ -35,7 +35,7 @@ export default function SearchUsers() {
 					value={query}
 					onChange={(e) => setQuery(e.target.value)}
 					type="text"
-					placeholder="Search by name or username..."
+					placeholder="Search all users by name or username..."
 					className={
 						"w-full p-2 outline-border outline rounded-[5px] focus-visible:outline-none focus-visible:bg-background text-muted"
 					}

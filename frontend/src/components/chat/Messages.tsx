@@ -122,7 +122,7 @@ export default function Messages() {
 			messageId: string;
 			markdown: string;
 		}) => {
-			queryClient.invalidateQueries({queryKey: ['messages', chatId]})
+			queryClient.invalidateQueries({ queryKey: ["messages", chatId] });
 		};
 
 		socket.on("typing", handleTyping);
@@ -147,7 +147,7 @@ export default function Messages() {
 		<div className="flex">
 			<div
 				ref={messagesContainerRef}
-				className="h-[calc(100vh-160px)] flex flex-col gap-8 items-start bg-background w-full p-6 overflow-y-auto"
+				className="h-[calc(100vh-160px)] flex flex-col gap-8 items-start bg-background w-full p-6 overflow-y-auto overflow-x-hidden app-scrollbar"
 			>
 				{isFetchingNextPage && (
 					<div className="h-5 mx-auto w-full">

@@ -5,7 +5,7 @@ import { NavLink, useNavigate, useResolvedPath } from "react-router";
 import { useShallow } from "zustand/react/shallow";
 import { Routes } from "../../../shared/Routes.enum.ts";
 import type { Notification as TNotification } from "../../../shared/types.ts";
-import { LogoIcon } from "../assets/icons/icons";
+// import { LogoIcon } from "../assets/icons/icons";
 import useDeleteNotifications from "../hooks/api/useDeleteNotifications.ts";
 import useReadNotification from "../hooks/api/useReadNotification.ts";
 import useUser from "../hooks/api/useUser.ts";
@@ -24,7 +24,7 @@ import IconButton from "./ui/IconButton.tsx";
 export default function Header() {
 	const { mutateAsync: readNotification } = useReadNotification();
 	const { mutateAsync: deleteNotifications } = useDeleteNotifications();
-	const { refetch } = useUser();
+	const { refetch, data: user } = useUser();
 	const [notifications, opened] = useUserStore(
 		useShallow((state) => [
 			state.user?.notifications,
@@ -33,6 +33,7 @@ export default function Header() {
 		]),
 	);
 	const { pathname } = useResolvedPath({});
+	const navigate = useNavigate();
 
 	const existsUnread = useMemo(() => {
 		return notifications?.notifications.some((n) => !n.read);
@@ -42,21 +43,29 @@ export default function Header() {
 
 	return (
 		<header className="h-full bg-primary w-full flex items-center border-b border-border">
-			<div className="h-full px-6.5 border-r border-border grid place-items-center w-24">
-				<LogoIcon />
-			</div>
-			<div className="flex px-4 gap-4 w-full">
-				<NavLink to={`/${Routes.CHATS}`}>
+			{/*<div className="h-full px-6.5 border-r border-border grid place-items-center w-24">*/}
+			{/*	<LogoIcon />*/}
+			{/*</div>*/}
+			<div className="flex px-6 gap-4 w-full">
+				<NavLink
+					to={`/${Routes.CHATS}`}
+					className="flex flex-col justify-between items-center gap-1"
+				>
 					<IconButton
 						isActive={pathname.startsWith(`/${Routes.CHATS}`)}
 						icon="message"
 					/>
+					<span className="text-xs text-muted text-center">Messages</span>
 				</NavLink>
-				<NavLink to={`/${Routes.CONTACTS}`}>
+				<NavLink
+					to={`/${Routes.CONTACTS}`}
+					className="flex flex-col justify-between items-center"
+				>
 					<IconButton
 						isActive={pathname.startsWith(`/${Routes.CONTACTS}`)}
 						icon="contact"
 					/>
+					<span className="text-xs text-muted text-center">Contacts</span>
 				</NavLink>
 				<DropdownMenu
 					onOpenChange={async (open) => {
@@ -65,13 +74,16 @@ export default function Header() {
 						}
 					}}
 				>
-					<DropdownMenuTrigger className="ml-auto">
+					<DropdownMenuTrigger className="ml-auto flex flex-col justify-between items-center">
 						<IconButton
 							icon="notification"
 							className={cn([
 								existsUnread && !opened && "[&_#dot]:fill-red-500",
 							])}
 						/>
+						<span className="text-xs text-muted text-center">
+							Notifications
+						</span>
 					</DropdownMenuTrigger>
 					<DropdownMenuContent className="bg-primary border-muted text-white min-w-sm mr-6 p-2">
 						{notifications?.notifications.length === 0 && (
@@ -102,15 +114,20 @@ export default function Header() {
 							))}
 					</DropdownMenuContent>
 				</DropdownMenu>
-				<UserButton>
-					<UserButton.MenuItems>
-						<UserButton.Link
-							label="Profile"
-							labelIcon={<UserIcon size={17} />}
-							href={`/${Routes.PROFILE}`}
-						/>
-					</UserButton.MenuItems>
-				</UserButton>
+				<div className="flex flex-col justify-between items-center">
+					<UserButton>
+						<UserButton.MenuItems>
+							<UserButton.Action
+								onClick={() => navigate(`/${Routes.PROFILE}`)}
+								label="Profile"
+								labelIcon={<UserIcon size={17} />}
+							/>
+						</UserButton.MenuItems>
+					</UserButton>
+					<span className="text-xs text-muted text-center">
+						{user?.firstName} {user?.lastName}
+					</span>
+				</div>
 			</div>
 		</header>
 	);

@@ -7,7 +7,7 @@ export function formatDate(date: Date){
     return date.toLocaleDateString('en-US', dateFormatterOptions)
 }
 
-export const isFriend = (userId: string, thisUser: User) => {
+export const isFriend = (userId: string, thisUser: Pick<User, 'friends'>) => {
     return thisUser?.friends.friends.some((u) => u._id === userId);
 };
 

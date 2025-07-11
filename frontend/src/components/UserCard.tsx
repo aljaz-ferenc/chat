@@ -12,12 +12,12 @@ function highlightText(text: string, query: string) {
 
 	return parts.map((part, index) =>
 		regex.test(part) ? (
-			<mark key={index} className="bg-yellow-300">
-                {part}
-            </mark>
+			<mark key={`part-${index + 1}`} className="bg-yellow-300">
+				{part}
+			</mark>
 		) : (
 			part
-		)
+		),
 	);
 }
 
@@ -45,11 +45,13 @@ export default function UserCard({
 			to={navigateTo || `/contacts/${user._id}`}
 			className={cn(["flex items-center gap-4", className])}
 		>
-			<img
-				src={user.imageUrl}
-				alt="user"
-				className="w-12 aspect-square rounded-[5px]"
-			/>
+			<div className="w-12 aspect-square rounded-[5px] relative overflow-hidden">
+				<img
+					src={user.imageUrl}
+					alt="user"
+					className="absolute inset-0 h-full w-full object-cover"
+				/>
+			</div>
 			<div className="flex flex-col items-start">
 				<div className="flex flex-col items-start justify-center">
 					<h3 className="font-bold text-white">

@@ -37,7 +37,7 @@ exports.getChat = async (req, res) => {
 		await connectToDatabase();
 		const chat = await Chat.findByIdAndUpdate(chatId, {
 			$addToSet: { readBy: userId },
-		}).populate("users", "firstName");
+		}).populate("users", "firstName friends.friends");
 
 		if (!chat) {
 			return res.status(404).json({ message: "Chat not found" });

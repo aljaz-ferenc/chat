@@ -1,7 +1,7 @@
 import {Endpoints} from "../../Endpoints";
 import type {Chat, User} from "../../types";
 
-export async function fetchChatById(chatId: Chat['_id'], userId: User['_id']){
+export async function fetchChatById(chatId: Chat['_id'], userId: User['_id']): Promise<Chat>{
     const res = await fetch(Endpoints.chat(chatId), {
         method: 'POST',
         headers: {

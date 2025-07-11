@@ -11,6 +11,7 @@
 	--icon-active: #2563eb;
 	--icon-background: #203047;
 	--icon-background-active: #bfdbfe;
+	--header-height: 100px;
 }
 
 @theme inline {
@@ -29,4 +30,8 @@
 .cl-avatarBox {
 	width: 48px;
 	height: 48px;
+}
+
+.app-scrollbar {
+	@apply [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-primary [&::-webkit-scrollbar-thumb]:bg-muted [&::-webkit-scrollbar-thumb]:rounded;
 }

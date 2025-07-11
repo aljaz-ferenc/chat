@@ -1,5 +1,9 @@
+import { useDebounce } from "@uidotdev/usehooks";
+import { X } from "lucide-react";
+import { useEffect, useState } from "react";
 import { Link, Outlet, useNavigate } from "react-router";
-import { SearchIcon } from "../assets/icons/icons.tsx";
+import type { Contact } from "../../../shared/types.ts";
+import { SearchIcon, XIcon } from "../assets/icons/icons.tsx";
 import UserCard from "../components/UserCard.tsx";
 import useContacts from "../hooks/api/useContacts.ts";
 import { cn } from "../utils/utils.ts";
@@ -7,6 +11,19 @@ import { cn } from "../utils/utils.ts";
 export default function ContactsLayout() {
 	const { data: contacts } = useContacts();
 	const navigate = useNavigate();
+	const [query, setQuery] = useState("");
+	const debouncedQuery = useDebounce(query, 300);
+	const [searchedContacts, setSearchedContacts] = useState<Contact[]>([]);
+
+	useEffect(() => {
+		if (!contacts) return;
+		const searchedUsers = contacts.filter((c) =>
+			(c.firstName + c.lastName + c.username)
+				.toLowerCase()
+				.includes(debouncedQuery.toLowerCase().trim()),
+		);
+		setSearchedContacts(searchedUsers);
+	}, [debouncedQuery, contacts]);
 
 	return (
 		<div className="flex">
@@ -19,7 +36,7 @@ export default function ContactsLayout() {
 						className="flex gap-2 items-center text-muted [&_svg]:fill-muted font-bold text-xs hover:text-message-primary hover:[&_svg]:fill-message-primary cursor-pointer"
 					>
 						<SearchIcon />
-						<span>Search</span>
+						<span>Search all users</span>
 					</button>
 					{/*<button*/}
 					{/*	type="button"*/}
@@ -37,27 +54,40 @@ export default function ContactsLayout() {
 						type="text"
 						className="w-full placeholder:text-muted pl-10 py-2 transition-all rounded-full focus-visible:bg-background focus-visible:outline-none text-muted outline-border outline-1"
 						placeholder="Search contacts"
+						onChange={(e) => setQuery(e.target.value)}
+						value={query}
 					/>
-				</div>
-				<div className="flex flex-col mt-4">
-					{contacts?.map((user) => (
-						<Link
-							to={`${user._id}`}
-							className={cn([
-								"cursor-pointer bg-primary hover:bg-background transition-all px-6",
-							])}
-							key={user._id}
+					{query && (
+						<button
 							type="button"
+							className="absolute top-1/2 -translate-y-1/2 right-9 [&_svg]:p-[1px] cursor-pointer"
+							onClick={() => setQuery("")}
 						>
-							<UserCard
-								user={user}
-								showLastMessageTime
-								showTypingStatus
-								className="py-3"
-							/>
-						</Link>
-					))}
+							<X size={20} color={"var(--muted)"} />
+						</button>
+					)}
 				</div>
+				{contacts && (
+					<div className="flex flex-col mt-4">
+						{(query ? searchedContacts : contacts).map((user) => (
+							<Link
+								to={`${user._id}`}
+								className={cn([
+									"cursor-pointer bg-primary hover:bg-background transition-all px-6",
+								])}
+								key={user._id}
+								type="button"
+							>
+								<UserCard
+									user={user}
+									showLastMessageTime
+									showTypingStatus
+									className="py-3"
+								/>
+							</Link>
+						))}
+					</div>
+				)}
 			</div>
 			<div className="w-full bg-primary flex flex-col">
 				<Outlet />

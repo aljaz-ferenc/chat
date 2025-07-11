@@ -1,6 +1,6 @@
 import { EditIcon, UserIcon } from "lucide-react";
 import { useMemo, useState } from "react";
-import { Link, useParams } from "react-router";
+import { Link, useNavigate, useParams } from "react-router";
 import { useShallow } from "zustand/react/shallow";
 import type { Chat, User } from "../../../../shared/types.ts";
 import { ReplyIcon } from "../../assets/icons/icons.tsx";
@@ -43,6 +43,7 @@ export default function ChatPreview({ chat }: ChatPreviewProps) {
 	const { mutateAsync: renameChat } = useRenameChat();
 	const { mutateAsync: leaveChat } = useLeaveChat();
 	const { chatId } = useParams();
+	const navigate = useNavigate();
 
 	const usersIds = useMemo(() => {
 		return chat.users.map((u) => u._id);
@@ -59,7 +60,7 @@ export default function ChatPreview({ chat }: ChatPreviewProps) {
 				<Link
 					to={`/chats/${chat._id}`}
 					className={cn([
-						"flex items-center gap-4 w-full p-2 rounded-xl",
+						"flex items-center gap-4 w-full p-2 rounded-xl outline outline-muted/20 mt-6",
 						chatId === chat._id && "bg-background",
 					])}
 				>
@@ -106,7 +107,10 @@ export default function ChatPreview({ chat }: ChatPreviewProps) {
 										Rename Group
 									</DropdownMenuItem>
 									<DropdownMenuItem
-										onSelect={async () => await leaveChat(chat._id)}
+										onSelect={async () => {
+											await leaveChat(chat._id);
+											navigate("/chats");
+										}}
 										className="flex items-center gap-2 hover:text-white cursor-pointer transition"
 									>
 										<ReplyIcon />
@@ -124,7 +128,8 @@ export default function ChatPreview({ chat }: ChatPreviewProps) {
 						<DialogHeader>
 							<DialogTitle>Add Friends to Group</DialogTitle>
 						</DialogHeader>
-						{friendsNotInChat && friendsNotInChat.length > 0 ? (
+						{friendsNotInChat &&
+							friendsNotInChat.length > 0 &&
 							friendsNotInChat?.map((friend) => (
 								<button
 									type="button"
@@ -152,10 +157,7 @@ export default function ChatPreview({ chat }: ChatPreviewProps) {
 										checked={checkedUsers.includes(friend._id)}
 									/>
 								</button>
-							))
-						) : (
-							<span>All your friends are already in the group.</span>
-						)}
+							))}
 						{friendsNotInChat && friendsNotInChat.length > 0 && (
 							<DialogFooter className="[&_svg]:h-5">
 								<button
@@ -218,20 +220,6 @@ export default function ChatPreview({ chat }: ChatPreviewProps) {
 				: chat.lastMessage?.content.gifs.length
 					? `${otherUser.firstName} sent a gif`
 					: "";
-
-		console.log(chat.lastMessage?.content);
-
-		// let bottomText = "";
-		//
-		// if (chat.lastMessage?.content.markdown) {
-		// 	bottomText = chat.lastMessage?.content.markdown;
-		// } else if (chat.lastMessage?.content.files.length) {
-		// 	bottomText = `${otherUser.firstName} sent a file`;
-		// } else if (chat.lastMessage?.content.gifs.length) {
-		// 	bottomText = `${otherUser.firstName} sent a gif`;
-		// }
-
-		console.log(chat.lastMessage?.content.gifs.length);
 
 		return (
 			<div className="flex justify-between items-center relative">

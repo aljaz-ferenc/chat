@@ -102,8 +102,8 @@ export default function ContactInfo({ contact }: ContactInfoProps) {
 						{contact.socials && Object.entries(contact.socials).length > 0 && (
 							<div className="flex gap-3 mt-6">
 								{Object.entries(contact.socials).map(([social, value]) => {
-									if(!value) return null
-									return <SocialLink key={social} link={[social, value]} />
+									if (!value) return null;
+									return <SocialLink key={social} link={[social, value]} />;
 								})}
 							</div>
 						)}
@@ -178,10 +178,14 @@ export default function ContactInfo({ contact }: ContactInfoProps) {
 										<Link
 											key={`${friend}-${index + 1}`}
 											to={`/contacts/${friend._id}`}
-											className="text-center border rounded-xl border-muted w-[168px] h-[178px] flex items-center flex-col justify-center"
+											className="p-3 text-center border rounded-xl border-muted/30 w-[158px] h-[178px] flex items-center flex-col justify-center hover:bg-background hover:border-muted transition"
 										>
-											<div className="rounded-full overflow-hidden h-[72px] aspect-square">
-												<img src={friend.imageUrl} alt="" />
+											<div className="rounded-full overflow-hidden h-full aspect-square relative">
+												<img
+													src={friend.imageUrl}
+													alt=""
+													className="absolute inset-0 w-full h-full object-cover"
+												/>
 											</div>
 											<div className="text-muted text-sm mt-3">
 												@{friend.username}

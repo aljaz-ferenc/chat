@@ -4,6 +4,9 @@ import type { Contact } from "../../../../shared/types.ts";
 import { EditIcon } from "../../assets/icons/icons.tsx";
 import useUpdateUser from "../../hooks/api/useUpdateUser.ts";
 import { FileStorageContext } from "../../providers/FileStorageProvider.tsx";
+import useUserStore from "../../state/useUserStore.ts";
+import {useShallow} from "zustand/react/shallow";
+import {cn} from "../../utils/utils.ts";
 
 const BUCKET_ID = import.meta.env.VITE_APPWRITE_BUCKET_ID;
 
@@ -17,6 +20,7 @@ export function ProfileHeader({ user, editable = false }: ProfileHeaderProps) {
 	const { storage } = use(FileStorageContext);
 	const { mutateAsync: updateUser } = useUpdateUser();
 	const [bgImage, setBgImage] = useState("");
+	const thisUserId = useUserStore(useShallow(state => state.user?._id))
 
 	const handleEditImage = async (e: ChangeEvent<HTMLInputElement>) => {
 		if (!e.target.files) return;
@@ -57,7 +61,7 @@ export function ProfileHeader({ user, editable = false }: ProfileHeaderProps) {
 				)}
 				{bgImage && (
 					<img
-						className="absolute inset-0 object-cover w-full h-full object-center group-hover:brightness-50 transition"
+						className={cn(["absolute inset-0 object-cover w-full h-full object-center transition", thisUserId === user._id && 'group-hover:brightness-50'])}
 						src={bgImage}
 						alt=""
 					/>

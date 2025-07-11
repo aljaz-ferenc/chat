@@ -15,7 +15,7 @@ export default function RootLayout() {
 	}, [pathname, navigate]);
 
 	return (
-		<main className="grid grid-cols-1 grid-rows-[72px_auto] h-screen">
+		<main className="grid grid-cols-1 grid-rows-[90px_auto] h-screen">
 			<Header />
 			<Outlet />
 		</main>
