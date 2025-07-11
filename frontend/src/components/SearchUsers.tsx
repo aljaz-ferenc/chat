@@ -1,4 +1,5 @@
 import { useDebounce } from "@uidotdev/usehooks";
+import { X } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { useShallow } from "zustand/react/shallow";
@@ -30,7 +31,7 @@ export default function SearchUsers() {
 
 	return (
 		<div className="p-6 max-w-6xl w-full mx-auto">
-			<div>
+			<div className="relative">
 				<input
 					value={query}
 					onChange={(e) => setQuery(e.target.value)}
@@ -40,6 +41,15 @@ export default function SearchUsers() {
 						"w-full p-2 outline-border outline rounded-[5px] focus-visible:outline-none focus-visible:bg-background text-muted"
 					}
 				/>
+				{query && (
+					<button
+						type="button"
+						onClick={() => setQuery("")}
+						className="cursor-pointer absolute right-2 top-1/2 -translate-y-1/2"
+					>
+						<X color="var(--muted)" size={20} />
+					</button>
+				)}
 			</div>
 			<div className="flex flex-col gap-4 mt-6">
 				{!isSearchPending &&
@@ -85,7 +95,7 @@ export default function SearchUsers() {
 
 						return (
 							<div key={user._id} className="flex justify-between items-center">
-								<UserCard user={user} />
+								<UserCard highlight={query} user={user} />
 								<FriendStatusButtons thisUser={thisUser} contactId={user._id} />
 							</div>
 						);
