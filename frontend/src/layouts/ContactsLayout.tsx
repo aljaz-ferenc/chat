@@ -3,7 +3,7 @@ import { X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link, Outlet, useNavigate } from "react-router";
 import type { Contact } from "../../../shared/types.ts";
-import { SearchIcon, XIcon } from "../assets/icons/icons.tsx";
+import { SearchIcon } from "../assets/icons/icons.tsx";
 import UserCard from "../components/UserCard.tsx";
 import useContacts from "../hooks/api/useContacts.ts";
 import { cn } from "../utils/utils.ts";
