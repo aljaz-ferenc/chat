@@ -60,7 +60,7 @@ export default function ChatPreview({ chat }: ChatPreviewProps) {
 				<Link
 					to={`/chats/${chat._id}`}
 					className={cn([
-						"flex items-center gap-4 w-full p-2 rounded-xl outline outline-muted/20 mt-6",
+						"flex items-center gap-4 w-full p-2 rounded-xl outline outline-muted/20 mt-2",
 						chatId === chat._id && "bg-background",
 					])}
 				>

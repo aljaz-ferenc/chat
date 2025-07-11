@@ -91,7 +91,7 @@ export default function ChatLayout() {
 						</button>
 					</div>
 				)}
-				<div className="flex flex-col p-6 pt-0">
+				<div className="flex flex-col p-6 pt-0 mt-6">
 					{(activeChatType === "direct" ? directChats : groups)?.map((chat) => (
 						<ChatPreview key={chat._id} chat={chat} />
 					))}
