@@ -12,7 +12,9 @@ export default function MessageMarkdown({ message }: MessageMarkdownProps) {
 			<p>
 				{message.content?.markdown}{" "}
 				{message.edited && (
-					<span className="text-muted-foreground text-xs italic font-semibold inline-block ml-2">Edited</span>
+					<span className="text-muted-foreground text-xs italic font-semibold inline-block ml-2">
+						Edited
+					</span>
 				)}
 			</p>
 		</div>

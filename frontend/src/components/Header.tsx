@@ -1,12 +1,11 @@
 import { useTheme } from "@/providers/ThemeProvider.tsx";
 import { UserButton } from "@clerk/clerk-react";
-import { UserIcon } from "lucide-react";
-import {  useMemo } from "react";
+import { MoonIcon, SunIcon, UserIcon } from "lucide-react";
+import { useMemo } from "react";
 import { NavLink, useNavigate, useResolvedPath } from "react-router";
 import { useShallow } from "zustand/react/shallow";
 import { Routes } from "../../../shared/Routes.enum.ts";
 import type { Notification as TNotification } from "../../../shared/types.ts";
-// import { LogoIcon } from "../assets/icons/icons";
 import useDeleteNotifications from "../hooks/api/useDeleteNotifications.ts";
 import useReadNotification from "../hooks/api/useReadNotification.ts";
 import useUser from "../hooks/api/useUser.ts";
@@ -132,7 +131,13 @@ export default function Header() {
 									setTheme(theme === "light" ? "dark" : "light");
 								}}
 								label={`${theme === "light" ? "Dark" : "Light"} Mode`}
-								labelIcon={<UserIcon size={17} />}
+								labelIcon={
+									theme === "light" ? (
+										<MoonIcon size={17} />
+									) : (
+										<SunIcon size={17} />
+									)
+								}
 							/>
 						</UserButton.MenuItems>
 					</UserButton>

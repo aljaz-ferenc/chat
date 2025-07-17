@@ -223,7 +223,7 @@ export default function ChatPreview({ chat }: ChatPreviewProps) {
 		if (!otherUser) return null;
 
 		const bottomText = chat.lastMessage?.content.markdown
-			? `${chat.lastMessage.user._id === thisUserId ? 'You: ' : '' }${chat.lastMessage?.content.markdown}`
+			? `${chat.lastMessage.user._id === thisUserId ? "You: " : ""}${chat.lastMessage?.content.markdown}`
 			: !chat.lastMessage?.content.markdown &&
 					chat.lastMessage?.content.files.length
 				? `${otherUser.firstName} sent a file`
