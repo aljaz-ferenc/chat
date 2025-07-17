@@ -1,7 +1,7 @@
 import { useTheme } from "@/providers/ThemeProvider.tsx";
 import { UserButton } from "@clerk/clerk-react";
 import { UserIcon } from "lucide-react";
-import { useEffect, useMemo } from "react";
+import {  useMemo } from "react";
 import { NavLink, useNavigate, useResolvedPath } from "react-router";
 import { useShallow } from "zustand/react/shallow";
 import { Routes } from "../../../shared/Routes.enum.ts";
@@ -40,10 +40,6 @@ export default function Header() {
 		return notifications?.notifications.some((n) => !n.read);
 	}, [notifications]);
 	const { setTheme, theme } = useTheme();
-
-	useEffect(() => {
-		console.log(theme);
-	}, [theme]);
 
 	return (
 		<header className="h-full bg-background w-full flex items-center border-b border-border">
