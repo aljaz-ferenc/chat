@@ -60,11 +60,11 @@ export default function ContactInfo({ contact }: ContactInfoProps) {
 
 	return (
 		<div className="mt-6 max-w-6xl mx-auto">
-			<div className="text-sm text-muted flex gap-6 font-bold mb-2">
+			<div className="text-sm text-muted-foreground flex gap-6 font-bold mb-2">
 				<button
 					className={cn([
 						"cursor-pointer underline-offset-11",
-						activeTab === "about" && "text-message-primary underline",
+						activeTab === "about" && "text-primary underline",
 					])}
 					type="button"
 					onClick={() => setActiveTab("about")}
@@ -74,7 +74,7 @@ export default function ContactInfo({ contact }: ContactInfoProps) {
 				<button
 					className={cn([
 						"cursor-pointer underline-offset-11",
-						activeTab === "mutualContacts" && "text-message-primary underline",
+						activeTab === "mutualContacts" && "text-primary underline",
 					])}
 					type="button"
 					onClick={() => setActiveTab("mutualContacts")}
@@ -82,21 +82,19 @@ export default function ContactInfo({ contact }: ContactInfoProps) {
 					Mutual Contacts
 				</button>
 			</div>
-			<div className="p-6 bg-primary rounded-b-2xl">
+			<div className="p-6 bg-card rounded-b-2xl text-primary">
 				{activeTab === "about" && (
 					<div>
 						{contact.about && (
 							<div className="relative">
 								<div className="flex justify-between">
-									<h2 className="text-white font-bold mb-3">
-										About {contact.firstName}
-									</h2>
+									<h2 className=" font-bold mb-3">About {contact.firstName}</h2>
 									<FriendStatusButtons
 										contactId={contact._id}
 										thisUser={thisUser}
 									/>
 								</div>
-								<p className="text-muted max-w-sm">{contact.about}</p>
+								<p className=" max-w-sm">{contact.about}</p>
 							</div>
 						)}
 						{contact.socials && Object.entries(contact.socials).length > 0 && (
@@ -107,13 +105,13 @@ export default function ContactInfo({ contact }: ContactInfoProps) {
 								})}
 							</div>
 						)}
-						<div className="text-white">
-							<h3 className="text-white font-bold mb-3 mt-6">Basic Info</h3>
+						<div className="">
+							<h3 className=" font-bold mb-3 mt-6">Basic Info</h3>
 							<div className="flex flex-wrap gap-30 w-full justify-start gap-y-10">
 								{contact.birthday && (
 									<div className="flex flex-col">
 										<span>{basicInfoCards.birthday.icon}</span>
-										<span className="text-sm mt-1 text-muted">
+										<span className="text-sm mt-1 ">
 											{basicInfoCards.birthday.title}
 										</span>
 										<span className="font-bold">
@@ -124,7 +122,7 @@ export default function ContactInfo({ contact }: ContactInfoProps) {
 								{!!contact.languages?.length && (
 									<div className="flex flex-col">
 										<span>{basicInfoCards.languages.icon}</span>
-										<span className="text-sm mt-1 text-muted">
+										<span className="text-sm mt-1 ">
 											{basicInfoCards.languages.title}
 										</span>
 										<span className="font-bold">
@@ -135,7 +133,7 @@ export default function ContactInfo({ contact }: ContactInfoProps) {
 								{contact.city && contact.country && (
 									<div className="flex flex-col">
 										<span>{basicInfoCards.city.icon}</span>
-										<span className="text-sm mt-1 text-muted">
+										<span className="text-sm mt-1 ">
 											{basicInfoCards.city.title}
 										</span>
 										<span className="font-bold">
@@ -146,7 +144,7 @@ export default function ContactInfo({ contact }: ContactInfoProps) {
 								{contact.phoneNumber && (
 									<div className="flex flex-col">
 										<span>{basicInfoCards.phoneNumber.icon}</span>
-										<span className="text-sm mt-1 text-muted">
+										<span className="text-sm mt-1 ">
 											{basicInfoCards.phoneNumber.title}
 										</span>
 										<span className="font-bold">{contact.phoneNumber}</span>
@@ -155,7 +153,7 @@ export default function ContactInfo({ contact }: ContactInfoProps) {
 								{contact.email && (
 									<div className="flex flex-col">
 										<span>{basicInfoCards.email.icon}</span>
-										<span className="text-sm mt-1 text-muted">
+										<span className="text-sm mt-1 ">
 											{basicInfoCards.email.title}
 										</span>
 										<span className="font-bold">{contact.email}</span>
@@ -168,7 +166,7 @@ export default function ContactInfo({ contact }: ContactInfoProps) {
 				{activeTab === "mutualContacts" && (
 					<div>
 						{!contact.mutualFriends.length ? (
-							<p className="text-muted font-bold">
+							<p className="font-bold">
 								You and {contact.firstName} don't have any mutual contacts.
 							</p>
 						) : (
@@ -187,10 +185,8 @@ export default function ContactInfo({ contact }: ContactInfoProps) {
 													className="absolute inset-0 w-full h-full object-cover"
 												/>
 											</div>
-											<div className="text-muted text-sm mt-3">
-												@{friend.username}
-											</div>
-											<div className="text-white">
+											<div className=" text-sm mt-3">@{friend.username}</div>
+											<div className="">
 												<span>{friend.firstName}</span>{" "}
 												<span>{friend.lastName}</span>
 											</div>
@@ -243,7 +239,7 @@ export function FriendStatusButtons({
 					})
 				}
 				className={cn([
-					"bg-message-primary px-3 py-1 rounded-[5px] cursor-pointer text-white",
+					"bg-background px-3 py-1 rounded-[5px] cursor-pointer text-primary border border-border",
 					["cancel", "decline"].includes(action) && "bg-red-500",
 					className,
 				])}

@@ -1,3 +1,4 @@
+import ThemeProvider from "@/providers/ThemeProvider.tsx";
 import type { PropsWithChildren, ReactNode } from "react";
 import ClerkProviderComponent from "./ClerkProvider.tsx";
 import FileStorageProvider from "./FileStorageProvider.tsx";
@@ -37,6 +38,7 @@ const Providers = composeProviders([
 	ReactQueryProvider,
 	ClerkProviderComponent,
 	SocketProvider,
+	ThemeProvider,
 	RouterProvider,
 	FileStorageProvider,
 ]);

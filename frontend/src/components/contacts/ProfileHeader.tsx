@@ -1,12 +1,12 @@
 import { ID } from "appwrite";
 import { type ChangeEvent, use, useEffect, useRef, useState } from "react";
+import { useShallow } from "zustand/react/shallow";
 import type { Contact } from "../../../../shared/types.ts";
 import { EditIcon } from "../../assets/icons/icons.tsx";
 import useUpdateUser from "../../hooks/api/useUpdateUser.ts";
 import { FileStorageContext } from "../../providers/FileStorageProvider.tsx";
 import useUserStore from "../../state/useUserStore.ts";
-import {useShallow} from "zustand/react/shallow";
-import {cn} from "../../utils/utils.ts";
+import { cn } from "../../utils/utils.ts";
 
 const BUCKET_ID = import.meta.env.VITE_APPWRITE_BUCKET_ID;
 
@@ -20,7 +20,7 @@ export function ProfileHeader({ user, editable = false }: ProfileHeaderProps) {
 	const { storage } = use(FileStorageContext);
 	const { mutateAsync: updateUser } = useUpdateUser();
 	const [bgImage, setBgImage] = useState("");
-	const thisUserId = useUserStore(useShallow(state => state.user?._id))
+	const thisUserId = useUserStore(useShallow((state) => state.user?._id));
 
 	const handleEditImage = async (e: ChangeEvent<HTMLInputElement>) => {
 		if (!e.target.files) return;
@@ -47,7 +47,7 @@ export function ProfileHeader({ user, editable = false }: ProfileHeaderProps) {
 	}, [storage, user]);
 
 	return (
-		<div className="bg-primary rounded-2xl overflow-hidden w-full max-w-6xl mx-auto relative ">
+		<div className="bg-background rounded-2xl overflow-hidden w-full max-w-6xl mx-auto relative ">
 			{/*BACKGROUND IMAGE*/}
 			<div className="w-full h-[500px] relative overflow-hidden group ">
 				{editable && (
@@ -61,7 +61,10 @@ export function ProfileHeader({ user, editable = false }: ProfileHeaderProps) {
 				)}
 				{bgImage && (
 					<img
-						className={cn(["absolute inset-0 object-cover w-full h-full object-center transition", thisUserId === user._id && 'group-hover:brightness-50'])}
+						className={cn([
+							"absolute inset-0 object-cover w-full h-full object-center transition",
+							thisUserId === user._id && "group-hover:brightness-50",
+						])}
 						src={bgImage}
 						alt=""
 					/>
@@ -83,19 +86,19 @@ export function ProfileHeader({ user, editable = false }: ProfileHeaderProps) {
 							className="w-full h-full object-cover"
 						/>
 					</div>
-					<div className="mt-6 bg-black/50 rounded-xl p-3 h-fit">
+					<div className="mt-6 bg-black/70 rounded-xl p-3 h-fit backdrop-blur-xs">
 						<h3>
 							<span className="font-bold text-lg">
 								{user.firstName} {user.lastName}
 							</span>{" "}
-							<span className="text-sm text-muted">@{user.username}</span>
+							<span className="text-sm text-gray-100">@{user.username}</span>
 						</h3>
 						<div>
-							<span className="text-sm text-muted">
+							<span className="text-sm text-gray-100">
 								{user.friends.friends.length} Contacts
 							</span>
 							{!!user?.mutualFriends && (
-								<span className="text-xs text-muted">
+								<span className="text-xs text-gray-100">
 									{" "}
 									&bull; {user?.mutualFriends.length} Mutual
 								</span>

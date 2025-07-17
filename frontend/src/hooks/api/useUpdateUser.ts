@@ -9,7 +9,7 @@ export default function useUpdateUser() {
 	return useMutation({
 		mutationKey: ["user-update"],
 		mutationFn: async (updates: Partial<User>) => {
-			await fetchUpdateUser(userId as User['_id'], updates);
+			await fetchUpdateUser(userId as User["_id"], updates);
 		},
 	});
 }

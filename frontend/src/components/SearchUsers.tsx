@@ -30,15 +30,15 @@ export default function SearchUsers() {
 	if (!thisUser) return;
 
 	return (
-		<div className="p-6 max-w-6xl w-full mx-auto">
-			<div className="relative">
+		<div className="p-6 max-w-6xl h-full w-full mx-auto bg-background">
+			<div className="relative h-full">
 				<input
 					value={query}
 					onChange={(e) => setQuery(e.target.value)}
 					type="text"
 					placeholder="Search all users by name or username..."
 					className={
-						"w-full p-2 outline-border outline rounded-[5px] focus-visible:outline-none focus-visible:bg-background text-muted"
+						"w-full p-2 outline-border outline rounded-[5px] text-primary placeholder:fill-muted-foreground"
 					}
 				/>
 				{query && (

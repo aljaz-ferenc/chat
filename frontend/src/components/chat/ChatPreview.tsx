@@ -1,3 +1,4 @@
+import { cn } from "@/utils/utils.ts";
 import { EditIcon, UserIcon } from "lucide-react";
 import { useMemo, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router";
@@ -8,7 +9,6 @@ import useAddUsersToChat from "../../hooks/api/useAddUsersToChat.ts";
 import useLeaveChat from "../../hooks/api/useLeaveChat.ts";
 import useRenameChat from "../../hooks/api/useRenameChat.ts";
 import useUserStore from "../../state/useUserStore.ts";
-import { cn } from "../../utils/utils.ts";
 import UserCard from "../UserCard.tsx";
 import { Checkbox } from "../ui/Checkbox.tsx";
 import {
@@ -60,23 +60,33 @@ export default function ChatPreview({ chat }: ChatPreviewProps) {
 				<Link
 					to={`/chats/${chat._id}`}
 					className={cn([
-						"flex items-center gap-4 w-full p-2 rounded-xl outline outline-muted/20 mt-2",
+						"flex items-center gap-4 w-full rounded-xl outline outline-muted/20 mt-2",
 						chatId === chat._id && "bg-background",
 					])}
 				>
-					<div className="flex mr-2 h-8">
-						{chat.users.slice(0, 3).map((user) => (
+					<div className="relative flex flex-col items-center">
+						{chat.users.slice(2, 3).map((user) => (
 							<img
 								key={user._id}
 								src={user.imageUrl}
 								alt="user"
-								className="-mr-4 w-8 min-w-8 aspect-square rounded-full border-2 border-background"
+								className="-mr-4 w-8 min-w-8 aspect-square rounded-full border-2 border-background -translate-x-0.5 z-0 translate-y-1/4"
 							/>
 						))}
+						<div className="flex mr-2 h-8 items-end z-10 -translate-y-1/4">
+							{chat.users.slice(0, 2).map((user) => (
+								<img
+									key={user._id}
+									src={user.imageUrl}
+									alt="user"
+									className="-mr-4 w-8 h-8 min-w-8 aspect-square rounded-full border-2 border-background"
+								/>
+							))}
+						</div>
 					</div>
 					<div className="flex flex-col items-start gap-1 w-full">
 						<div className="flex items-center w-full ">
-							<h3 className="font-bold text-white text-ellipsis truncate">
+							<h3 className="font-bold text-primary text-ellipsis truncate">
 								{chat.name
 									? chat.name
 									: chat.users
@@ -85,25 +95,25 @@ export default function ChatPreview({ chat }: ChatPreviewProps) {
 											.join(", ")}
 							</h3>
 							<DropdownMenu>
-								<DropdownMenuTrigger className="ml-auto cursor-pointer [&_svg]:fill-muted">
+								<DropdownMenuTrigger className="ml-auto cursor-pointer ">
 									<IconButton
 										icon="ellipsis"
 										className="h-[24px] w-[24px] p-1.5"
 									/>
 								</DropdownMenuTrigger>
-								<DropdownMenuContent className="p-2 bg-primary border-border text-muted">
+								<DropdownMenuContent className="p-2 border-border text-primary">
 									<DropdownMenuItem
 										onSelect={() => setAddFriendsIsOpen(true)}
-										className="flex items-center gap-2 hover:text-white cursor-pointer transition"
+										className="flex items-center gap-2 cursor-pointer transition"
 									>
-										<UserIcon />
+										<UserIcon color={"var(--primary)"} />
 										Add Friends
 									</DropdownMenuItem>
 									<DropdownMenuItem
 										onSelect={() => setRenameDialogIsOpen(true)}
-										className="flex items-center gap-2 hover:text-white cursor-pointer transition"
+										className="flex items-center gap-2 cursor-pointer transition"
 									>
-										<EditIcon />
+										<EditIcon color={"var(--primary)"} />
 										Rename Group
 									</DropdownMenuItem>
 									<DropdownMenuItem
@@ -111,7 +121,7 @@ export default function ChatPreview({ chat }: ChatPreviewProps) {
 											await leaveChat(chat._id);
 											navigate("/chats");
 										}}
-										className="flex items-center gap-2 hover:text-white cursor-pointer transition"
+										className="[&_svg]:fill-primary flex items-center gap-2 cursor-pointer transition"
 									>
 										<ReplyIcon />
 										Leave Group
@@ -124,7 +134,7 @@ export default function ChatPreview({ chat }: ChatPreviewProps) {
 
 				{/* Add Friends Dialog */}
 				<Dialog open={addFriendsIsOpen} onOpenChange={setAddFriendsIsOpen}>
-					<DialogContent className="bg-primary text-muted">
+					<DialogContent className="bg-background text-primary">
 						<DialogHeader>
 							<DialogTitle>Add Friends to Group</DialogTitle>
 						</DialogHeader>
@@ -178,13 +188,13 @@ export default function ChatPreview({ chat }: ChatPreviewProps) {
 
 				{/* Rename Group Dialog */}
 				<Dialog open={renameDialogIsOpen} onOpenChange={setRenameDialogIsOpen}>
-					<DialogContent className="bg-primary text-muted">
+					<DialogContent className="bg-background text-primary">
 						<DialogHeader>
 							<DialogTitle>Rename Group</DialogTitle>
 						</DialogHeader>
 						<input
 							type="text"
-							className="w-full bg-background text-white p-2 rounded"
+							className="w-full border-1 placeholder:text-muted-foreground border-border text-primary p-2 rounded"
 							placeholder="New group name"
 							value={groupName}
 							onChange={(e) => setGroupName(e.target.value)}
@@ -192,7 +202,7 @@ export default function ChatPreview({ chat }: ChatPreviewProps) {
 						<DialogFooter className="[&_svg]:h-5">
 							<button
 								type="button"
-								className="border-1 text-base hover:bg-background cursor-pointer transition rounded-xl px-3 py-1 flex items-center gap-1"
+								className="border-1 border-border text-base cursor-pointer transition rounded-xl px-3 py-1 flex items-center gap-1"
 								onClick={async () => {
 									await renameChat(groupName);
 									setRenameDialogIsOpen(false);
@@ -213,14 +223,13 @@ export default function ChatPreview({ chat }: ChatPreviewProps) {
 		if (!otherUser) return null;
 
 		const bottomText = chat.lastMessage?.content.markdown
-			? chat.lastMessage?.content.markdown
+			? `${chat.lastMessage.user._id === thisUserId ? 'You: ' : '' }${chat.lastMessage?.content.markdown}`
 			: !chat.lastMessage?.content.markdown &&
 					chat.lastMessage?.content.files.length
 				? `${otherUser.firstName} sent a file`
 				: chat.lastMessage?.content.gifs.length
-					? `${otherUser.firstName} sent a gif`
+					? `${chat.lastMessage.user.firstName} sent a gif`
 					: "";
-
 		return (
 			<div className="flex justify-between items-center relative">
 				<UserCard

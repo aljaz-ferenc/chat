@@ -23,7 +23,7 @@ import useEditMessage from "../../hooks/api/useEditMessage.ts";
 import useReactToMessage from "../../hooks/api/useReactToMessage.ts";
 import { FileStorageContext } from "../../providers/FileStorageProvider.tsx";
 import useUserStore from "../../state/useUserStore.ts";
-import { cn } from "../../utils/utils.ts";
+import { cn } from "@/utils/utils.ts";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -107,7 +107,7 @@ export default function Message({
 
 	if (message.type === "renameChat") {
 		return (
-			<p className="text-muted text-center w-full">
+			<p className="text-muted-foreground text-center w-full">
 				<strong>{message.user.firstName} </strong>
 				renamed the group to
 				<strong> {message.newChatName}</strong>
@@ -117,7 +117,7 @@ export default function Message({
 
 	if (message.type === "leaveChat") {
 		return (
-			<p className="text-muted text-center w-full">
+			<p className="text-muted-foreground text-center w-full">
 				<strong>{message.user.firstName} </strong>
 				left the chat.
 			</p>
@@ -131,7 +131,7 @@ export default function Message({
 			className={cn([
 				"w-full",
 				message.replyTo &&
-					"ml-2 relative after:content-[''] after:absolute after:w-px after:h-full after:-left-2 after:top-0 after:bg-white",
+					"ml-2 relative after:content-[''] after:absolute after:w-px after:h-full after:-left-2 after:top-0 after:bg-muted-foreground",
 			])}
 		>
 			<div className={cn(["group w-full"])}>
@@ -147,19 +147,19 @@ export default function Message({
 							alt=""
 						/>
 					</div>
-					<span className="text-white">
+					<span className="text-primary font-bold">
 						{message.user.firstName} {message.user.lastName}
 					</span>
 				</button>
 				{message.replyTo?.user?.firstName && (
 					<>
-						<div className="text-muted mt-2 flex items-center gap-2 mb-6">
+						<div className="text-muted-foreground mt-2 flex items-center gap-2 mb-2">
 							<div className="h-4 [&_svg]:h-full">
 								<ReplyIcon />
 							</div>
 							<UserTag user={message.replyTo.user} className="text-sm" />
 							{message.replyTo?.content?.markdown && (
-								<span className="text-muted/50 text-sm">
+								<span className="text-muted-foreground text-sm">
 									{message.replyTo?.content?.markdown}
 								</span>
 							)}
@@ -181,12 +181,12 @@ export default function Message({
 								ref={editInputRef}
 								value={editedMarkdown}
 								onChange={(e) => setEditedMarkdown(e.target.value)}
-								className="w-full h-10 text-white border-muted/30 mt-2 border outline-none p-1 rounded"
+								className="w-full h-10 text-primary border-muted/30 mt-2 border outline-none p-1 rounded"
 							/>
 						)}
-						<div className='flex flex-col gap-2'>
-						<MessageFiles files={message.content.files} />
-						<MessageGifs gifs={message.content.gifs} />
+						<div className="flex flex-col gap-2">
+							<MessageFiles files={message.content.files} />
+							<MessageGifs gifs={message.content.gifs} />
 						</div>
 					</div>
 					<div className="h-full flex items-center z-20">
@@ -216,14 +216,14 @@ export default function Message({
 						<DropdownMenuTrigger className="cursor-pointer [&_svg]:fill-muted">
 							<IconButton icon="ellipsis" className="h-[24px] w-[24px] p-1.5" />
 						</DropdownMenuTrigger>
-						<DropdownMenuContent className="bg-primary border-border text-muted">
+						<DropdownMenuContent className="bg-background border-border text-muted">
 							{isMine && (
 								<DropdownMenuItem
 									onClick={() => {
 										setIsEditing(true);
 										setEditedMarkdown(message.content?.markdown);
 									}}
-									className="flex items-center gap-2 hover:text-white cursor-pointer transition"
+									className="flex items-center gap-2 text-primary cursor-pointer transition"
 								>
 									<EditIcon />
 									Edit
@@ -232,7 +232,7 @@ export default function Message({
 							{isMine && (
 								<DropdownMenuItem
 									asChild
-									className="flex w-full items-center gap-2 hover:text-white cursor-pointer transition"
+									className="flex w-full items-center gap-2 text-primary cursor-pointer transition"
 								>
 									<button type="button" onClick={handleDeleteMessage}>
 										<TrashIcon />
@@ -242,7 +242,7 @@ export default function Message({
 							)}
 							<DropdownMenuItem
 								asChild
-								className="flex w-full items-center gap-2 hover:text-white cursor-pointer transition"
+								className="flex w-full items-center gap-2 text-primary cursor-pointer transition"
 							>
 								<button type="button" onClick={() => setReplyingTo(message)}>
 									<ReplyIcon />
@@ -254,7 +254,7 @@ export default function Message({
 				</div>
 			</div>
 			<FacebookCounter
-				bg={"var(--color-primary)"}
+				bg={"var(--background)"}
 				user={thisUserId}
 				counters={message.reactions}
 			/>

@@ -19,13 +19,13 @@ export default function EmojiPickerPopover({
 				<IconButton icon="emoji" />
 			</PopoverTrigger>
 			<PopoverContent className="border-none">
-				<EmojiPicker.Root className="isolate flex h-[368px] w-fit flex-col bg-white dark:bg-background border-2 border-muted/50 rounded-xl">
-					<EmojiPicker.Search className="z-10 mx-2 mt-2 text-white appearance-none rounded-md bg-neutral-100 px-2.5 py-2 text-sm dark:bg-background placeholder:text-muted" />
+				<EmojiPicker.Root className="isolate flex h-[368px] w-fit flex-col bg-background border-2 border-muted/50 rounded-xl">
+					<EmojiPicker.Search className="z-10 mx-2 mt-2 border-1 text-primary appearance-none rounded-md bg-background px-2.5 py-2 text-sm placeholder:text-muted-foreground" />
 					<EmojiPicker.Viewport className="relative flex-1 outline-hidden">
-						<EmojiPicker.Loading className="absolute inset-0 flex items-center justify-center text-neutral-400 text-sm dark:text-neutral-500">
+						<EmojiPicker.Loading className="absolute inset-0 flex items-center justify-center text-muted-foreground text-sm ">
 							Loading…
 						</EmojiPicker.Loading>
-						<EmojiPicker.Empty className="absolute inset-0 flex items-center justify-center text-neutral-400 text-sm dark:text-neutral-500">
+						<EmojiPicker.Empty className="absolute inset-0 flex items-center justify-center text-sm text-muted-foreground">
 							No emoji found.
 						</EmojiPicker.Empty>
 						<EmojiPicker.List
@@ -33,7 +33,7 @@ export default function EmojiPickerPopover({
 							components={{
 								CategoryHeader: ({ category, ...props }) => (
 									<div
-										className="bg-white px-3 pt-3 pb-1.5 font-medium text-neutral-600 text-xs dark:bg-primary dark:text-white"
+										className="bg-white px-2 pt-3 pb-1.5 font-medium text-primary text-xs"
 										{...props}
 									>
 										{category.label}

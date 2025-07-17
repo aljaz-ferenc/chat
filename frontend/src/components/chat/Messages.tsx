@@ -147,7 +147,7 @@ export default function Messages() {
 		<div className="flex">
 			<div
 				ref={messagesContainerRef}
-				className="h-[calc(100vh-160px)] flex flex-col gap-8 items-start bg-background w-full p-6 overflow-y-auto overflow-x-hidden app-scrollbar"
+				className="h-[calc(100vh-160px)] flex flex-col gap-8 items-start bg-card w-full p-6 overflow-y-auto overflow-x-hidden app-scrollbar"
 			>
 				{isFetchingNextPage && (
 					<div className="h-5 mx-auto w-full">

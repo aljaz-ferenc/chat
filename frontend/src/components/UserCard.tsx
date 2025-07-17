@@ -43,7 +43,7 @@ export default function UserCard({
 	return (
 		<Link
 			to={navigateTo || `/contacts/${user._id}`}
-			className={cn(["flex items-center gap-4", className])}
+			className={cn(["flex items-center gap-4 p-2", className])}
 		>
 			<div className="w-12 aspect-square rounded-[5px] relative overflow-hidden">
 				<img
@@ -54,12 +54,12 @@ export default function UserCard({
 			</div>
 			<div className="flex flex-col items-start">
 				<div className="flex flex-col items-start justify-center">
-					<h3 className="font-bold text-white">
+					<h3 className="font-bold">
 						{highlightText(user.firstName as string, highlight as string)}{" "}
 						{highlightText(user.lastName as string, highlight as string)}
 					</h3>
 					{showUsername && (
-						<span className="text-xs font-normal text-muted">
+						<span className="text-xs font-normal ">
 							@{highlightText(user.username as string, highlight as string)}
 						</span>
 					)}
@@ -68,7 +68,7 @@ export default function UserCard({
 					{/*)}*/}
 				</div>
 				<div className="flex items-center gap-2">
-					<p className="text-muted text-xs truncate max-w-40 text-left italic">
+					<p className=" text-xs truncate max-w-40 text-left italic">
 						{bottomText}
 					</p>
 					{/*{showLastMessageTime && (*/}

@@ -72,7 +72,7 @@ export default function MessageFiles({ files }: MessageFilesProps) {
 									extension={preview.name.split(".").slice(-1)[0] as MimeType}
 								/>
 							</div>
-							<div className="text-muted text-center text-sm">
+							<div className="text-muted-foreground text-center text-sm">
 								{preview.name}
 							</div>
 						</div>

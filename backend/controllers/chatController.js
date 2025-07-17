@@ -21,7 +21,13 @@ exports.getAllChats = async (req, res) => {
 
 		const chats = await Chat.find({ users: userId })
 			.populate("users", "firstName lastName username imageUrl")
-			.populate("lastMessage");
+			.populate({
+				path: "lastMessage",
+				populate: {
+					path: "user",
+					select: "firstName",
+				},
+			});
 
 		res.status(200).json(chats);
 	} catch (error) {

@@ -147,9 +147,9 @@ export default function MessageInput({
 	}, [handleKeyPress]);
 
 	return (
-		<div className="bg-primary border-t border-border p-2 absolute bottom-0 left-0 right-0 pb-3">
+		<div className="bg-background border-t border-border p-2 absolute bottom-0 left-0 right-0 pb-3">
 			{replyingTo && (
-				<div className="text-muted/50 mb-3 flex items-center gap-2">
+				<div className="text-primary mb-3 flex items-center gap-2">
 					<button
 						type="button"
 						onClick={() => setReplyingTo(null)}
@@ -157,7 +157,7 @@ export default function MessageInput({
 					>
 						<PlusIcon />
 					</button>
-					<span className="text-sm">
+					<span className="text-sm text-muted-foreground">
 						@{replyingTo.user.firstName} {replyingTo.user.lastName}:{" "}
 						{replyingTo.content.markdown}
 					</span>
@@ -167,7 +167,7 @@ export default function MessageInput({
 				{newFiles.map((file) => {
 					return (
 						<div
-							className="border border-muted/50 rounded-md text-white p-3 gap-5 flex items-center w-full relative"
+							className="border border-muted/50 rounded-md text-primary p-3 gap-5 flex items-center w-full relative"
 							key={file.id}
 						>
 							<IconButton
@@ -256,7 +256,7 @@ export default function MessageInput({
 				/>
 				<textarea
 					spellCheck={false}
-					className="w-full h-full text-white p-2 bg-background rounded"
+					className="w-full h-full text-primary p-2 bg-background border-1 border-border rounded"
 					value={markdown}
 					onChange={(e) => setMarkdown(e.target.value)}
 					ref={inputRef}

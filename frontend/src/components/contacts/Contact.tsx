@@ -30,7 +30,7 @@ export default function Contact() {
 	}
 
 	return (
-		<div className="bg-background h-full w-full p-6">
+		<div className="bg-background h-full w-full p-6 pt-0 lg:pt-6">
 			<ProfileHeader user={contact} />
 			<ContactInfo contact={contact} />
 		</div>

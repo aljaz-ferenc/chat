@@ -26,8 +26,8 @@ export default function SharedFiles({ chatId }: { chatId: Chat["_id"] }) {
 					if (m.content.files.length) {
 						const fetchedFiles = await Promise.all(
 							m.content.files.map((fileId: Models.File["$id"]) =>
-								storage.getFile(BUCKET_ID, fileId)
-							)
+								storage.getFile(BUCKET_ID, fileId),
+							),
 						);
 						allFiles.push(...fetchedFiles);
 					}

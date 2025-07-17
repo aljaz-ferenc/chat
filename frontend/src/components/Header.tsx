@@ -1,6 +1,7 @@
+import { useTheme } from "@/providers/ThemeProvider.tsx";
 import { UserButton } from "@clerk/clerk-react";
 import { UserIcon } from "lucide-react";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { NavLink, useNavigate, useResolvedPath } from "react-router";
 import { useShallow } from "zustand/react/shallow";
 import { Routes } from "../../../shared/Routes.enum.ts";
@@ -38,11 +39,14 @@ export default function Header() {
 	const existsUnread = useMemo(() => {
 		return notifications?.notifications.some((n) => !n.read);
 	}, [notifications]);
+	const { setTheme, theme } = useTheme();
 
-	// if (!notifications) return;
+	useEffect(() => {
+		console.log(theme);
+	}, [theme]);
 
 	return (
-		<header className="h-full bg-primary w-full flex items-center border-b border-border">
+		<header className="h-full bg-background w-full flex items-center border-b border-border">
 			{/*<div className="h-full px-6.5 border-r border-border grid place-items-center w-24">*/}
 			{/*	<LogoIcon />*/}
 			{/*</div>*/}
@@ -55,7 +59,9 @@ export default function Header() {
 						isActive={pathname.startsWith(`/${Routes.CHATS}`)}
 						icon="message"
 					/>
-					<span className="text-xs text-muted text-center">Messages</span>
+					<span className="text-xs text-primary text-center hidden md:block">
+						Messages
+					</span>
 				</NavLink>
 				<NavLink
 					to={`/${Routes.CONTACTS}`}
@@ -65,7 +71,9 @@ export default function Header() {
 						isActive={pathname.startsWith(`/${Routes.CONTACTS}`)}
 						icon="contact"
 					/>
-					<span className="text-xs text-muted text-center">Contacts</span>
+					<span className="text-xs text-primary text-center hidden md:block">
+						Contacts
+					</span>
 				</NavLink>
 				<DropdownMenu
 					onOpenChange={async (open) => {
@@ -74,18 +82,19 @@ export default function Header() {
 						}
 					}}
 				>
-					<DropdownMenuTrigger className="ml-auto flex flex-col justify-between items-center">
+					<DropdownMenuTrigger className="ml-auto flex flex-col justify-between items-center cursor-pointer">
 						<IconButton
 							icon="notification"
 							className={cn([
+								"[&_#dot]:fill-muted-foreground",
 								existsUnread && !opened && "[&_#dot]:fill-red-500",
 							])}
 						/>
-						<span className="text-xs text-muted text-center">
+						<span className="text-xs text-primary text-center hidden md:block">
 							Notifications
 						</span>
 					</DropdownMenuTrigger>
-					<DropdownMenuContent className="bg-primary border-muted text-white min-w-sm mr-6 p-2">
+					<DropdownMenuContent className="bg-background border-muted mr-6 p-2 text-primary">
 						{notifications?.notifications.length === 0 && (
 							<DropdownMenuItem>
 								<div>No notifications</div>
@@ -122,9 +131,16 @@ export default function Header() {
 								label="Profile"
 								labelIcon={<UserIcon size={17} />}
 							/>
+							<UserButton.Action
+								onClick={() => {
+									setTheme(theme === "light" ? "dark" : "light");
+								}}
+								label={`${theme === "light" ? "Dark" : "Light"} Mode`}
+								labelIcon={<UserIcon size={17} />}
+							/>
 						</UserButton.MenuItems>
 					</UserButton>
-					<span className="text-xs text-muted text-center">
+					<span className="text-xs text-primary text-center hidden md:block">
 						{user?.firstName} {user?.lastName}
 					</span>
 				</div>

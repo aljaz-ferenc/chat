@@ -1,5 +1,5 @@
+import { cn } from "@/utils/utils.ts";
 import type { Message } from "../../../../shared/types.ts";
-import { cn } from "../../utils/utils.ts";
 
 type MessageMarkdownProps = {
 	message: Message;
@@ -8,11 +8,11 @@ type MessageMarkdownProps = {
 
 export default function MessageMarkdown({ message }: MessageMarkdownProps) {
 	return (
-		<div className={cn(["text-white rounded-xl p-2"])}>
+		<div className={cn(["text-primary rounded-xl p-2"])}>
 			<p>
 				{message.content?.markdown}{" "}
 				{message.edited && (
-					<span className="text-muted/50 text-xs italic">Edited</span>
+					<span className="text-muted-foreground text-xs italic font-semibold inline-block ml-2">Edited</span>
 				)}
 			</p>
 		</div>

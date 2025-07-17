@@ -106,10 +106,10 @@ export default function IconButton({
 			type="button"
 			onClick={onClick}
 			className={cn([
-				"cursor-pointer transition-all grid place-items-center bg-icon-background hover:bg-icon-background-active h-12 rounded-full aspect-square p-3.5 [&_svg]:fill-icon hover:[&_svg]:fill-icon-active [&_svg]:h-full [&_svg]:w-full",
+				"cursor-pointer transition-all grid place-items-center bg-background h-12 rounded-full aspect-square p-3.5 [&_svg]:fill-primary [&_svg]:h-full [&_svg]:w-full border-1 border-muted-foreground",
 				shape === "rect" && "rounded-md",
 				className,
-				isActive && ["bg-icon-background-active [&_svg]:fill-icon-active"],
+				isActive && ["[&_svg]:fill-secondary bg-foreground"],
 			])}
 		>
 			{icons[icon]}
