@@ -6,7 +6,7 @@ import { cn } from "@/utils/utils.ts";
 import { useDebounce } from "@uidotdev/usehooks";
 import { SidebarIcon, X } from "lucide-react";
 import { type Dispatch, type SetStateAction, useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router";
+import { Link, useNavigate, useParams } from "react-router";
 import type { Contact } from "../../../../shared/types.ts";
 
 type ContactsSidebarProps = {
@@ -23,6 +23,7 @@ function ContactsSidebarBase({
 	const debouncedQuery = useDebounce(query, 300);
 	const [searchedContacts, setSearchedContacts] = useState<Contact[]>([]);
 	const { data: contacts } = useContacts();
+	const { contactId } = useParams();
 
 	useEffect(() => {
 		if (!contacts) return;
@@ -81,7 +82,10 @@ function ContactsSidebarBase({
 					{(query ? searchedContacts : contacts).map((user) => (
 						<Link
 							to={`${user._id}`}
-							className={cn(["cursor-pointer transition-all px-2 md:px-6"])}
+							className={cn([
+								"cursor-pointer transition-all mx-2 md:mx-6 rounded-xl",
+								contactId === user._id && "bg-foreground text-background",
+							])}
 							key={user._id}
 							type="button"
 							onClick={() => setSidebarIsOpen?.(false)}

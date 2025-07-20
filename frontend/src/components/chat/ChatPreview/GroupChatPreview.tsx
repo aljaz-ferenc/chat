@@ -13,7 +13,6 @@ type GroupChatPreviewProps = {
 export default function GroupChatPreview({ chat }: GroupChatPreviewProps) {
 	const [addFriendsIsOpen, setAddFriendsIsOpen] = useState(false);
 	const [renameDialogIsOpen, setRenameDialogIsOpen] = useState(false);
-
 	const { chatId } = useParams();
 
 	return (
@@ -21,8 +20,8 @@ export default function GroupChatPreview({ chat }: GroupChatPreviewProps) {
 			<Link
 				to={`/chats/${chat._id}`}
 				className={cn([
-					"flex items-center gap-4 w-full rounded-xl outline outline-muted/20 mt-2",
-					chatId === chat._id && "bg-background",
+					"flex items-center gap-4 px-2 transition w-full rounded-xl mt-2",
+					chatId === chat._id && "bg-foreground",
 				])}
 			>
 				<div className="relative flex flex-col items-center">
@@ -47,7 +46,12 @@ export default function GroupChatPreview({ chat }: GroupChatPreviewProps) {
 				</div>
 				<div className="flex flex-col items-start gap-1 w-full">
 					<div className="flex items-center w-full ">
-						<h3 className="font-bold text-primary text-ellipsis truncate">
+						<h3
+							className={cn([
+								"font-bold text-primary text-ellipsis truncate transition",
+								chatId === chat._id && "text-background",
+							])}
+						>
 							{chat.name
 								? chat.name
 								: chat.users

@@ -35,9 +35,10 @@ export default function DirectChatPreview({ chat }: DirectChatPreviewProps) {
 				navigateTo={chat._id}
 				className={cn([
 					"w-full p-2",
-					chat._id === chatId && "bg-background rounded-xl",
+					chat._id === chatId && "bg-foreground text-background rounded-xl",
 				])}
 			/>
+			{/*NEW UNREAD MESSAGE INDEICATOR*/}
 			{thisUserId &&
 				!chat.readBy.includes(thisUserId) &&
 				chat._id !== chatId && (
