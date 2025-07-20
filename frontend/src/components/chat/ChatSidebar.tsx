@@ -1,5 +1,5 @@
 import { PlusIcon } from "@/assets/icons/icons.tsx";
-import ChatPreview from "@/components/chat/ChatPreview.tsx";
+import ChatPreview from "@/components/chat/ChatPreview/ChatPreview.tsx";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet.tsx";
 import useChats from "@/hooks/api/useChats.ts";
 import useCreateChat from "@/hooks/api/useCreateChat.ts";
