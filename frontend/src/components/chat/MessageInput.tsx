@@ -1,3 +1,4 @@
+import { cn } from "@/lib/utils.ts";
 import type { IGif } from "@giphy/js-types";
 import { Gif } from "@giphy/react-components";
 import { ID } from "appwrite";
@@ -26,12 +27,11 @@ import FileIcon, { type MimeType } from "../FileIcon.tsx";
 import IconButton from "../ui/IconButton";
 import EmojiPickerPopover from "./EmojiPicker.tsx";
 import Giphy from "./Giphy.tsx";
-import {cn} from "@/lib/utils.ts";
 
 type MessageInputProps = {
 	replyingTo: Message | null;
 	setReplyingTo: Dispatch<SetStateAction<Message | null>>;
-	className?:string
+	className?: string;
 };
 
 const BUCKET_ID = import.meta.env.VITE_APPWRITE_BUCKET_ID;
@@ -39,7 +39,7 @@ const BUCKET_ID = import.meta.env.VITE_APPWRITE_BUCKET_ID;
 export default function MessageInput({
 	replyingTo,
 	setReplyingTo,
-	className = ''
+	className = "",
 }: MessageInputProps) {
 	const [markdown, setMarkdown] = useState("");
 	const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -150,7 +150,12 @@ export default function MessageInput({
 	}, [handleKeyPress]);
 
 	return (
-		<div className={cn(["bg-background border-t border-border p-2  pb-3 z-20", className])}>
+		<div
+			className={cn([
+				"bg-background border-t border-border p-2  pb-3 z-20",
+				className,
+			])}
+		>
 			{replyingTo && (
 				<div className="text-primary mb-3 flex items-center gap-2">
 					<button
