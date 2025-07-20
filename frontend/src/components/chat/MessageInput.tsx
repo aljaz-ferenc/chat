@@ -26,10 +26,12 @@ import FileIcon, { type MimeType } from "../FileIcon.tsx";
 import IconButton from "../ui/IconButton";
 import EmojiPickerPopover from "./EmojiPicker.tsx";
 import Giphy from "./Giphy.tsx";
+import {cn} from "@/lib/utils.ts";
 
 type MessageInputProps = {
 	replyingTo: Message | null;
 	setReplyingTo: Dispatch<SetStateAction<Message | null>>;
+	className?:string
 };
 
 const BUCKET_ID = import.meta.env.VITE_APPWRITE_BUCKET_ID;
@@ -37,6 +39,7 @@ const BUCKET_ID = import.meta.env.VITE_APPWRITE_BUCKET_ID;
 export default function MessageInput({
 	replyingTo,
 	setReplyingTo,
+	className = ''
 }: MessageInputProps) {
 	const [markdown, setMarkdown] = useState("");
 	const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -147,7 +150,7 @@ export default function MessageInput({
 	}, [handleKeyPress]);
 
 	return (
-		<div className="bg-background border-t border-border p-2 absolute bottom-0 left-0 right-0 pb-3">
+		<div className={cn(["bg-background border-t border-border p-2  pb-3 z-20", className])}>
 			{replyingTo && (
 				<div className="text-primary mb-3 flex items-center gap-2">
 					<button
@@ -167,7 +170,7 @@ export default function MessageInput({
 				{newFiles.map((file) => {
 					return (
 						<div
-							className="border border-muted/50 rounded-md text-primary p-3 gap-5 flex items-center w-full relative"
+							className="border border-border rounded-md text-primary p-3 gap-5 flex items-center w-full relative"
 							key={file.id}
 						>
 							<IconButton

@@ -2,7 +2,7 @@ import Providers from "./providers/index.tsx";
 
 function App() {
 	return (
-		<div className="h-screen ">
+		<div>
 			<Providers />
 		</div>
 	);

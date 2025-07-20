@@ -22,10 +22,10 @@ export default function ChatLayout() {
 	const [sidebarIsOpen, setSidebarIsOpen] = useState(false);
 
 	return (
-		<div className="flex flex-col lg:flex-row">
-			<div className="lg:hidden">
+		<div className="grid lg:grid-cols-[320px_1fr] grid-cols-[1fr] grid-rows-[1fr_auto] lg:flex-row relative h-[calc(100vh-65px)] md:h-[calc(100vh-90px)]">
+			<div className="lg:hidden bg-background z-30">
 				<Sheet open={sidebarIsOpen} onOpenChange={setSidebarIsOpen}>
-					<SheetTrigger className="mr-auto m-2">
+					<SheetTrigger className="mr-auto m-2 mb-0 cursor-pointer">
 						<SidebarIcon />
 					</SheetTrigger>
 					<SheetContent side="left">
@@ -35,19 +35,12 @@ export default function ChatLayout() {
 			</div>
 			<ChatSidebar
 				setSidebarIsOpen={setSidebarIsOpen}
-				className="hidden lg:block min-w-[320px]"
+				className="hidden lg:block min-w-[320px] row-span-2 bg-background h-full border-r border-border"
 			/>
-			<div className="w-full h-[calc(100vh-90px)] flex flex-col relative">
-				{chatId && (
-					<div>
-						<Outlet context={{ replyingTo, setReplyingTo }} />
-						<MessageInput
-							replyingTo={replyingTo}
-							setReplyingTo={setReplyingTo}
-						/>
-					</div>
-				)}
-			</div>
+			{!!chatId && <>
+				<Outlet context={{replyingTo, setReplyingTo}}/>
+				<MessageInput replyingTo={replyingTo} setReplyingTo={setReplyingTo} className='mt-auto'/>
+			</>}
 		</div>
 	);
 }
@@ -85,22 +78,10 @@ function ChatSidebar({ setSidebarIsOpen, className = "" }: ChatSidebarProps) {
 	}, [chats, chatId]);
 
 	return (
-		<div
-			className={cn(["h-full bg-background border-r border-border", className])}
-		>
+		<div className={cn([className])}>
 			<div className="py-5 px-6 flex gap-4">
 				<h3 className="font-bold text-2xl mr-auto text-primary">Chats</h3>
 			</div>
-			{/*<div className="flex items-center gap-2 [&_svg]:fill-muted relative px-6">*/}
-			{/*	<span className="absolute top-1/2 -translate-y-1/2 left-9 [&_svg]:p-[1px]">*/}
-			{/*		<SearchIcon />*/}
-			{/*	</span>*/}
-			{/*	<input*/}
-			{/*		type="text"*/}
-			{/*		className="w-full placeholder:text-muted pl-10 py-2 transition-all rounded-full focus-visible:bg-background focus-visible:outline-none text-muted outline-border outline-1"*/}
-			{/*		placeholder="Search messages..."*/}
-			{/*	/>*/}
-			{/*</div>*/}
 			<div className="m-6 mt-0 flex ">
 				<button
 					type="button"

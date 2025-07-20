@@ -47,7 +47,7 @@ export function ProfileHeader({ user, editable = false }: ProfileHeaderProps) {
 	}, [storage, user]);
 
 	return (
-		<div className="bg-background rounded-2xl overflow-hidden w-full max-w-6xl mx-auto relative ">
+		<div className="bg-background rounded-2xl overflow-hidden w-full max-w-6xl mx-auto relative">
 			{/*BACKGROUND IMAGE*/}
 			<div className="w-full h-[500px] relative overflow-hidden group ">
 				{editable && (

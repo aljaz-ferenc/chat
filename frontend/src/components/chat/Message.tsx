@@ -189,7 +189,7 @@ export default function Message({
 							<MessageGifs gifs={message.content.gifs} />
 						</div>
 					</div>
-					<div className="h-full flex items-center z-20">
+					<div className="h-full flex items-center z-10">
 						<div className="flex gap-2">
 							<Popover
 								open={reactionsAreOpen}

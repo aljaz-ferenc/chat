@@ -68,18 +68,15 @@ export default function Messages() {
 
 	useEffect(() => {
 		const container = messagesContainerRef.current;
-		if (!container || !hasNextPage) return;
+		if (!container || !hasNextPage || !container) return;
 
 		const handleScroll = async () => {
-			const el = messagesContainerRef.current;
-			if (!el) return;
-
 			if (
-				el.scrollTop === 0 &&
+				container.scrollTop <= 10 &&
 				!isFetchingNextPage &&
 				data?.pages[data.pages.length - 1].hasNext
 			) {
-				beforeHeight.current = el.scrollHeight;
+				beforeHeight.current = container.scrollHeight;
 				await fetchNextPage();
 			}
 		};
@@ -144,10 +141,11 @@ export default function Messages() {
 	if (!thisUserId) return <div>User not found...</div>;
 
 	return (
-		<div className="flex">
+		//h-[calc(100vh-193px)] md:h-[calc(100vh-220px)]
+		<div className="flex h-full overflow-y-auto">
 			<div
 				ref={messagesContainerRef}
-				className="h-[calc(100vh-160px)] flex flex-col gap-8 items-start bg-card w-full p-6 overflow-y-auto overflow-x-hidden app-scrollbar"
+				className=" flex flex-col gap-8 items-start bg-card w-full p-6 overflow-x-hidden app-scrollbar"
 			>
 				{isFetchingNextPage && (
 					<div className="h-5 mx-auto w-full">
