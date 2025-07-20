@@ -18,7 +18,7 @@ export default function ContactInfo({ contact }: ContactInfoProps) {
 	if (!thisUser) return;
 
 	return (
-		<div className="mt-6 max-w-6xl mx-auto">
+		<div className="m-6 max-w-6xl mx-auto pb-2 md:pb-6">
 			<div className="text-sm text-muted-foreground flex gap-6 font-bold mb-2">
 				<button
 					className={cn([

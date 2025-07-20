@@ -237,6 +237,7 @@ export default function MessageInput({
 			</div>
 			<div className="flex items-center gap-5">
 				<EmojiPickerPopover
+					className="hidden md:block"
 					onOpenChange={(open) => setEmojiPickerIsOpen(open)}
 					isOpen={emojiPickerIsOpen}
 					onSelect={(emoji) => {

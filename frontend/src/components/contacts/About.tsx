@@ -47,7 +47,7 @@ export default function About({ contact }: AboutProps) {
 		<div>
 			{contact.about && (
 				<div className="relative">
-					<div className="flex justify-between">
+					<div className="flex justify-between items-center">
 						<h2 className=" font-bold mb-3">About {contact.firstName}</h2>
 						<FriendStatusButtons contactId={contact._id} thisUser={thisUser} />
 					</div>

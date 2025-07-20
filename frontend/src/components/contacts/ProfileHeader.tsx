@@ -1,3 +1,4 @@
+import { cn } from "@/utils/utils.ts";
 import { ID } from "appwrite";
 import { type ChangeEvent, use, useEffect, useRef, useState } from "react";
 import { useShallow } from "zustand/react/shallow";
@@ -6,7 +7,6 @@ import { EditIcon } from "../../assets/icons/icons.tsx";
 import useUpdateUser from "../../hooks/api/useUpdateUser.ts";
 import { FileStorageContext } from "../../providers/FileStorageProvider.tsx";
 import useUserStore from "../../state/useUserStore.ts";
-import { cn } from "@/utils/utils.ts";
 
 const BUCKET_ID = import.meta.env.VITE_APPWRITE_BUCKET_ID;
 
@@ -49,7 +49,7 @@ export function ProfileHeader({ user, editable = false }: ProfileHeaderProps) {
 	return (
 		<div className="bg-background rounded-2xl overflow-hidden w-full max-w-6xl mx-auto relative">
 			{/*BACKGROUND IMAGE*/}
-			<div className="w-full h-[500px] relative overflow-hidden group ">
+			<div className="w-full md:h-[500px] h-[250px] relative overflow-hidden group ">
 				{editable && (
 					<button
 						type="button"
@@ -76,25 +76,27 @@ export function ProfileHeader({ user, editable = false }: ProfileHeaderProps) {
 					onChange={handleEditImage}
 				/>
 			</div>
-			<div className="px-8 absolute bottom-0 ">
+			<div className="px-2 md:px-8 absolute bottom-0 w-full">
 				{/*PROFILE PIC*/}
-				<div className="flex gap-5 text-white ">
-					<div className="relative h-[150px] w-[150px] border-border border-2 rounded-xl overflow-hidden -translate-y-8">
+				<div className="mb-2 md:mb-0 flex text-white justify-evenly md:justify-start md:gap-5 w-full items-center">
+					<div className="relative md:h-[150px] md:w-[150px] h-[100px] w-[100px] border-border border-2 rounded-xl overflow-hidden md:-translate-y-8">
 						<img
 							src={user.imageUrl || "https://picsum.photos/300"}
 							alt=""
 							className="w-full h-full object-cover"
 						/>
 					</div>
-					<div className="mt-6 bg-black/70 rounded-xl p-3 h-fit backdrop-blur-xs">
-						<h3>
+					<div className="md:mt-6 bg-black/70 rounded-xl md:p-3 p-2 h-fit backdrop-blur-xs">
+						<h3 className="flex flex-col md:flex-row md:items-baseline md:gap-2">
 							<span className="font-bold text-lg">
 								{user.firstName} {user.lastName}
 							</span>{" "}
-							<span className="text-sm text-gray-100">@{user.username}</span>
+							<span className="text-xs md:text-sm text-gray-100">
+								@{user.username}
+							</span>
 						</h3>
 						<div>
-							<span className="text-sm text-gray-100">
+							<span className="text-xs md:text-sm text-gray-100">
 								{user.friends.friends.length} Contacts
 							</span>
 							{!!user?.mutualFriends && (

@@ -1,4 +1,3 @@
-import FriendStatusButtons from "@/components/FriendStatusButtons.tsx";
 import Notification from "@/components/Notification.tsx";
 import { useTheme } from "@/providers/ThemeProvider.tsx";
 import { UserButton } from "@clerk/clerk-react";
@@ -7,13 +6,11 @@ import { useMemo } from "react";
 import { NavLink, useNavigate, useResolvedPath } from "react-router";
 import { useShallow } from "zustand/react/shallow";
 import { Routes } from "../../../shared/Routes.enum.ts";
-import type { Notification as TNotification } from "../../../shared/types.ts";
 import useDeleteNotifications from "../hooks/api/useDeleteNotifications.ts";
 import useReadNotification from "../hooks/api/useReadNotification.ts";
 import useUser from "../hooks/api/useUser.ts";
 import useUserStore from "../state/useUserStore.ts";
 import { cn } from "../utils/utils.ts";
-import UserCard from "./UserCard.tsx";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -22,7 +19,11 @@ import {
 } from "./ui/DropdownMenu.tsx";
 import IconButton from "./ui/IconButton.tsx";
 
-export default function Header() {
+type HeaderProps = {
+	className?: string;
+};
+
+export default function Header({ className }: HeaderProps) {
 	const { mutateAsync: readNotification } = useReadNotification();
 	const { mutateAsync: deleteNotifications } = useDeleteNotifications();
 	const { refetch, data: user } = useUser();
@@ -42,11 +43,13 @@ export default function Header() {
 	const { setTheme, theme } = useTheme();
 
 	return (
-		<header className="h-full bg-background w-full flex items-center border-b border-border">
-			{/*<div className="h-full px-6.5 border-r border-border grid place-items-center w-24">*/}
-			{/*	<LogoIcon />*/}
-			{/*</div>*/}
-			<div className="flex px-6 gap-4 w-full">
+		<header
+			className={cn([
+				"h-full bg-background w-full flex items-center border-b border-border",
+				className,
+			])}
+		>
+			<div className="flex px-2 md:px-6 gap-4 w-full">
 				<NavLink
 					to={`/${Routes.CHATS}`}
 					className="flex flex-col justify-between items-center gap-1"

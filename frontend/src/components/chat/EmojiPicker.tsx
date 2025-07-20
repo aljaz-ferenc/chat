@@ -6,16 +6,18 @@ type EmojiPickerPopoverProps = {
 	onSelect: (emoji: string) => void;
 	onOpenChange: (open: boolean) => void;
 	isOpen: boolean;
+	className?: string;
 };
 
 export default function EmojiPickerPopover({
 	onSelect,
 	isOpen,
 	onOpenChange,
+	className = "",
 }: EmojiPickerPopoverProps) {
 	return (
 		<Popover open={isOpen} onOpenChange={onOpenChange}>
-			<PopoverTrigger>
+			<PopoverTrigger className={className}>
 				<IconButton icon="emoji" />
 			</PopoverTrigger>
 			<PopoverContent className="border-none w-fit">

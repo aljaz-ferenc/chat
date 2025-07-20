@@ -3,6 +3,7 @@ import UserCard from "@/components/UserCard.tsx";
 import useUserStore from "@/state/useUserStore.ts";
 import { useNavigate } from "react-router";
 import { useShallow } from "zustand/react/shallow";
+import type { Notification as TNotification } from "../../../shared/types.ts";
 
 type NotificationProps = {
 	notification: Pick<TNotification, "_id" | "type" | "from" | "chatId">;

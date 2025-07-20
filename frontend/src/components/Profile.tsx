@@ -76,10 +76,8 @@ export default function Profile() {
 
 	return (
 		<div className="bg-background h-full w-full flex flex-col">
-			<div className="h-[98px] mb-6">
-				<Header />
-			</div>
-			<div className="px-6">
+			<Header className="h-[65px] md:h-[90px] mb-2 md:mb-6" />
+			<div className="px-2 md:px-6">
 				<ProfileHeader user={user as Contact} editable />
 				<div className="w-full max-w-6xl mx-auto mt-6 border border-border rounded-xl px-6 py-3 text-primary flex flex-col gap-10 mb-6">
 					<div className="flex flex-col gap-2">
@@ -101,7 +99,7 @@ export default function Profile() {
 								{Object.entries(socials).map(([social, value]) => {
 									return (
 										<div key={social} className="flex">
-											<div className="w-20">{social}</div>
+											<div className="w-40">{social}</div>
 											<input
 												type="text"
 												value={value}
@@ -162,7 +160,7 @@ export default function Profile() {
 								{Object.entries(basicInfo).map(([info, value]) => {
 									return (
 										<div key={info} className="flex">
-											<div className="w-23 capitalize">{info}</div>
+											<div className="w-40 capitalize">{info}</div>
 											<input
 												type="text"
 												value={value}
