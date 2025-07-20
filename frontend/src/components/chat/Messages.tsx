@@ -141,11 +141,10 @@ export default function Messages() {
 	if (!thisUserId) return <div>User not found...</div>;
 
 	return (
-		//h-[calc(100vh-193px)] md:h-[calc(100vh-220px)]
 		<div className="flex h-full overflow-y-auto">
 			<div
 				ref={messagesContainerRef}
-				className=" flex flex-col gap-8 items-start bg-card w-full p-6 overflow-x-hidden app-scrollbar"
+				className=" flex flex-col gap-8 items-start bg-card w-full p-6 overflow-x-hidden"
 			>
 				{isFetchingNextPage && (
 					<div className="h-5 mx-auto w-full">
@@ -165,7 +164,7 @@ export default function Messages() {
 						if (userId === thisUserId) return null;
 
 						return (
-							<p className="text-muted text-sm" key={userId}>
+							<p className="text-muted-foreground text-sm" key={userId}>
 								{chat.users.find(
 									(u: Pick<User, "firstName" | "_id">) => u._id === userId,
 								)?.firstName || "Someone"}{" "}
@@ -175,7 +174,6 @@ export default function Messages() {
 					})}
 				</div>
 			</div>
-			{/*{chatId && <SharedFiles chatId={chatId} />}*/}
 		</div>
 	);
 }

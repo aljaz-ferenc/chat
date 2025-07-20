@@ -6,7 +6,7 @@ import { EditIcon } from "../../assets/icons/icons.tsx";
 import useUpdateUser from "../../hooks/api/useUpdateUser.ts";
 import { FileStorageContext } from "../../providers/FileStorageProvider.tsx";
 import useUserStore from "../../state/useUserStore.ts";
-import { cn } from "../../utils/utils.ts";
+import { cn } from "@/utils/utils.ts";
 
 const BUCKET_ID = import.meta.env.VITE_APPWRITE_BUCKET_ID;
 
@@ -104,7 +104,6 @@ export function ProfileHeader({ user, editable = false }: ProfileHeaderProps) {
 								</span>
 							)}
 						</div>
-						{/*TODO: mutual contacts*/}
 					</div>
 				</div>
 			</div>

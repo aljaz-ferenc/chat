@@ -18,7 +18,7 @@ export default function EmojiPickerPopover({
 			<PopoverTrigger>
 				<IconButton icon="emoji" />
 			</PopoverTrigger>
-			<PopoverContent className="border-none">
+			<PopoverContent className="border-none w-fit">
 				<EmojiPicker.Root className="isolate flex h-[368px] w-fit flex-col bg-background border-2 border-muted/50 rounded-xl">
 					<EmojiPicker.Search className="z-10 mx-2 mt-2 border-1 text-primary appearance-none rounded-md bg-background px-2.5 py-2 text-sm placeholder:text-muted-foreground" />
 					<EmojiPicker.Viewport className="relative flex-1 outline-hidden">
@@ -33,7 +33,7 @@ export default function EmojiPickerPopover({
 							components={{
 								CategoryHeader: ({ category, ...props }) => (
 									<div
-										className="bg-white px-2 pt-3 pb-1.5 font-medium text-primary text-xs"
+										className="bg-background px-2 pt-3 pb-1.5 font-medium text-primary text-xs"
 										{...props}
 									>
 										{category.label}

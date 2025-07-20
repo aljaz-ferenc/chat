@@ -132,6 +132,10 @@
 	@apply [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-background [&::-webkit-scrollbar-thumb]:bg-primary [&::-webkit-scrollbar-thumb]:rounded;
 }
 
+* {
+	@apply [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-background [&::-webkit-scrollbar-thumb]:bg-primary [&::-webkit-scrollbar-thumb]:rounded;
+}
+
 @layer base {
 	* {
 		@apply border-border outline-ring/50;

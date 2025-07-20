@@ -1,17 +1,10 @@
+import FriendStatusButtons from "@/components/FriendStatusButtons.tsx";
+import { cn } from "@/utils/utils.ts";
 import { useState } from "react";
 import { Link } from "react-router";
 import { useShallow } from "zustand/react/shallow";
-import {
-	formatDate,
-	isFriend,
-	isIncomingRequest,
-	isPendingRequest,
-} from "../../../../shared/functions/utils.tsx";
-import type {
-	Contact,
-	FriendRequestAction,
-	User,
-} from "../../../../shared/types.ts";
+import { formatDate } from "../../../../shared/functions/utils.tsx";
+import type { Contact } from "../../../../shared/types.ts";
 import {
 	BuildingsIcon,
 	CakeIcon,
@@ -19,9 +12,7 @@ import {
 	EnvelopeIcon,
 	PhoneIcon,
 } from "../../assets/icons/icons.tsx";
-import useFriendRequest from "../../hooks/api/useFriendRequest.ts";
 import useUserStore from "../../state/useUserStore.ts";
-import { cn } from "../../utils/utils.ts";
 import IconButton, { type Icons } from "../ui/IconButton.tsx";
 
 type ContactInfoProps = {
@@ -210,64 +201,4 @@ function SocialLink({ link }: { link: [string, string] }) {
 			<IconButton icon={platform as Icons} shape="rect" />
 		</a>
 	);
-}
-
-export function FriendStatusButtons({
-	contactId,
-	thisUser,
-	className = "",
-	shortAccept = false,
-}: {
-	contactId: User["_id"];
-	thisUser: User;
-	className?: string;
-	shortAccept?: boolean;
-}) {
-	const { mutateAsync } = useFriendRequest();
-
-	function BaseButton({
-		text,
-		action,
-	}: { text: string; action: FriendRequestAction }) {
-		return (
-			<button
-				type="button"
-				onClick={async () =>
-					await mutateAsync({
-						receiverId: contactId,
-						action,
-					})
-				}
-				className={cn([
-					"bg-background px-3 py-1 rounded-[5px] cursor-pointer text-primary border border-border",
-					["cancel", "decline"].includes(action) && "bg-red-500",
-					className,
-				])}
-			>
-				{text}
-			</button>
-		);
-	}
-
-	if (isFriend(contactId, thisUser)) {
-		return <BaseButton action={"unfriend"} text="Unfriend" />;
-	}
-
-	if (isPendingRequest(contactId, thisUser)) {
-		return <BaseButton action={"cancel"} text="Cancel Request" />;
-	}
-
-	if (isIncomingRequest(contactId, thisUser)) {
-		return (
-			<div className="flex gap-3">
-				<BaseButton
-					action={"accept"}
-					text={shortAccept ? "Accept" : "Accept Friend Request"}
-				/>
-				<BaseButton action={"decline"} text="Decline" />
-			</div>
-		);
-	}
-
-	return <BaseButton action={"send"} text="Add Friend" />;
 }

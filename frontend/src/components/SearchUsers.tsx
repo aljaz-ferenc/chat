@@ -1,3 +1,4 @@
+import FriendStatusButtons from "@/components/FriendStatusButtons.tsx";
 import { useDebounce } from "@uidotdev/usehooks";
 import { X } from "lucide-react";
 import { useState } from "react";
@@ -14,7 +15,6 @@ import useFriendRequest from "../hooks/api/useFriendRequest.ts";
 import useSearchUsers from "../hooks/api/useSearchUsers.ts";
 import useUserStore from "../state/useUserStore.ts";
 import UserCard from "./UserCard.tsx";
-import { FriendStatusButtons } from "./contacts/ContactInfo.tsx";
 import IconButton from "./ui/IconButton.tsx";
 
 export default function SearchUsers() {

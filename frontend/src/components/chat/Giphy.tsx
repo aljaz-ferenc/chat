@@ -23,7 +23,7 @@ export default function Giphy({ onGifSelect, open, setOpen }: GiphyProps) {
 			<PopoverTrigger className="text-foreground cursor-pointer">
 				GIF
 			</PopoverTrigger>
-			<PopoverContent className="h-[400px] w-[800px] overflow-y-scroll bg-background border-muted/50 app-scrollbar">
+			<PopoverContent className="h-[400px] w-[800px] overflow-y-scroll bg-background border-muted/50">
 				<SearchContextManager
 					apiKey={GIPHY_KEY}
 					shouldDefaultToTrending

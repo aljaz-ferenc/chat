@@ -1,3 +1,4 @@
+import FriendStatusButtons from "@/components/FriendStatusButtons.tsx";
 import { useTheme } from "@/providers/ThemeProvider.tsx";
 import { UserButton } from "@clerk/clerk-react";
 import { MoonIcon, SunIcon, UserIcon } from "lucide-react";
@@ -12,7 +13,6 @@ import useUser from "../hooks/api/useUser.ts";
 import useUserStore from "../state/useUserStore.ts";
 import { cn } from "../utils/utils.ts";
 import UserCard from "./UserCard.tsx";
-import { FriendStatusButtons } from "./contacts/ContactInfo.tsx";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -98,7 +98,7 @@ export default function Header() {
 
 						{!!notifications?.notifications.length &&
 							notifications?.notifications.length > 0 && (
-								<DropdownMenuItem className="text-muted text-sm underline">
+								<DropdownMenuItem className="text-muted-foreground hover:text-primary text-sm hover:underline transition">
 									<button
 										type="button"
 										onClick={async () => deleteNotifications()}
@@ -182,7 +182,7 @@ function Notification({ notification }: NotificationProps) {
 				className="flex items-center gap-1 cursor-pointer"
 			>
 				<UserCard user={notification.from} showUsername={false} />
-				<span className="mr-1">added you to group.</span>
+				<span className="-ml-1">added you to group.</span>
 			</button>
 		);
 	}
