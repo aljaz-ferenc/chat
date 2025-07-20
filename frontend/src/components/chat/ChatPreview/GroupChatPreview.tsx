@@ -31,7 +31,7 @@ export default function GroupChatPreview({ chat }: GroupChatPreviewProps) {
 							key={user._id}
 							src={user.imageUrl}
 							alt="user"
-							className="-mr-4 w-8 min-w-8 aspect-square rounded-full border-2 border-background -translate-x-0.5 z-0 translate-y-1/4"
+							className="-mr-4 w-8 min-w-8 aspect-square rounded-full border-2 border-primary/50 -translate-x-0.5 z-0 translate-y-1/4"
 						/>
 					))}
 					<div className="flex mr-2 h-8 items-end z-10 -translate-y-1/4">
@@ -40,7 +40,7 @@ export default function GroupChatPreview({ chat }: GroupChatPreviewProps) {
 								key={user._id}
 								src={user.imageUrl}
 								alt="user"
-								className="-mr-4 w-8 h-8 min-w-8 aspect-square rounded-full border-2 border-background"
+								className="-mr-4 w-8 h-8 min-w-8 aspect-square rounded-full border-2 border-primary/50"
 							/>
 						))}
 					</div>

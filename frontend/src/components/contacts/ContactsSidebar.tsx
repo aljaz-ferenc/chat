@@ -41,7 +41,7 @@ function ContactsSidebarBase({
 				className,
 			])}
 		>
-			<div className="py-5 px-6 flex gap-4">
+			<div className="py-5 px-2 md:px-6 flex gap-4">
 				<h3 className="font-bold text-2xl mr-auto text-primary">Contacts</h3>
 				<button
 					onClick={() => {
@@ -49,14 +49,14 @@ function ContactsSidebarBase({
 						navigate("/contacts");
 					}}
 					type="button"
-					className="flex gap-2 items-center text-muted [&_svg]:fill-foreground font-bold text-xs cursor-pointer"
+					className="flex pr-6 gap-2 items-center text-muted [&_svg]:fill-foreground font-bold text-xs cursor-pointer"
 				>
 					<SearchIcon />
 					<span className="text-foreground">Search all users</span>
 				</button>
 			</div>
-			<div className="flex items-center gap-2 [&_svg]:fill-muted relative px-6">
-				<span className="absolute top-1/2 -translate-y-1/2 left-9 [&_svg]:p-[1px] [&_svg]:fill-muted-foreground">
+			<div className="flex items-center gap-2 [&_svg]:fill-muted relative px-2 md:px-6">
+				<span className="absolute top-1/2 -translate-y-1/2 left-5 md:left-9 [&_svg]:p-[1px] [&_svg]:fill-muted-foreground">
 					<SearchIcon />
 				</span>
 				<input
@@ -69,7 +69,7 @@ function ContactsSidebarBase({
 				{query && (
 					<button
 						type="button"
-						className="absolute top-1/2 -translate-y-1/2 right-9 [&_svg]:p-[1px] cursor-pointer"
+						className="absolute top-1/2 -translate-y-1/2 right-5 md:right-9 [&_svg]:p-[1px] cursor-pointer"
 						onClick={() => setQuery("")}
 					>
 						<X size={20} color={"var(--muted-foreground)"} />
@@ -81,7 +81,7 @@ function ContactsSidebarBase({
 					{(query ? searchedContacts : contacts).map((user) => (
 						<Link
 							to={`${user._id}`}
-							className={cn(["cursor-pointer transition-all px-6"])}
+							className={cn(["cursor-pointer transition-all px-2 md:px-6"])}
 							key={user._id}
 							type="button"
 							onClick={() => setSidebarIsOpen?.(false)}
@@ -90,7 +90,7 @@ function ContactsSidebarBase({
 								user={user}
 								showLastMessageTime
 								showTypingStatus
-								className="py-3"
+								className="py-2 md:py-3"
 							/>
 						</Link>
 					))}

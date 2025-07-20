@@ -74,6 +74,8 @@ export default function MessageInput({
 
 	useEffect(() => {
 		if (!chatId) return;
+		setMarkdown("");
+		setGifs([]);
 		setNewFiles([]);
 	}, [chatId]);
 

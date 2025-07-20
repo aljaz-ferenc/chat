@@ -134,7 +134,7 @@ export default function Messages() {
 
 	if (!chat || !data)
 		return (
-			<div className="w-full h-[calc(100vh-160px)] flex flex-col justify-center">
+			<div className="w-full h-full flex flex-col justify-center">
 				<Spinner />
 			</div>
 		);

@@ -56,10 +56,10 @@ function ChatSidebarBase({
 				className,
 			])}
 		>
-			<div className="py-5 px-6 flex gap-4">
+			<div className="py-5 pt-0 md:pt-6 px-3 md:px-6 flex gap-4">
 				<h3 className="font-bold text-2xl mr-auto text-primary">Chats</h3>
 			</div>
-			<div className="m-6 mt-0 flex ">
+			<div className="px-3 md:px-6 mt-0 flex ">
 				<button
 					type="button"
 					className={cn([
@@ -82,7 +82,7 @@ function ChatSidebarBase({
 				</button>
 			</div>
 			{activeChatType === "groups" && (
-				<div className="mx-6">
+				<div className="mx-6 mt-6">
 					<button
 						type="button"
 						className="flex items-center text-primary gap-2 w-full outline-muted-foreground outline-[1px] rounded-xl cursor-pointer py-2 justify-center transition"
@@ -99,7 +99,7 @@ function ChatSidebarBase({
 					</button>
 				</div>
 			)}
-			<div className="flex flex-col p-6 pt-0 mt-6">
+			<div className="flex flex-col px-2 md:px-6 pt-0 mt-2 md:mt-6">
 				{(activeChatType === "direct" ? directChats : groups)?.map((chat) => (
 					// biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
 					<div key={chat._id} onClick={() => setSidebarIsOpen?.(false)}>
@@ -121,7 +121,7 @@ function ChatSidebarSheet({ className }: { className?: string }) {
 				<SheetTrigger className="mr-auto m-2 mb-0 cursor-pointer">
 					<SidebarIcon />
 				</SheetTrigger>
-				<SheetContent side="left">
+				<SheetContent side="left" className="w-fit">
 					<ChatSidebarBase
 						setSidebarIsOpen={setSidebarIsOpen}
 						className="mt-2"
