@@ -29,6 +29,7 @@ export default function Messages() {
 	const queryClient = useQueryClient();
 	const [initialScrollDone, setInitialScrollDone] = useState(false);
 	const beforeHeight = useRef<number>(0);
+	const sentinelRef = useRef<HTMLDivElement>(null);
 
 	const { replyingTo, setReplyingTo } = useOutletContext<{
 		replyingTo: TMessage;
@@ -67,23 +68,30 @@ export default function Messages() {
 	}, [data]);
 
 	useEffect(() => {
-		const container = messagesContainerRef.current;
-		if (!container || !hasNextPage || !container) return;
+		if (!sentinelRef.current || !hasNextPage) return;
 
-		const handleScroll = async () => {
-			if (
-				container.scrollTop <= 10 &&
-				!isFetchingNextPage &&
-				data?.pages[data.pages.length - 1].hasNext
-			) {
-				beforeHeight.current = container.scrollHeight;
-				await fetchNextPage();
-			}
+		const observer = new IntersectionObserver(
+			async (entries) => {
+				const first = entries[0];
+				if (
+					first.isIntersecting &&
+					!isFetchingNextPage &&
+					data?.pages[data.pages?.length - 1]?.hasNext
+				) {
+					beforeHeight.current =
+						messagesContainerRef.current?.scrollHeight ?? 0;
+					await fetchNextPage();
+				}
+			},
+			{ threshold: 1.0 },
+		);
+
+		observer.observe(sentinelRef.current);
+
+		return () => {
+			observer.disconnect();
 		};
-
-		container.addEventListener("scroll", handleScroll);
-		return () => container.removeEventListener("scroll", handleScroll);
-	}, [hasNextPage, isFetchingNextPage, fetchNextPage, data]);
+	}, [data, hasNextPage, isFetchingNextPage, fetchNextPage]);
 
 	useEffect(() => {
 		if (!messagesContainerRef.current || !messages?.length || initialScrollDone)
@@ -151,6 +159,7 @@ export default function Messages() {
 						<Spinner />
 					</div>
 				)}
+				<div ref={sentinelRef} />
 				{messages?.map((message) => (
 					<Message
 						key={message._id}
