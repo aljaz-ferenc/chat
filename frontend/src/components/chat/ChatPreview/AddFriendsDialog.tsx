@@ -80,7 +80,10 @@ export default function AddFriendsDialog({
 							type="button"
 							className="border-1 text-base hover:bg-background cursor-pointer transition rounded-xl px-3 py-1 flex items-center gap-1"
 							onClick={async () => {
-								await addUsersToChat(checkedUsers);
+								await addUsersToChat({
+									chatId: chat._id,
+									usersIds: checkedUsers,
+								});
 								setAddFriendsIsOpen(false);
 								setCheckedUsers([]);
 							}}

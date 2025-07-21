@@ -19,9 +19,10 @@ export default function GroupChatPreview({ chat }: GroupChatPreviewProps) {
 		<>
 			<Link
 				to={`/chats/${chat._id}`}
+				onClick={() => console.log("click preview")}
 				className={cn([
 					"flex items-center gap-4 px-2 transition w-full rounded-xl mt-2",
-					chatId === chat._id && "bg-foreground",
+					chatId === chat._id && "bg-foreground h-[64px]",
 				])}
 			>
 				<div className="relative flex flex-col items-center">
@@ -33,7 +34,12 @@ export default function GroupChatPreview({ chat }: GroupChatPreviewProps) {
 							className="-mr-4 w-8 min-w-8 aspect-square rounded-full border-2 border-primary/50 -translate-x-0.5 z-0 translate-y-1/4"
 						/>
 					))}
-					<div className="flex mr-2 h-8 items-end z-10 -translate-y-1/4">
+					<div
+						className={cn([
+							"flex mr-2 h-8 items-end z-10",
+							chat.users.length > 2 && "-translate-y-1/4",
+						])}
+					>
 						{chat.users.slice(0, 2).map((user) => (
 							<img
 								key={user._id}

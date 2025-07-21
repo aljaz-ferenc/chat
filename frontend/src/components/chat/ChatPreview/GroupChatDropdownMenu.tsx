@@ -33,7 +33,10 @@ export default function GroupChatDropdownMenu({
 			</DropdownMenuTrigger>
 			<DropdownMenuContent className="p-2 border-border text-primary">
 				<DropdownMenuItem
-					onSelect={() => setAddFriendsIsOpen(true)}
+					onClick={(e) => e.stopPropagation()}
+					onSelect={() => {
+						setAddFriendsIsOpen(true);
+					}}
 					className="flex items-center gap-2 cursor-pointer transition"
 				>
 					<UserIcon color={"var(--primary)"} />
@@ -41,12 +44,14 @@ export default function GroupChatDropdownMenu({
 				</DropdownMenuItem>
 				<DropdownMenuItem
 					onSelect={() => setRenameDialogIsOpen(true)}
+					onClick={(e) => e.stopPropagation()}
 					className="flex items-center gap-2 cursor-pointer transition"
 				>
 					<EditIcon color={"var(--primary)"} />
 					Rename Group
 				</DropdownMenuItem>
 				<DropdownMenuItem
+					onClick={(e) => e.stopPropagation()}
 					onSelect={async () => {
 						await leaveChat(chat._id);
 						navigate("/chats");
