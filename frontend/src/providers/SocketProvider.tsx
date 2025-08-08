@@ -102,8 +102,8 @@ export default function SocketProvider({ children }: PropsWithChildren) {
 					(
 						oldData:
 							| {
-									pages: ResponseType[];
-							  }
+								pages: ResponseType[];
+							}
 							| undefined,
 					) => {
 						if (!oldData) return oldData;
