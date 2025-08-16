@@ -1,3 +1,4 @@
+import NotFound from "@/routes/NotFound.tsx";
 import { RouterProvider as Provider, createBrowserRouter } from "react-router";
 import { Routes } from "../../../shared/Routes.enum.ts";
 import Profile from "../components/Profile.tsx";
@@ -57,6 +58,10 @@ const router = createBrowserRouter([
 				],
 			},
 		],
+	},
+	{
+		path: "*",
+		element: <NotFound />,
 	},
 ]);
 
