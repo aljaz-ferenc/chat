@@ -1,8 +1,15 @@
 import { SearchIcon } from "@/assets/icons/icons.tsx";
 import UserCard from "@/components/UserCard.tsx";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet.tsx";
+import {
+	Sheet,
+	SheetContent,
+	SheetDescription,
+	SheetTitle,
+	SheetTrigger,
+} from "@/components/ui/sheet.tsx";
 import useContacts from "@/hooks/api/useContacts.ts";
 import { cn } from "@/utils/utils.ts";
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { useDebounce } from "@uidotdev/usehooks";
 import { SidebarIcon, X } from "lucide-react";
 import { type Dispatch, type SetStateAction, useEffect, useState } from "react";
@@ -109,6 +116,12 @@ function ContactsSidebarSheet({ className }: { className?: string }) {
 					<SidebarIcon />
 				</SheetTrigger>
 				<SheetContent side="left" className="w-fit">
+					<VisuallyHidden>
+						<SheetDescription>
+							List of contacts. Click on a contact to see the user's profile.
+						</SheetDescription>
+						<SheetTitle>Contacts list</SheetTitle>
+					</VisuallyHidden>
 					<ContactsSidebarBase
 						className="mt-2 w-full"
 						setSidebarIsOpen={setSidebarIsOpen}

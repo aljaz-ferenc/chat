@@ -1,9 +1,16 @@
 import { PlusIcon } from "@/assets/icons/icons.tsx";
 import ChatPreview from "@/components/chat/ChatPreview/ChatPreview.tsx";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet.tsx";
+import {
+	Sheet,
+	SheetContent,
+	SheetDescription,
+	SheetTitle,
+	SheetTrigger,
+} from "@/components/ui/sheet.tsx";
 import useChats from "@/hooks/api/useChats.ts";
 import useCreateChat from "@/hooks/api/useCreateChat.ts";
 import { cn } from "@/lib/utils.ts";
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { SidebarIcon } from "lucide-react";
 import {
 	type Dispatch,
@@ -118,6 +125,10 @@ function ChatSidebarSheet({ className }: { className?: string }) {
 	return (
 		<div className={cn(["bg-background z-30", className])}>
 			<Sheet open={sidebarIsOpen} onOpenChange={setSidebarIsOpen}>
+				<VisuallyHidden>
+					<SheetDescription>List of chats</SheetDescription>
+					<SheetTitle>Click on a chat to start messaging the user</SheetTitle>
+				</VisuallyHidden>
 				<SheetTrigger className="mr-auto m-2 mb-0 cursor-pointer">
 					<SidebarIcon />
 				</SheetTrigger>
