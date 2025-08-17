@@ -10,6 +10,7 @@ type DemoUserCredentialsProps = {
 	creds: {
 		username: string;
 		password: string;
+		name: string;
 	};
 };
 
@@ -31,7 +32,9 @@ export default function DemoUserCredentials({
 
 	return (
 		<div className={cn(["flex flex-col gap-2", className])}>
-			<span className="font-semibold text-primary-foreground">DEMO USER</span>
+			<span className="font-semibold text-primary-foreground">
+				{creds.name}
+			</span>
 			<motion.div className="flex items-center gap-1 relative text-primary-foreground">
 				<Input type="text" value={creds.username} readOnly />
 				<Button
