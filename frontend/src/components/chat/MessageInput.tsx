@@ -223,14 +223,14 @@ export default function MessageInput({
 								/>
 								<button
 									type="button"
-									className="opacity-0 group-hover:opacity-100 flex items-center justify-center cursor-pointer absolute h-5 w-5 top-1 right-1 bg-background/30 p-1 rounded-full hover:bg-background/70 transition"
+									className="opacity-0 group-hover:opacity-100 flex items-center justify-center cursor-pointer absolute h-5 w-5 top-1 right-1 bg-black/50 p-1 rounded-full hover:bg-black/70 transition"
 									onClick={() =>
 										setGifs((prev) => {
 											return prev.filter((g) => g.id !== gif.id);
 										})
 									}
 								>
-									<X color="var(--muted)" size={15} />
+									<X color="white" size={15} />
 								</button>
 							</div>
 						);

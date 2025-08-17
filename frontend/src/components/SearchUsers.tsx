@@ -31,7 +31,7 @@ export default function SearchUsers() {
 
 	return (
 		<div className="p-6 max-w-6xl h-full w-full mx-auto bg-background">
-			<div className="relative h-full">
+			<div className="relative">
 				<input
 					value={query}
 					onChange={(e) => setQuery(e.target.value)}
@@ -105,7 +105,9 @@ export default function SearchUsers() {
 			{/*PENDING REQUESTS*/}
 			{!!thisUser?.friends.pendingRequests.length && (
 				<div className="flex flex-col gap-4 mt-10">
-					<h3 className="text-muted text-sm font-bold">Pending Requests</h3>
+					<h3 className="text-muted-foreground text-sm font-bold">
+						Pending Requests
+					</h3>
 					{thisUser?.friends.pendingRequests.map((user) => (
 						<div key={user._id} className="flex justify-between items-center">
 							<UserCard user={user} />
