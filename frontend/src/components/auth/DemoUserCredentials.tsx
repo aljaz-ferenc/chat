@@ -5,15 +5,17 @@ import { Check, Copy } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useState } from "react";
 
-const demoUsername = import.meta.env.VITE_DEMO_USER_USERNAME;
-const demoPassword = import.meta.env.VITE_DEMO_USER_PASSWORD;
-
 type DemoUserCredentialsProps = {
 	className?: string;
+	creds: {
+		username: string;
+		password: string;
+	};
 };
 
 export default function DemoUserCredentials({
 	className = "",
+	creds,
 }: DemoUserCredentialsProps) {
 	const [wasCopied, setWasCopied] = useState<"username" | "password" | null>(
 		null,
@@ -21,7 +23,7 @@ export default function DemoUserCredentials({
 
 	const copyToClipboard = async (value: string) => {
 		await navigator.clipboard.writeText(value);
-		const target = value === demoUsername ? "username" : "password";
+		const target = value === creds.username ? "username" : "password";
 		setWasCopied(target);
 
 		setTimeout(() => setWasCopied(null), 1000);
@@ -31,11 +33,11 @@ export default function DemoUserCredentials({
 		<div className={cn(["flex flex-col gap-2", className])}>
 			<span className="font-semibold text-primary-foreground">DEMO USER</span>
 			<motion.div className="flex items-center gap-1 relative text-primary-foreground">
-				<Input type="text" value={demoUsername} readOnly />
+				<Input type="text" value={creds.username} readOnly />
 				<Button
 					type="button"
 					className="cursor-pointer"
-					onClick={() => copyToClipboard(demoUsername)}
+					onClick={() => copyToClipboard(creds.username)}
 				>
 					<Copy />
 				</Button>
@@ -55,11 +57,11 @@ export default function DemoUserCredentials({
 				</AnimatePresence>
 			</motion.div>
 			<div className="flex items-center gap-1 relative text-primary-foreground">
-				<Input type="password" value={demoPassword} readOnly />
+				<Input type="password" value={creds.password} readOnly />
 				<Button
 					type="button"
 					className="cursor-pointer"
-					onClick={() => copyToClipboard(demoPassword)}
+					onClick={() => copyToClipboard(creds.password)}
 				>
 					<Copy />
 				</Button>
