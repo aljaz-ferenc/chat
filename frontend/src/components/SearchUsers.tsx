@@ -67,7 +67,7 @@ export default function SearchUsers() {
 							return (
 								<div
 									key={user._id}
-									className="flex justify-between items-center text-muted font-bold"
+									className="flex justify-between items-center text-muted-foreground font-bold"
 								>
 									<UserCard highlight={query} user={user} />
 									<IconButton
@@ -88,7 +88,6 @@ export default function SearchUsers() {
 										}
 										icon="message"
 									/>
-									{/*<span>Friends</span>*/}
 								</div>
 							);
 						}
@@ -109,7 +108,10 @@ export default function SearchUsers() {
 						Pending Requests
 					</h3>
 					{thisUser?.friends.pendingRequests.map((user) => (
-						<div key={user._id} className="flex justify-between items-center">
+						<div
+							key={user._id}
+							className="flex flex-col md:flex-row justify-between md:items-center"
+						>
 							<UserCard user={user} />
 							<FriendStatusButtons contactId={user._id} thisUser={thisUser} />
 						</div>
@@ -119,10 +121,15 @@ export default function SearchUsers() {
 
 			{/*INCOMING REQUESTS*/}
 			{!!thisUser?.friends.incomingRequests.length && (
-				<div className="flex flex-col gap-4 mt-10">
-					<h3 className="text-muted text-sm font-bold">Incoming Requests</h3>
+				<div className="flex flex-col gap-6 md:gap-4 mt-10">
+					<h3 className="text-muted-foreground text-sm font-bold">
+						Incoming Requests
+					</h3>
 					{thisUser?.friends.incomingRequests.map((user) => (
-						<div key={user._id} className="flex justify-between items-center">
+						<div
+							key={user._id}
+							className="flex flex-col md:flex-row justify-between md:items-center"
+						>
 							<UserCard user={user} />
 							<FriendStatusButtons contactId={user._id} thisUser={thisUser} />
 						</div>

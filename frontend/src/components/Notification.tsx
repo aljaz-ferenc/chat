@@ -17,7 +17,7 @@ export default function Notification({ notification }: NotificationProps) {
 
 	if (notification.type === "friendRequest") {
 		return (
-			<div className="flex items-center gap-1">
+			<div className="flex items-center gap-1 flex-wrap max-w-screen">
 				<UserCard user={notification.from} showUsername={false} />
 				<span className="mr-1">sent you a friend request.</span>
 				<FriendStatusButtons
