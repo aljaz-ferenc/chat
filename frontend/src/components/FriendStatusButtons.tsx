@@ -35,7 +35,7 @@ export default function FriendStatusButtons({
 				}
 				className={cn([
 					"bg-background px-3 py-1 rounded-[5px] cursor-pointer text-primary border border-border",
-					["cancel", "decline"].includes(action) && "bg-red-500",
+					["cancel", "decline"].includes(action) && "bg-red-500 text-white",
 					className,
 				])}
 			>
