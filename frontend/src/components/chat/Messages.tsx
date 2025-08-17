@@ -168,7 +168,7 @@ export default function Messages() {
 						replyingTo={replyingTo}
 					/>
 				))}
-				<div className="mt-auto">
+				<div className="mt-auto h-0">
 					{Array.from(typingUsers).map((userId) => {
 						if (userId === thisUserId) return null;
 
