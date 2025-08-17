@@ -6,7 +6,7 @@ import { cn } from "@/utils/utils.ts";
 import { useDebounce } from "@uidotdev/usehooks";
 import { SidebarIcon, X } from "lucide-react";
 import { type Dispatch, type SetStateAction, useEffect, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import type { Contact } from "../../../../shared/types.ts";
 
 type ContactsSidebarProps = {
@@ -80,23 +80,17 @@ function ContactsSidebarBase({
 			{contacts && (
 				<div className="flex flex-col mt-4">
 					{(query ? searchedContacts : contacts).map((user) => (
-						<Link
-							to={`${user._id}`}
+						<UserCard
+							key={user._id}
+							user={user}
+							showLastMessageTime
+							showTypingStatus
 							className={cn([
-								"cursor-pointer transition-all mx-2 md:mx-6 rounded-xl",
+								"py-2 md:py-3 cursor-pointer transition-all mx-2 md:mx-6 rounded-xl",
 								contactId === user._id && "bg-foreground text-background",
 							])}
-							key={user._id}
-							type="button"
 							onClick={() => setSidebarIsOpen?.(false)}
-						>
-							<UserCard
-								user={user}
-								showLastMessageTime
-								showTypingStatus
-								className="py-2 md:py-3"
-							/>
-						</Link>
+						/>
 					))}
 				</div>
 			)}

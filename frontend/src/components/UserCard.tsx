@@ -19,14 +19,7 @@ function highlightText(text: string, query: string) {
 	);
 }
 
-export default function UserCard({
-	user,
-	bottomText,
-	className,
-	highlight,
-	showUsername = true,
-	navigateTo,
-}: {
+type UserCardProps = {
 	className?: string;
 	user: Partial<User>;
 	bottomText?: string;
@@ -35,11 +28,23 @@ export default function UserCard({
 	highlight?: string;
 	showUsername?: boolean;
 	navigateTo?: string;
-}) {
+	onClick?: () => void;
+};
+
+export default function UserCard({
+	user,
+	bottomText,
+	className,
+	highlight,
+	showUsername = true,
+	navigateTo,
+	onClick,
+}: UserCardProps) {
 	return (
 		<Link
 			to={navigateTo || `/contacts/${user._id}`}
 			className={cn(["flex items-center gap-4 p-2", className])}
+			onClick={onClick}
 		>
 			<div className="w-12 aspect-square rounded-[5px] relative overflow-hidden">
 				<img

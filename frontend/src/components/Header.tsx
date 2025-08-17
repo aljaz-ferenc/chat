@@ -81,17 +81,19 @@ export default function Header({ className }: HeaderProps) {
 						}
 					}}
 				>
-					<DropdownMenuTrigger className="ml-auto flex flex-col justify-between items-center cursor-pointer">
-						<IconButton
-							icon="notification"
-							className={cn([
-								"[&_#dot]:fill-muted-foreground",
-								existsUnread && !opened && "[&_#dot]:fill-red-500",
-							])}
-						/>
-						<span className="text-xs text-primary text-center hidden md:block">
-							Notifications
-						</span>
+					<DropdownMenuTrigger asChild>
+						<div className="ml-auto flex flex-col justify-between items-center cursor-pointer">
+							<IconButton
+								icon="notification"
+								className={cn([
+									"[&_#dot]:fill-muted-foreground",
+									existsUnread && !opened && "[&_#dot]:fill-red-500",
+								])}
+							/>
+							<span className="text-xs text-primary text-center hidden md:block">
+								Notifications
+							</span>
+						</div>
 					</DropdownMenuTrigger>
 					<DropdownMenuContent className="bg-background border-muted mr-6 p-2 text-primary">
 						{notifications?.notifications.length === 0 && (
