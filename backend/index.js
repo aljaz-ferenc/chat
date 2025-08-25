@@ -19,7 +19,6 @@ const { users } = require("./controllers/webhooksController");
 const Chat = require("./models/Chat");
 
 const app = express();
-app.use(cors());
 const server = http.createServer(app);
 
 const io = new Server(server, {
@@ -39,8 +38,9 @@ app.post(
 	users,
 );
 
-app.use(clerkMiddleware());
+app.use(cors());
 app.use(bodyParser.json());
+app.use(clerkMiddleware());
 app.use("/api/v1/users", usersRouter);
 app.use("/api/v1/friendRequest", friendRequestRouter);
 app.use("/api/v1/notifications", notificationsRouter);
