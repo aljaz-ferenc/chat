@@ -123,7 +123,7 @@ function ChatSidebarSheet({ className }: { className?: string }) {
 	const [sidebarIsOpen, setSidebarIsOpen] = useState(false);
 
 	return (
-		<div className={cn(["bg-background z-30", className])}>
+		<div className={cn(["bg-card z-30", className, "absolute w-full"])}>
 			<Sheet open={sidebarIsOpen} onOpenChange={setSidebarIsOpen}>
 				<VisuallyHidden>
 					<SheetDescription>List of chats</SheetDescription>
