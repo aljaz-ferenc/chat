@@ -196,7 +196,7 @@ export default function Message({
 								onOpenChange={setReactionsAreOpen}
 							>
 								<PopoverTrigger>
-									<IconButton icon="emoji" className="max-h-6 p-1.5" />
+									<IconButton asDiv icon="emoji" className="max-h-6 p-1.5" />
 								</PopoverTrigger>
 								<PopoverContent>
 									<FacebookSelector
@@ -214,7 +214,11 @@ export default function Message({
 					</div>
 					<DropdownMenu>
 						<DropdownMenuTrigger className="cursor-pointer [&_svg]:fill-muted">
-							<IconButton icon="ellipsis" className="h-[24px] w-[24px] p-1.5" />
+							<IconButton
+								asDiv
+								icon="ellipsis"
+								className="h-[24px] w-[24px] p-1.5"
+							/>
 						</DropdownMenuTrigger>
 						<DropdownMenuContent className="bg-background border-border text-muted">
 							{isMine && (

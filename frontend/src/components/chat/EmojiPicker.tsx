@@ -17,8 +17,8 @@ export default function EmojiPickerPopover({
 }: EmojiPickerPopoverProps) {
 	return (
 		<Popover open={isOpen} onOpenChange={onOpenChange}>
-			<PopoverTrigger className={className} asChild>
-				<IconButton icon="emoji" />
+			<PopoverTrigger className={className}>
+				<IconButton asDiv icon="emoji" />
 			</PopoverTrigger>
 			<PopoverContent className="border-none w-fit">
 				<EmojiPicker.Root className="isolate flex h-[368px] w-fit flex-col bg-background border-2 border-muted/50 rounded-xl">

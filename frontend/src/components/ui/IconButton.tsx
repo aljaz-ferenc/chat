@@ -92,6 +92,7 @@ type IconButtonProps = {
 	href?: string;
 	shape?: "round" | "rect";
 	isActive?: boolean;
+	asDiv?: boolean;
 };
 
 export default function IconButton({
@@ -100,16 +101,33 @@ export default function IconButton({
 	onClick,
 	shape = "round",
 	isActive = false,
+	asDiv = false,
 }: IconButtonProps) {
+	if (asDiv) {
+		return (
+			// biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
+			<div
+				onClick={onClick}
+				className={cn([
+					"cursor-pointer transition-all grid place-items-center bg-background h-12 rounded-full aspect-square p-3.5 [&_svg]:!fill-primary [&_svg]:h-full [&_svg]:w-full border-1 border-muted-foreground",
+					shape === "rect" && "rounded-md",
+					className,
+					isActive && ["[&_svg]:!fill-secondary bg-foreground"],
+				])}
+			>
+				{icons[icon]}
+			</div>
+		);
+	}
 	return (
 		<button
 			type="button"
 			onClick={onClick}
 			className={cn([
-				"cursor-pointer transition-all grid place-items-center bg-background h-12 rounded-full aspect-square p-3.5 [&_svg]:fill-primary [&_svg]:h-full [&_svg]:w-full border-1 border-muted-foreground",
+				"cursor-pointer transition-all grid place-items-center bg-background h-12 rounded-full aspect-square p-3.5 [&_svg]:!fill-primary [&_svg]:h-full [&_svg]:w-full border-1 border-muted-foreground",
 				shape === "rect" && "rounded-md",
 				className,
-				isActive && ["[&_svg]:fill-secondary bg-foreground"],
+				isActive && ["[&_svg]:!fill-secondary bg-foreground"],
 			])}
 		>
 			{icons[icon]}

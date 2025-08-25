@@ -2,7 +2,7 @@ import Notification from "@/components/Notification.tsx";
 import { useTheme } from "@/providers/ThemeProvider.tsx";
 import { UserButton } from "@clerk/clerk-react";
 import { MoonIcon, SunIcon, UserIcon } from "lucide-react";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { NavLink, useNavigate, useResolvedPath } from "react-router";
 import { useShallow } from "zustand/react/shallow";
 import { Routes } from "../../../shared/Routes.enum.ts";
@@ -26,6 +26,7 @@ type HeaderProps = {
 export default function Header({ className }: HeaderProps) {
 	const { mutateAsync: readNotification } = useReadNotification();
 	const { mutateAsync: deleteNotifications } = useDeleteNotifications();
+	const [notificationsOpen, setNotificationsOpen] = useState(false);
 	const { refetch, data: user } = useUser();
 	const [notifications, opened] = useUserStore(
 		useShallow((state) => [
@@ -75,7 +76,9 @@ export default function Header({ className }: HeaderProps) {
 					</span>
 				</NavLink>
 				<DropdownMenu
+					open={notificationsOpen}
 					onOpenChange={async (open) => {
+						setNotificationsOpen(open);
 						if (open) {
 							await readNotification().then(() => refetch());
 						}
@@ -84,6 +87,7 @@ export default function Header({ className }: HeaderProps) {
 					<DropdownMenuTrigger asChild>
 						<div className="ml-auto flex flex-col justify-between items-center cursor-pointer">
 							<IconButton
+								isActive={notificationsOpen}
 								icon="notification"
 								className={cn([
 									"[&_#dot]:fill-muted-foreground",

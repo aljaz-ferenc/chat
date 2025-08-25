@@ -28,7 +28,7 @@ export default function GroupChatDropdownMenu({
 
 	return (
 		<DropdownMenu>
-			<DropdownMenuTrigger className="ml-auto cursor-pointer ">
+			<DropdownMenuTrigger asChild className="ml-auto cursor-pointer ">
 				<IconButton icon="ellipsis" className="h-[24px] w-[24px] p-1.5" />
 			</DropdownMenuTrigger>
 			<DropdownMenuContent className="p-2 border-border text-primary">

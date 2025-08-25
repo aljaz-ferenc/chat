@@ -46,8 +46,6 @@ export function ProfileHeader({ user, editable = false }: ProfileHeaderProps) {
 		setBgImage(imageUrl);
 	}, [storage, user]);
 
-	console.log(user);
-
 	return (
 		<div className="bg-background rounded-2xl overflow-hidden w-full max-w-6xl mx-auto relative">
 			{/*BACKGROUND IMAGE*/}
