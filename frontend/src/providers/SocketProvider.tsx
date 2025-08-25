@@ -1,3 +1,4 @@
+import useNotificationsStore from "@/state/useNotificationsStore.ts";
 import { useQueryClient } from "@tanstack/react-query";
 import { type PropsWithChildren, createContext, useEffect } from "react";
 import { type Socket, io } from "socket.io-client";
@@ -19,6 +20,7 @@ export default function SocketProvider({ children }: PropsWithChildren) {
 	const userId = useUserStore(useShallow((state) => state.user?._id));
 	const { refetch } = useUser();
 	const queryClient = useQueryClient();
+	const { setNewMessageArrived } = useNotificationsStore();
 
 	useEffect(() => {
 		if (!userId || !socket.connected) return;
@@ -36,11 +38,13 @@ export default function SocketProvider({ children }: PropsWithChildren) {
 			socket.emit("online", userId);
 		});
 
-		socket.on("new-message", (message: Message) => {
+		socket.on("new-message", async (message: Message) => {
 			queryClient.invalidateQueries({ queryKey: ["chats"] });
-			queryClient.invalidateQueries({
+			await queryClient.invalidateQueries({
 				queryKey: ["messages", message.chat],
 			});
+
+			setNewMessageArrived(true);
 		});
 
 		socket.on("chat-rename", (renameMessage) => {
@@ -102,8 +106,8 @@ export default function SocketProvider({ children }: PropsWithChildren) {
 					(
 						oldData:
 							| {
-								pages: ResponseType[];
-							}
+									pages: ResponseType[];
+							  }
 							| undefined,
 					) => {
 						if (!oldData) return oldData;
@@ -163,7 +167,7 @@ export default function SocketProvider({ children }: PropsWithChildren) {
 			socket.off("connect");
 			socket.disconnect();
 		};
-	}, [userId, refetch, queryClient]);
+	}, [userId, refetch, queryClient, setNewMessageArrived]);
 
 	return (
 		<SocketContext.Provider value={socket}>{children}</SocketContext.Provider>

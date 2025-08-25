@@ -1,3 +1,4 @@
+import { cn } from "@/utils/utils.ts";
 import {
 	AttachmentIcon,
 	BellIcon,
@@ -26,7 +27,6 @@ import {
 	TrashIcon,
 	XIcon,
 } from "../../assets/icons/icons.tsx";
-import { cn } from "../../utils/utils.ts";
 
 export type Icons =
 	| "logo"

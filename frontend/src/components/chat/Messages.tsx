@@ -1,8 +1,10 @@
+import useNotificationsStore from "@/state/useNotificationsStore.ts";
 import { useQueryClient } from "@tanstack/react-query";
 import {
 	type Dispatch,
 	type SetStateAction,
 	use,
+	useCallback,
 	useEffect,
 	useRef,
 	useState,
@@ -30,12 +32,26 @@ export default function Messages() {
 	const [initialScrollDone, setInitialScrollDone] = useState(false);
 	const beforeHeight = useRef<number>(0);
 	const sentinelRef = useRef<HTMLDivElement>(null);
+	const { newMessageArrived, setNewMessageArrived } = useNotificationsStore();
 
 	const { replyingTo, setReplyingTo } = useOutletContext<{
 		replyingTo: TMessage;
 		setReplyingTo: Dispatch<SetStateAction<TMessage | null>>;
 	}>();
 	const messagesContainerRef = useRef<HTMLDivElement>(null);
+
+	const scrollDown = useCallback(() => {
+		if (messagesContainerRef.current) {
+			messagesContainerRef.current.scrollTop =
+				messagesContainerRef.current.scrollHeight;
+		}
+	}, []);
+
+	useEffect(() => {
+		if (!newMessageArrived) return;
+		scrollDown();
+		setNewMessageArrived(false);
+	}, [newMessageArrived, scrollDown, setNewMessageArrived]);
 
 	useEffect(() => {
 		if (!socket || !data) return;
@@ -55,17 +71,6 @@ export default function Messages() {
 		.slice()
 		.reverse()
 		.flatMap((page) => page.messages);
-
-	useEffect(() => {
-		if (!data) return;
-		const el = messagesContainerRef.current;
-		if (!el || beforeHeight.current === 0) return;
-
-		const newHeight = el.scrollHeight;
-		el.scrollTop = newHeight - beforeHeight.current;
-
-		beforeHeight.current = 0;
-	}, [data]);
 
 	useEffect(() => {
 		if (!sentinelRef.current || !hasNextPage) return;
@@ -152,7 +157,7 @@ export default function Messages() {
 		<div className="flex h-full overflow-y-auto">
 			<div
 				ref={messagesContainerRef}
-				className=" flex flex-col gap-8 items-start bg-card w-full p-6 overflow-x-hidden"
+				className="scroll-smooth flex flex-col gap-8 items-start bg-card w-full p-6 overflow-x-hidden"
 			>
 				{isFetchingNextPage && (
 					<div className="h-5 mx-auto w-full">
