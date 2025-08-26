@@ -1,3 +1,4 @@
+import Message from "@/components/chat/Message/Message.tsx";
 import useNotificationsStore from "@/state/useNotificationsStore.ts";
 import { useQueryClient } from "@tanstack/react-query";
 import {
@@ -18,7 +19,6 @@ import useMessages from "../../hooks/api/useMessages.ts";
 import { SocketContext } from "../../providers/SocketProvider.tsx";
 import useUserStore from "../../state/useUserStore.ts";
 import Spinner from "../ui/Spinner.tsx";
-import Message from "../Message/Message.tsx";
 
 export default function Messages() {
 	const socket = use(SocketContext);

@@ -1,5 +1,5 @@
-import MessageDropdownMenu from "@/components/Message/MessageDropdownMenu.tsx";
-import MessageReactionsPopup from "@/components/Message/MessageReactionsPopup.tsx";
+import MessageDropdownMenu from "@/components/chat/Message/MessageDropdownMenu.tsx";
+import MessageReactionsPopup from "@/components/chat/Message/MessageReactionsPopup.tsx";
 import { Textarea } from "@/components/ui/textarea.tsx";
 import { cn } from "@/utils/utils.ts";
 import { FacebookCounter } from "@charkour/react-reactions";
@@ -14,11 +14,11 @@ import {
 } from "react";
 import { useNavigate, useParams } from "react-router";
 import { useShallow } from "zustand/react/shallow";
-import type { Message as TMessage } from "../../../../shared/types.ts";
-import { ReplyIcon } from "../../assets/icons/icons.tsx";
-import useEditMessage from "../../hooks/api/useEditMessage.ts";
-import useUserStore from "../../state/useUserStore.ts";
-import UserTag from "../chat/UserTag.tsx";
+import type { Message as TMessage } from "../../../../../shared/types.ts";
+import { ReplyIcon } from "../../../assets/icons/icons.tsx";
+import useEditMessage from "../../../hooks/api/useEditMessage.ts";
+import useUserStore from "../../../state/useUserStore.ts";
+import UserTag from "../UserTag.tsx";
 import MessageFiles from "./MessageFiles.tsx";
 import MessageGifs from "./MessageGifs.tsx";
 import MessageMarkdown from "./MessageMarkdown.tsx";

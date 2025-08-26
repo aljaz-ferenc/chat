@@ -8,7 +8,7 @@ import {
 	PopoverTrigger,
 } from "@radix-ui/react-popover";
 import { useState } from "react";
-import type { Message, User } from "../../../../shared/types.ts";
+import type { Message, User } from "../../../../../shared/types.ts";
 
 type MessageReactionsPopupProps = {
 	isEditing: boolean;

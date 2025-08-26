@@ -3,15 +3,15 @@ import { FileStorageContext } from "@/providers/FileStorageProvider.tsx";
 import { cn } from "@/utils/utils.ts";
 import { EditIcon } from "lucide-react";
 import { type Dispatch, type SetStateAction, use } from "react";
-import type { Message } from "../../../../shared/types.ts";
-import { ReplyIcon, TrashIcon } from "../../assets/icons/icons.tsx";
+import type { Message } from "../../../../../shared/types.ts";
+import { ReplyIcon, TrashIcon } from "../../../assets/icons/icons.tsx";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuItem,
 	DropdownMenuTrigger,
-} from "../ui/DropdownMenu.tsx";
-import IconButton from "../ui/IconButton.tsx";
+} from "../../ui/DropdownMenu.tsx";
+import IconButton from "../../ui/IconButton.tsx";
 
 const BUCKET_ID = import.meta.env.VITE_APPWRITE_BUCKET_ID;
 

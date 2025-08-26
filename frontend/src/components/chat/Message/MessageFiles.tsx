@@ -1,10 +1,10 @@
 import { cn } from "@/utils/utils.ts";
 import { use, useEffect, useState } from "react";
-import type { Message as TMessage } from "../../../../shared/types.ts";
-import { DownloadIcon } from "../../assets/icons/icons.tsx";
-import useDownloadFile from "../../hooks/useDownloadFile.tsx";
-import { FileStorageContext } from "../../providers/FileStorageProvider.tsx";
-import FileIcon, { type MimeType } from "../FileIcon.tsx";
+import type { Message as TMessage } from "../../../../../shared/types.ts";
+import { DownloadIcon } from "../../../assets/icons/icons.tsx";
+import useDownloadFile from "../../../hooks/useDownloadFile.tsx";
+import { FileStorageContext } from "../../../providers/FileStorageProvider.tsx";
+import FileIcon, { type MimeType } from "../../FileIcon.tsx";
 
 const BUCKET_ID = import.meta.env.VITE_APPWRITE_BUCKET_ID;
 

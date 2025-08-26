@@ -1,5 +1,5 @@
 import { cn } from "@/utils/utils.ts";
-import type { Message } from "../../../../shared/types.ts";
+import type { Message } from "../../../../../shared/types.ts";
 
 type MessageMarkdownProps = {
 	message: Message;
