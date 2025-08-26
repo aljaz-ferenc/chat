@@ -1,16 +1,12 @@
+import MessageDropdownMenu from "@/components/Message/MessageDropdownMenu.tsx";
+import MessageReactionsPopup from "@/components/Message/MessageReactionsPopup.tsx";
 import { Textarea } from "@/components/ui/textarea.tsx";
 import { cn } from "@/utils/utils.ts";
-import { FacebookCounter, FacebookSelector } from "@charkour/react-reactions";
-import {
-	Popover,
-	PopoverContent,
-	PopoverTrigger,
-} from "@radix-ui/react-popover";
-import { EditIcon, X } from "lucide-react";
+import { FacebookCounter } from "@charkour/react-reactions";
+import { X } from "lucide-react";
 import {
 	type Dispatch,
 	type SetStateAction,
-	use,
 	useCallback,
 	useEffect,
 	useRef,
@@ -19,24 +15,13 @@ import {
 import { useNavigate, useParams } from "react-router";
 import { useShallow } from "zustand/react/shallow";
 import type { Message as TMessage } from "../../../../shared/types.ts";
-import { ReplyIcon, TrashIcon } from "../../assets/icons/icons.tsx";
-import useDeleteMessage from "../../hooks/api/useDeleteMessage.ts";
+import { ReplyIcon } from "../../assets/icons/icons.tsx";
 import useEditMessage from "../../hooks/api/useEditMessage.ts";
-import useReactToMessage from "../../hooks/api/useReactToMessage.ts";
-import { FileStorageContext } from "../../providers/FileStorageProvider.tsx";
 import useUserStore from "../../state/useUserStore.ts";
-import {
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuTrigger,
-} from "../ui/DropdownMenu.tsx";
-import IconButton from "../ui/IconButton.tsx";
+import UserTag from "../chat/UserTag.tsx";
 import MessageFiles from "./MessageFiles.tsx";
 import MessageGifs from "./MessageGifs.tsx";
 import MessageMarkdown from "./MessageMarkdown.tsx";
-import UserTag from "./UserTag.tsx";
-const BUCKET_ID = import.meta.env.VITE_APPWRITE_BUCKET_ID;
 
 type MessageProps = {
 	message: TMessage;
@@ -52,16 +37,13 @@ export default function Message({
 	const { mutateAsync: editMessage } = useEditMessage();
 	const thisUserId = useUserStore(useShallow((state) => state.user?._id));
 	const isMine = message.user._id === thisUserId;
-	const { mutateAsync: deleteMessage } = useDeleteMessage();
 	const [isEditing, setIsEditing] = useState(false);
 	const [editedMarkdown, setEditedMarkdown] = useState(
 		message.content?.markdown || "",
 	);
 	const { chatId } = useParams();
 	const editInputRef = useRef<HTMLTextAreaElement>(null);
-	const [reactionsAreOpen, setReactionsAreOpen] = useState(false);
-	const { mutateAsync: react } = useReactToMessage();
-	const { storage } = use(FileStorageContext);
+
 	const navigate = useNavigate();
 
 	const handleKeyPress = useCallback(
@@ -90,21 +72,6 @@ export default function Message({
 
 		return () => removeEventListener("keypress", handleKeyPress);
 	}, [handleKeyPress]);
-
-	const handleDeleteMessage = async () => {
-		await deleteMessage({
-			messageId: message._id,
-			chatId: message.chat,
-		});
-		if (message.content.files.length) {
-			for (const file of message.content.files) {
-				await storage.deleteFile(BUCKET_ID, file);
-			}
-		}
-		if (replyingTo?._id === message?._id) {
-			setReplyingTo(null);
-		}
-	};
 
 	if (message.type === "renameChat") {
 		return (
@@ -204,83 +171,22 @@ export default function Message({
 							</div>
 						)}
 					</div>
-					<div
-						className={cn([
-							"h-full flex items-center z-10",
-							isEditing && "hidden",
-						])}
-					>
-						<div className="flex gap-2">
-							<Popover
-								open={reactionsAreOpen}
-								onOpenChange={setReactionsAreOpen}
-							>
-								<PopoverTrigger>
-									<IconButton
-										asDiv
-										icon="emoji"
-										className="max-h-6 p-1.5 bg-transparent"
-									/>
-								</PopoverTrigger>
-								<PopoverContent>
-									<FacebookSelector
-										onSelect={async (reaction) =>
-											await react({
-												messageId: message._id,
-												reaction: { emoji: reaction, by: thisUserId as string },
-											}).then(() => setReactionsAreOpen(false))
-										}
-										iconSize={30}
-									/>
-								</PopoverContent>
-							</Popover>
-						</div>
-					</div>
-					<DropdownMenu>
-						<DropdownMenuTrigger
-							className={cn(["cursor-pointer", isEditing && "hidden"])}
-						>
-							<IconButton
-								asDiv
-								icon="ellipsis"
-								className="h-[24px] w-[24px] p-1.5 bg-transparent [&_svg]:fill-muted"
-							/>
-						</DropdownMenuTrigger>
-						<DropdownMenuContent className="bg-background border-border text-muted">
-							{isMine && (
-								<DropdownMenuItem
-									onClick={() => {
-										setIsEditing(true);
-										setEditedMarkdown(message.content?.markdown);
-									}}
-									className="flex items-center gap-2 text-primary cursor-pointer transition"
-								>
-									<EditIcon />
-									Edit
-								</DropdownMenuItem>
-							)}
-							{isMine && (
-								<DropdownMenuItem
-									asChild
-									className="flex w-full items-center gap-2 text-primary cursor-pointer transition"
-								>
-									<button type="button" onClick={handleDeleteMessage}>
-										<TrashIcon />
-										Delete
-									</button>
-								</DropdownMenuItem>
-							)}
-							<DropdownMenuItem
-								asChild
-								className="flex w-full items-center gap-2 text-primary cursor-pointer transition"
-							>
-								<button type="button" onClick={() => setReplyingTo(message)}>
-									<ReplyIcon />
-									Reply
-								</button>
-							</DropdownMenuItem>
-						</DropdownMenuContent>
-					</DropdownMenu>
+					{thisUserId && (
+						<MessageReactionsPopup
+							isEditing={isEditing}
+							messageId={message._id}
+							userId={thisUserId}
+						/>
+					)}
+					<MessageDropdownMenu
+						isMine={isMine}
+						isEditing={isEditing}
+						setIsEditing={setIsEditing}
+						message={message}
+						replyingTo={replyingTo}
+						setReplyingTo={setReplyingTo}
+						setEditedMarkdown={setEditedMarkdown}
+					/>
 				</div>
 			</div>
 			<FacebookCounter

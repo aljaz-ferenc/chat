@@ -18,7 +18,7 @@ import useMessages from "../../hooks/api/useMessages.ts";
 import { SocketContext } from "../../providers/SocketProvider.tsx";
 import useUserStore from "../../state/useUserStore.ts";
 import Spinner from "../ui/Spinner.tsx";
-import Message from "./Message.tsx";
+import Message from "../Message/Message.tsx";
 
 export default function Messages() {
 	const socket = use(SocketContext);

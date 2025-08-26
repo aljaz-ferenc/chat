@@ -2,7 +2,7 @@ import ChatSidebar from "@/components/chat/ChatSidebar.tsx";
 import { useState } from "react";
 import { Outlet } from "react-router";
 import type { Message as TMessage } from "../../../shared/types.ts";
-import MessageInput from "../components/chat/MessageInput.tsx";
+import MessageInput from "../components/chat/MessageInput/MessageInput.tsx";
 
 export default function ChatLayout() {
 	const [replyingTo, setReplyingTo] = useState<TMessage | null>(null);
