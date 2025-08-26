@@ -1,3 +1,4 @@
+import { Textarea } from "@/components/ui/textarea.tsx";
 import { cn } from "@/utils/utils.ts";
 import { FacebookCounter, FacebookSelector } from "@charkour/react-reactions";
 import {
@@ -5,7 +6,7 @@ import {
 	PopoverContent,
 	PopoverTrigger,
 } from "@radix-ui/react-popover";
-import { EditIcon } from "lucide-react";
+import { EditIcon, X } from "lucide-react";
 import {
 	type Dispatch,
 	type SetStateAction,
@@ -173,23 +174,42 @@ export default function Message({
 				)}
 
 				<div className="flex gap-2 items-center">
-					<div>
+					<div className={cn([isEditing && "w-full rounded mt-2"])}>
 						{!isEditing ? (
 							<MessageMarkdown message={message} isMine={isMine} />
 						) : (
-							<textarea
-								ref={editInputRef}
-								value={editedMarkdown}
-								onChange={(e) => setEditedMarkdown(e.target.value)}
-								className="w-full h-10 text-primary border-muted/30 mt-2 border outline-none p-1 rounded"
-							/>
+							<div className="p-2 rounded">
+								<div className="flex items-center gap-2 mb-2">
+									<button
+										type="button"
+										className="cursor-pointer"
+										onClick={() => setIsEditing(false)}
+									>
+										<X size={15} />
+									</button>
+									<span className="text-muted-foreground">Edit:</span>
+								</div>
+								<Textarea
+									ref={editInputRef}
+									value={editedMarkdown}
+									onChange={(e) => setEditedMarkdown(e.target.value)}
+									className="text-primary p-2 field-sizing-content  resize-none border-input placeholder:text-muted-foreground/70 focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive flex min-h-19.5 w-full rounded-md border bg-transparent px-3 py-2 text-sm shadow-xs transition-[color,box-shadow] outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
+								/>
+							</div>
 						)}
-						<div className="flex flex-col gap-2">
-							<MessageFiles files={message.content.files} />
-							<MessageGifs gifs={message.content.gifs} />
-						</div>
+						{!isEditing && (
+							<div className="flex flex-col gap-2">
+								<MessageFiles files={message.content.files} />
+								<MessageGifs gifs={message.content.gifs} />
+							</div>
+						)}
 					</div>
-					<div className="h-full flex items-center z-10">
+					<div
+						className={cn([
+							"h-full flex items-center z-10",
+							isEditing && "hidden",
+						])}
+					>
 						<div className="flex gap-2">
 							<Popover
 								open={reactionsAreOpen}
@@ -213,7 +233,12 @@ export default function Message({
 						</div>
 					</div>
 					<DropdownMenu>
-						<DropdownMenuTrigger className="cursor-pointer [&_svg]:fill-muted">
+						<DropdownMenuTrigger
+							className={cn([
+								"cursor-pointer [&_svg]:fill-muted",
+								isEditing && "hidden",
+							])}
+						>
 							<IconButton
 								asDiv
 								icon="ellipsis"

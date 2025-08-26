@@ -17,7 +17,6 @@ import {
 import { useParams } from "react-router";
 import { useShallow } from "zustand/react/shallow";
 import type { Message } from "../../../../shared/types.ts";
-import { PlusIcon } from "../../assets/icons/icons.tsx";
 import useCreateMessage from "../../hooks/api/useCreateMessage";
 import useIsTyping from "../../hooks/useIsTyping.tsx";
 import { FileStorageContext } from "../../providers/FileStorageProvider.tsx";
@@ -159,18 +158,23 @@ export default function MessageInput({
 			])}
 		>
 			{replyingTo && (
-				<div className="text-primary mb-3 flex items-center gap-2">
-					<button
-						type="button"
-						onClick={() => setReplyingTo(null)}
-						className="rotate-45 cursor-pointer h-6 w-6 [&_svg]:h-full"
-					>
-						<PlusIcon />
-					</button>
-					<span className="text-sm text-muted-foreground">
-						@{replyingTo.user.firstName} {replyingTo.user.lastName}:{" "}
-						{replyingTo.content.markdown}
-					</span>
+				<div className="flex flex-col mb-3 gap-3 text-sm text-muted-foreground">
+					<div className="flex items-center gap-2">
+						<button
+							type="button"
+							onClick={() => setReplyingTo(null)}
+							className="cursor-pointer h-6 w-6 [&_svg]:h-full"
+						>
+							<X size={15} />
+						</button>
+						<span className="flex gap-1">
+							<span>Reply to</span>
+							<span className="bg-muted-foreground text-secondary rounded-xl px-2">
+								@{replyingTo.user.firstName} {replyingTo.user.lastName}
+							</span>
+						</span>
+					</div>
+					<span className="ml-2">{replyingTo.content.markdown}</span>
 				</div>
 			)}
 			<div className="flex flex-col justify-start gap-3 w-full max-w-60 mb-1">
