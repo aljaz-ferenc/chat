@@ -216,7 +216,11 @@ export default function Message({
 								onOpenChange={setReactionsAreOpen}
 							>
 								<PopoverTrigger>
-									<IconButton asDiv icon="emoji" className="max-h-6 p-1.5" />
+									<IconButton
+										asDiv
+										icon="emoji"
+										className="max-h-6 p-1.5 bg-transparent"
+									/>
 								</PopoverTrigger>
 								<PopoverContent>
 									<FacebookSelector
@@ -234,15 +238,12 @@ export default function Message({
 					</div>
 					<DropdownMenu>
 						<DropdownMenuTrigger
-							className={cn([
-								"cursor-pointer [&_svg]:fill-muted",
-								isEditing && "hidden",
-							])}
+							className={cn(["cursor-pointer", isEditing && "hidden"])}
 						>
 							<IconButton
 								asDiv
 								icon="ellipsis"
-								className="h-[24px] w-[24px] p-1.5"
+								className="h-[24px] w-[24px] p-1.5 bg-transparent [&_svg]:fill-muted"
 							/>
 						</DropdownMenuTrigger>
 						<DropdownMenuContent className="bg-background border-border text-muted">

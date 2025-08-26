@@ -20,7 +20,7 @@ type GiphyProps = {
 export default function Giphy({ onGifSelect, open, setOpen }: GiphyProps) {
 	return (
 		<Popover open={open} onOpenChange={setOpen}>
-			<PopoverTrigger className="text-foreground cursor-pointer">
+			<PopoverTrigger className="text-foreground cursor-pointer h-5 text-sm flex items-center">
 				GIF
 			</PopoverTrigger>
 			<PopoverContent className="h-[400px] w-[800px] overflow-y-scroll bg-background border-muted/50">

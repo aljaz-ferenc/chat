@@ -108,7 +108,7 @@ export default function Header({ className }: HeaderProps) {
 
 						{!!notifications?.notifications.length &&
 							notifications?.notifications.length > 0 && (
-								<DropdownMenuItem className="text-muted-foreground hover:text-primary text-sm hover:underline transition">
+								<DropdownMenuItem className="text-muted-foreground hover:text-primary text-sm hover:underline transition w-min">
 									<button
 										type="button"
 										onClick={async () => deleteNotifications()}

@@ -1,4 +1,5 @@
 import { cn } from "@/utils/utils.ts";
+import { SendHorizontal } from "lucide-react";
 import {
 	AttachmentIcon,
 	BellIcon,
@@ -21,7 +22,6 @@ import {
 	PlusIcon,
 	ProfileIcon,
 	SearchIcon,
-	SendIcon,
 	SidebarIcon,
 	TiktokIcon,
 	TrashIcon,
@@ -80,7 +80,7 @@ const icons = {
 	instagram: <InstagramIcon />,
 	tiktok: <TiktokIcon />,
 	envelope: <EnvelopeIcon />,
-	send: <SendIcon />,
+	send: <SendHorizontal />,
 	edit: <EditIcon />,
 	attachment: <AttachmentIcon />,
 };

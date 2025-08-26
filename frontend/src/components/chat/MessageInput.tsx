@@ -1,3 +1,4 @@
+import { Textarea } from "@/components/ui/textarea.tsx";
 import { cn } from "@/lib/utils.ts";
 import type { IGif } from "@giphy/js-types";
 import { Gif } from "@giphy/react-components";
@@ -151,12 +152,7 @@ export default function MessageInput({
 	}, [handleKeyPress]);
 
 	return (
-		<div
-			className={cn([
-				"bg-background border-t border-border p-2  pb-3 z-20",
-				className,
-			])}
-		>
+		<div className={cn(["bg-card  p-2 pb-3 z-20", className])}>
 			{replyingTo && (
 				<div className="flex flex-col mb-3 gap-3 text-sm text-muted-foreground">
 					<div className="flex items-center gap-2">
@@ -241,42 +237,51 @@ export default function MessageInput({
 					})}
 				</div>
 			</div>
-			<div className="flex items-center gap-5">
-				<EmojiPickerPopover
-					className="hidden md:block"
-					onOpenChange={(open) => setEmojiPickerIsOpen(open)}
-					isOpen={emojiPickerIsOpen}
-					onSelect={(emoji) => {
-						setMarkdown((prev) => prev + emoji);
-						setEmojiPickerIsOpen(false);
-					}}
-				/>
-				<IconButton
-					icon="attachment"
-					onClick={() => fileInputRef.current?.click()}
-				/>
-				<Giphy
-					open={gifsOpen}
-					setOpen={setGifsOpen}
-					onGifSelect={(gif) => {
-						setGifs((prev) => [...prev, gif]);
-						setGifsOpen(false);
-					}}
-				/>
+			<div className="flex items-end border-1 border-border rounded-2xl p-4 gap-8">
+				<div className="flex items-center gap-3 mb-[1ex]">
+					<EmojiPickerPopover
+						className="hidden md:block"
+						onOpenChange={(open) => setEmojiPickerIsOpen(open)}
+						isOpen={emojiPickerIsOpen}
+						onSelect={(emoji) => {
+							setMarkdown((prev) => prev + emoji);
+							setEmojiPickerIsOpen(false);
+						}}
+					/>
+					<IconButton
+						icon="attachment"
+						onClick={() => fileInputRef.current?.click()}
+						className="border-none h-5 p-0 bg-transparent"
+					/>
+					<Giphy
+						open={gifsOpen}
+						setOpen={setGifsOpen}
+						onGifSelect={(gif) => {
+							setGifs((prev) => [...prev, gif]);
+							setGifsOpen(false);
+						}}
+					/>
+				</div>
 				<input
 					type="file"
 					className="hidden"
 					ref={fileInputRef}
 					onChange={handleAddFile}
 				/>
-				<textarea
+				<Textarea
 					spellCheck={false}
-					className="w-full h-full text-primary p-2 bg-background border-1 border-border rounded"
+					placeholder="Write a message. Be nice..."
+					className="h-full shadow-none text-base resize-none field-sizing-content flex min-h-[2ex] w-full rounded-md bg-transparent px-0 py-2  text-primary placeholder:text-muted-foreground/70 disabled:cursor-not-allowed disabled:opacity-50 border-none outline-none ring-0 focus:border-none focus:outline-none focus:ring-0 focus-visible:border-none focus-visible:outline-none focus-visible:ring-0"
 					value={markdown}
 					onChange={(e) => setMarkdown(e.target.value)}
 					ref={inputRef}
 				/>
-				<IconButton icon="send" onClick={sendMessage} />
+				<IconButton
+					shape="rect"
+					icon="send"
+					onClick={sendMessage}
+					className="h-9.5 bg-foreground [&_svg]:!fill-foreground [&_svg]:!stroke-background p-2"
+				/>
 			</div>
 		</div>
 	);
