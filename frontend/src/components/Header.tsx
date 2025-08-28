@@ -112,7 +112,7 @@ export default function Header({ className }: HeaderProps) {
 									<button
 										type="button"
 										onClick={async () => deleteNotifications()}
-										className="cursor-pointer"
+										className="cursor-pointer w-max"
 									>
 										Clear all
 									</button>
