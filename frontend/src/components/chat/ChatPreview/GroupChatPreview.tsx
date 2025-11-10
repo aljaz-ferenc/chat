@@ -19,10 +19,9 @@ export default function GroupChatPreview({ chat }: GroupChatPreviewProps) {
 		<>
 			<Link
 				to={`/chats/${chat._id}`}
-				onClick={() => console.log("click preview")}
 				className={cn([
-					"flex items-center gap-4 px-2 transition w-full rounded-xl mt-2",
-					chatId === chat._id && "bg-foreground h-[64px]",
+					"flex items-center gap-4 px-2 transition w-full rounded-xl mt-2 h-[64px]",
+					chatId === chat._id && "bg-foreground",
 				])}
 			>
 				<div className="relative flex flex-col items-center">
