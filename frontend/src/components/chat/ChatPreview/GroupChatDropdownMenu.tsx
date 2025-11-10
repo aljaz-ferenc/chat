@@ -28,9 +28,19 @@ export default function GroupChatDropdownMenu({
 
 	return (
 		<DropdownMenu>
-			<DropdownMenuTrigger asChild className="ml-auto cursor-pointer ">
-				<IconButton icon="ellipsis" className="h-[24px] w-[24px] p-1.5" />
-			</DropdownMenuTrigger>
+            <DropdownMenuTrigger asChild>
+                <div
+                    onClick={(e) => e.preventDefault()}
+                    onMouseDown={(e) => e.stopPropagation()}
+                    onPointerDown={(e) => e.stopPropagation()}
+                    className='ml-auto'
+                >
+                    <IconButton
+                        icon="ellipsis"
+                        className="h-[24px] w-[24px] p-1.5 ml-auto cursor-pointer"
+                    />
+                </div>
+            </DropdownMenuTrigger>
 			<DropdownMenuContent className="p-2 border-border text-primary">
 				<DropdownMenuItem
 					onClick={(e) => e.stopPropagation()}
