@@ -1,3 +1,9 @@
 packages:
-  - "frontend"
-  - "backend"
+  - frontend
+  - backend
+
+onlyBuiltDependencies:
+  - '@biomejs/biome'
+  - '@clerk/shared'
+  - '@tailwindcss/oxide'
+  - esbuild
